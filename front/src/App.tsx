@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { googleLogout, useGoogleLogin } from "@react-oauth/google";
 import axios from "axios";
 import "./App.css";
+import QuestionCard from "./components/Features/QuestionCard";
 
 interface GoogleLoginResponse {
   access_token: string;
@@ -14,7 +15,7 @@ interface UserProfile {
 }
 
 const App: React.FC = () => {
-  const [user, setUser] = useState<GoogleLoginResponse | null >(null);
+  const [user, setUser] = useState<GoogleLoginResponse | null>(null);
   const [profile, setProfile] = useState<UserProfile | null>(null);
 
   const login = useGoogleLogin({
@@ -43,7 +44,7 @@ const App: React.FC = () => {
     googleLogout();
     setUser(null);
     setProfile(null);
-  }
+  };
 
   return (
     <div>
@@ -51,10 +52,14 @@ const App: React.FC = () => {
       <br />
       {profile ? (
         <div>
-          <img src={profile.picture} alt={`Profile picture of ${profile.name}`} />
+          <img
+            src={profile.picture}
+            alt={`Profile picture of ${profile.name}`}
+          />
           <h3>Hi {profile.name}</h3>
           <p>Email: {profile.email}</p>
           <button onClick={logout}>Log out</button>
+          <QuestionCard onAnswer={console.log}/>
         </div>
       ) : (
         <button onClick={() => login()}>Sign In with Google</button>
