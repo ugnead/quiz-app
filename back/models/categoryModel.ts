@@ -1,6 +1,11 @@
-import mongoose, { Schema } from "mongoose";
+import { Document, Schema, model } from "mongoose";
 
-let categorySchema = new mongoose.Schema({
+interface ICategory extends Document {
+  name: string;
+  parentCategory: Schema.Types.ObjectId;
+}
+
+let categorySchema = new Schema<ICategory>({
   name: { type: String, required: true },
   parentCategory: {
     type: Schema.Types.ObjectId,
@@ -9,4 +14,6 @@ let categorySchema = new mongoose.Schema({
   },
 });
 
-const Category = mongoose.model("Category", categorySchema);
+const Category = model<ICategory>("Category", categorySchema);
+
+export default Category;
