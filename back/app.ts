@@ -1,5 +1,7 @@
 import express, { Express, Request, Response, NextFunction } from "express";
 import cors from "cors";
+import questionRouter from "./routes/questionRoutes";
+import categoryRouter from "./routes/categoryRoutes";
 
 const app: Express = express();
 
@@ -16,5 +18,8 @@ app.use((req: Request, res: Response, next: NextFunction) => {
 });
 
 app.use(express.json());
+
+app.use("/api/v1/questions", questionRouter);
+app.use("/api/v1/categories", categoryRouter);
 
 export default app;
