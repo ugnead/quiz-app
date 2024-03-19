@@ -2,6 +2,7 @@ import express, { Express, Request, Response, NextFunction } from "express";
 import cors from "cors";
 import questionRouter from "./routes/questionRoutes";
 import categoryRouter from "./routes/categoryRoutes";
+import authRouter from "./routes/authRoutes";
 
 const app: Express = express();
 
@@ -21,5 +22,6 @@ app.use(express.json());
 
 app.use("/api/v1/questions", questionRouter);
 app.use("/api/v1/categories", categoryRouter);
+app.use("/api/v1/auth", authRouter);
 
 export default app;
