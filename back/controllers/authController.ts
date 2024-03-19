@@ -1,18 +1,18 @@
 import { Request, Response } from "express";
 import User from "../models/authModel";
 import { OAuth2Client } from "google-auth-library";
-import jwt from 'jsonwebtoken';
+import jwt from "jsonwebtoken";
 
 const client = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
 
 export const googleAuth = async (req: Request, res: Response) => {
   const { token } = req.body;
   try {
-    const ticket  = await client.verifyIdToken({
+    const ticket = await client.verifyIdToken({
       idToken: token,
       audience: process.env.GOOGLE_CLIENT_ID,
     });
-    const payload = ticket .getPayload();
+    const payload = ticket.getPayload();
 
     if (!payload) {
       return res.status(401).json({ message: "Invalid Google token" });
