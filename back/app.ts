@@ -3,6 +3,7 @@ import cors from "cors";
 import questionRouter from "./routes/questionRoutes";
 import categoryRouter from "./routes/categoryRoutes";
 import authRouter from "./routes/authRoutes";
+import { verifyToken } from "./middlewares/authMiddleware";
 
 const app: Express = express();
 
@@ -20,8 +21,8 @@ app.use((req: Request, res: Response, next: NextFunction) => {
 
 app.use(express.json());
 
-app.use("/api/v1/questions", questionRouter);
-app.use("/api/v1/categories", categoryRouter);
+app.use("/api/v1/questions", verifyToken, questionRouter);
+app.use("/api/v1/categories", verifyToken, categoryRouter);
 app.use("/api/v1/auth", authRouter);
 
 export default app;
