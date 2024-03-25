@@ -37,8 +37,8 @@ const Auth: React.FC = () => {
 
   const logout = () => {
     googleLogout();
-    setProfile(null);
     localStorage.removeItem("jwtToken");
+    setProfile(null);
     setUserToken(null);
   };
 
