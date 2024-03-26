@@ -4,6 +4,7 @@ import questionRouter from "./routes/questionRoutes";
 import categoryRouter from "./routes/categoryRoutes";
 import authRouter from "./routes/authRoutes";
 import { verifyToken } from "./middlewares/authMiddleware";
+import { apiLimiter, loginLimiter } from "./middlewares/rateLimiters";
 
 const app: Express = express();
 
@@ -21,8 +22,10 @@ app.use((req: Request, res: Response, next: NextFunction) => {
 
 app.use(express.json());
 
+app.use(apiLimiter);
+
 app.use("/api/v1/questions", verifyToken, questionRouter);
 app.use("/api/v1/categories", verifyToken, categoryRouter);
-app.use("/api/v1/auth", authRouter);
+app.use("/api/v1/auth", loginLimiter, authRouter);
 
 export default app;
