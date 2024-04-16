@@ -1,65 +1,96 @@
-import React, { useState, useEffect } from "react";
-import { googleLogout, useGoogleLogin } from "@react-oauth/google";
-import axios from "axios";
+import React, { useEffect, useState } from "react";
+import { loginUser, logoutUser } from '../../services/auth';
 
-interface GoogleLoginResponse {
-  access_token: string;
+declare global {
+  interface Window {
+    google?: {
+      accounts: {
+        id: {
+          initialize: (config: {
+            client_id: string;
+            callback: (response: CredentialResponse) => void;
+          }) => void;
+          renderButton: (
+            element: Element | null,
+            options: { theme: string; size: string }
+          ) => void;
+          revoke: (
+            email: string,
+            callback: (response: RevokeResponse) => void
+          ) => void;
+        };
+      };
+    };
+  }
+}
+
+interface CredentialResponse {
+  credential: string;
 }
 
 interface UserProfile {
   name: string;
-  picture: string;
   email: string;
 }
 
-const Auth: React.FC = () => {
-  const [userToken, setUserToken] = useState<GoogleLoginResponse | null>(null);
-  const [profile, setProfile] = useState<UserProfile | null>(null);
+interface RevokeResponse {
+  error?: string;
+}
 
-  const login = useGoogleLogin({
-    onSuccess: (access_token) => setUserToken(access_token),
-    onError: (error) => console.log("Login Failed:", error),
-  });
+const clientId = import.meta.env.VITE_GOOGLE_CLIENT_ID;
+
+const Auth: React.FC = () => {
+  const [user, setUser] = useState<UserProfile | null>(null);
 
   useEffect(() => {
-    if (userToken) {
-      axios
-        .post("http://localhost:4000/api/v1/auth/google", {
-          token: userToken,
-        })
-        .then((res) => {
-          localStorage.setItem("jwtToken", res.data.token);
-          setProfile(res.data);
-        })
-        .catch((err) => console.error(err));
-    }
-  }, [userToken]);
+    if (window.google) {
+      window.google.accounts.id.initialize({
+        client_id: clientId,
+        callback: handleCredentialResponse,
+      });
 
-  const logout = () => {
-    googleLogout();
-    localStorage.removeItem("jwtToken");
-    setProfile(null);
-    setUserToken(null);
+      if (!user) {
+        window.google.accounts.id.renderButton(
+          document.getElementById("buttonDiv"),
+          { theme: "outline", size: "large" }
+        );
+      }
+    }
+  }, [user]);
+  console.log(user)
+
+  const handleCredentialResponse = async (response: CredentialResponse) => {
+    try {
+      const user = await loginUser(response.credential);
+      setUser(user);
+    } catch (error) {
+      console.error("Error during authentication:", error);
+    }
+  };
+
+  const logout = async () => {
+    try {
+      if (user) {
+        await logoutUser(user.email);
+        setUser(null);
+      }
+    } catch (error) {
+      console.error("Logout failed:", error);
+    }
   };
 
   return (
-    <>
-      <h2>Google Login</h2>
-      <br />
-      {profile ? (
+    <div>
+      {user ? (
         <div>
-          <img
-            src={profile.picture}
-            alt={`Profile picture of ${profile.name}`}
-          />
-          <h3>Hi {profile.name}</h3>
-          <p>Email: {profile.email}</p>
-          <button onClick={logout}>Log out</button>
+          <h3>{user.name}</h3>
+          <p>{user.email}</p>
+          <button onClick={logout}>Logout</button>
         </div>
       ) : (
-        <button onClick={() => login()}>Sign In with Google</button>
+        <div id="buttonDiv"></div>
       )}
-    </>
+    </div>
   );
 };
 
