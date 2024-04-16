@@ -12,6 +12,7 @@ export const googleAuth = async (req: Request, res: Response) => {
       idToken: token,
       audience: process.env.GOOGLE_CLIENT_ID,
     });
+
     const payload = ticket.getPayload();
 
     if (!payload) {
@@ -19,12 +20,13 @@ export const googleAuth = async (req: Request, res: Response) => {
     }
 
     const { sub: googleId, email, name } = payload;
-    let user = await User.findOne({ googleId });
+    let user = await User.findOne({ email });
 
     if (!user) {
       user = await User.create({ googleId, email, name });
-      await user.save();
     }
+
+    await user.save();
 
     const jwtToken = jwt.sign(
       { userId: user._id, email: user.email },
@@ -34,6 +36,7 @@ export const googleAuth = async (req: Request, res: Response) => {
 
     res.status(200).json({ user, token: jwtToken });
   } catch (error) {
+    console.error("Authentication error:", error);
     res.status(500).json({ message: "Authentication failed", error });
   }
 };
