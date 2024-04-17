@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { loginUser, logoutUser } from '../../services/auth';
+import { loginUser, logoutUser } from "../../services/auth";
 
 declare global {
   interface Window {
@@ -12,7 +12,12 @@ declare global {
           }) => void;
           renderButton: (
             element: Element | null,
-            options: { theme: string; size: string }
+            options: {
+              theme: string;
+              size: string;
+              shape: string;
+              locale: string;
+            }
           ) => void;
           revoke: (
             email: string,
@@ -52,12 +57,16 @@ const Auth: React.FC = () => {
       if (!user) {
         window.google.accounts.id.renderButton(
           document.getElementById("buttonDiv"),
-          { theme: "outline", size: "large" }
+          {
+            theme: "filled_black",
+            size: "medium",
+            shape: "square",
+            locale: "en",
+          }
         );
       }
     }
   }, [user]);
-  console.log(user)
 
   const handleCredentialResponse = async (response: CredentialResponse) => {
     try {
@@ -88,7 +97,7 @@ const Auth: React.FC = () => {
           <button onClick={logout}>Logout</button>
         </div>
       ) : (
-        <div id="buttonDiv"></div>
+        <div id="buttonDiv" key={user ? "logged-in" : "logged-out"}></div>
       )}
     </div>
   );
