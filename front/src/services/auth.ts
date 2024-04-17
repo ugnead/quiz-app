@@ -12,7 +12,7 @@ interface AuthResponse {
 
 export async function loginUser(idToken: string): Promise<UserProfile> {
   try {
-    const response = await api.post<AuthResponse>('http://localhost:4000/api/v1/auth/google', {
+    const response = await api.post<AuthResponse>('/auth/google', {
       token: idToken,
     });
     const { user, token } = response.data;
