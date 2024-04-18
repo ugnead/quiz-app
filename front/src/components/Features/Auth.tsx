@@ -16,7 +16,6 @@ declare global {
               theme: string;
               size: string;
               shape: string;
-              locale: string;
             }
           ) => void;
           revoke: (
@@ -61,7 +60,6 @@ const Auth: React.FC = () => {
             theme: "filled_black",
             size: "medium",
             shape: "square",
-            locale: "en",
           }
         );
       }
