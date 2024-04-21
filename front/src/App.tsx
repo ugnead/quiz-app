@@ -1,12 +1,15 @@
 import React from "react";
 import "./App.css";
-import '../src/styles/main.scss';
+import "../src/styles/main.scss";
 import Auth from "./components/Features/Auth";
+import { LoadingProvider } from "../src/contexts/LoadingContext";
 
-const App: React.FC = () => {  
+const App: React.FC = () => {
   return (
     <>
-    <Auth />
+      <LoadingProvider>
+        <Auth />
+      </LoadingProvider>
     </>
   );
 };
