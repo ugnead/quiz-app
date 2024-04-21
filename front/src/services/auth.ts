@@ -15,9 +15,10 @@ export async function loginUser(idToken: string): Promise<UserProfile> {
     const response = await api.post<AuthResponse>('/auth/google', {
       token: idToken,
     });
-    const { user, token } = response.data;
+    const { user, token, refreshToken } = response.data;
 
     localStorage.setItem('jwtToken', token);
+    localStorage.setItem('refreshToken', refreshToken);
 
     return user;
   } catch (error) {
@@ -34,6 +35,8 @@ export async function logoutUser(email: string): Promise<void> {
         throw new Error(response.error);
       } else {
         localStorage.removeItem('jwtToken');
+        localStorage.removeItem('refreshToken'); 
+        console.log("User logged out successfully.");
       }
     });
   }
