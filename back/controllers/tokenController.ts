@@ -16,13 +16,13 @@ export const handleRefreshToken = async (req: Request, res: Response): Promise<v
   try {
     const user = await User.findOne({ refreshToken });
     if (!user) {
-      res.sendStatus(403);
+      res.sendStatus(401);
       return;
     }
 
     jwt.verify(refreshToken, process.env.REFRESH_TOKEN!, (err: Error | null) => {
       if (err) {
-        res.sendStatus(403);
+        res.sendStatus(401);
       } else {
         const accessToken = generateAccessToken(user._id.toString());
         res.json({ accessToken });
