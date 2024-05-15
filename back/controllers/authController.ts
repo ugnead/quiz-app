@@ -29,9 +29,9 @@ export const googleAuth = async (req: Request, res: Response) => {
     await user.save();
 
     const accessToken = jwt.sign(
-      { userId: user._id, email: user.email },
+      { userId: user._id, name: user.name, email: user.email },
       process.env.JWT_TOKEN!,
-      { expiresIn: "24h" }
+      { expiresIn: "15m" }
     );
 
     const refreshToken = jwt.sign(
@@ -43,7 +43,9 @@ export const googleAuth = async (req: Request, res: Response) => {
     user.refreshToken = refreshToken;
     await user.save();
 
-    res.status(200).json({ user, token: accessToken, refreshToken:  refreshToken});
+    res
+      .status(200)
+      .json({ user, token: accessToken, refreshToken: refreshToken });
   } catch (error) {
     console.error("Authentication error:", error);
     res.status(500).json({ message: "Authentication failed", error });
