@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { loginUser, logoutUser } from "../../services/auth";
+import { verifyToken, loginUser, logoutUser } from "../../services/auth";
 
 declare global {
   interface Window {
@@ -50,7 +50,7 @@ const Auth: React.FC = () => {
     if (window.google) {
       window.google.accounts.id.initialize({
         client_id: clientId,
-        callback: handleCredentialResponse,
+        callback: handleLogin,
       });
 
       if (!user) {
@@ -66,16 +66,32 @@ const Auth: React.FC = () => {
     }
   }, [user]);
 
-  const handleCredentialResponse = async (response: CredentialResponse) => {
+  useEffect(() => {
+    const initializeUser = async () => {
+      try {
+        const user = await verifyToken();
+        if (user) {
+          setUser(user);
+        }
+      } catch (error) {
+        console.error("Failed to verify token or token expired:", error);
+        setUser(null);
+      }
+    };
+
+    initializeUser();
+  }, []);
+
+  const handleLogin = async (response: CredentialResponse) => {
     try {
       const user = await loginUser(response.credential);
       setUser(user);
     } catch (error) {
-      console.error("Error during authentication:", error);
+      console.error("Login failed:", error);
     }
   };
 
-  const logout = async () => {
+  const handlelogout = async () => {
     try {
       if (user) {
         await logoutUser(user.email);
@@ -92,7 +108,7 @@ const Auth: React.FC = () => {
         <div>
           <h3>{user.name}</h3>
           <p>{user.email}</p>
-          <button onClick={logout}>Logout</button>
+          <button onClick={handlelogout}>Logout</button>
         </div>
       ) : (
         <div id="buttonDiv" key={user ? "logged-in" : "logged-out"}></div>
