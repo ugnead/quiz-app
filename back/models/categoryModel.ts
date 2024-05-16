@@ -2,16 +2,15 @@ import { Document, Schema, model } from "mongoose";
 
 interface ICategory extends Document {
   name: string;
-  parentCategory: Schema.Types.ObjectId;
+  subcategories: Schema.Types.ObjectId[];
 }
 
 let categorySchema = new Schema<ICategory>({
   name: { type: String, required: true },
-  parentCategory: {
+  subcategories: [{
     type: Schema.Types.ObjectId,
-    ref: "Category",
-    default: null,
-  },
+    ref: "Subcategory"
+  }],
 });
 
 const Category = model<ICategory>("Category", categorySchema);
