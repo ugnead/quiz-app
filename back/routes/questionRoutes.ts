@@ -1,8 +1,8 @@
 import express from "express";
-import { getAllQuestions } from "../controllers/questionController";
+import { getQuestionsBySubcategory } from "../controllers/questionController";
 
 const router = express.Router();
 
-router.route("/").get(getAllQuestions);
+router.route("/subcategory/:subcategoryId").get(getQuestionsBySubcategory);
 
 export default router;
