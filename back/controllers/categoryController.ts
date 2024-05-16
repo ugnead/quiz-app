@@ -6,7 +6,7 @@ export const getAllCategories = async (
   res: Response
 ): Promise<void> => {
   try {
-    const categories = await Category.find();
+    const categories = await Category.find().populate('subcategories');
     res.status(200).json({
       status: "success",
       results: categories.length,
