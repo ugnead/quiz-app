@@ -3,6 +3,7 @@ import cors from "cors";
 import categoryRouter from "./routes/categoryRoutes";
 import subcategoryRouter from "./routes/subcategoryRoutes";
 import questionRouter from "./routes/questionRoutes";
+import userProgressRouter from "./routes/userProgressRoutes";
 import authRouter from "./routes/authRoutes";
 import { verifyToken } from "./middlewares/authMiddleware";
 import { apiLimiter } from "./middlewares/rateLimiters";
@@ -29,5 +30,6 @@ app.use("/api/v1/auth", authRouter);
 app.use("/api/v1/categories", verifyToken, categoryRouter);
 app.use("/api/v1/subcategories", verifyToken, subcategoryRouter);
 app.use("/api/v1/questions", verifyToken, questionRouter);
+app.use("/api/v1/learn", verifyToken, userProgressRouter);
 
 export default app;
