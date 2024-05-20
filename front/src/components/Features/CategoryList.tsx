@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { fetchCategories } from "../../services/quiz";
+import { useNavigate } from "react-router-dom";
 
 interface Category {
   _id: string;
@@ -8,6 +9,7 @@ interface Category {
 
 const CategoryList: React.FC = () => {
   const [categories, setCategories] = useState<Category[]>([]);
+  const navigate = useNavigate();
 
   useEffect(() => {
     const loadCategories = async () => {
@@ -26,8 +28,12 @@ const CategoryList: React.FC = () => {
     <div>
       <h1>Categories</h1>
       <ul>
-        {categories.map(category => (
-          <li key={category._id}>{category.name}</li>
+        {categories.map((category) => (
+          <li key={category._id}>
+            <button onClick={() => navigate(`/subcategories/${category._id}`)}>
+              {category.name}
+            </button>
+          </li>
         ))}
       </ul>
     </div>
