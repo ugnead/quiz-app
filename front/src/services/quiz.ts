@@ -11,20 +11,20 @@ export const fetchSubcategories = async (categoryId: string) => {
 };
 
 export const fetchQuestionsBySubcategory = async (subcategoryId: string) => {
-  const response = await api.get(`/questions/subcategory/${subcategoryId}`);
+  const response = await api.get(`/questions/${subcategoryId}`);
   return response.data.data.questions;
 };
 
-export async function fetchQuestionsForLearning(subcategoryId: string) {
+export const fetchQuestionsForLearning = async (subcategoryId: string) => {
   const response = await api.get(`/learn/${subcategoryId}`);
   return response.data.data.questions;
 }
 
-export async function updateUserProgress(
+export const updateUserProgress = async (
   questionId: string,
   subcategoryId: string,
   isCorrect: boolean
-) {
+) => {
   const response = await api.post(`/learn/user_progress`, {
     questionId,
     subcategoryId,
