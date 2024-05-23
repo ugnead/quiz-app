@@ -1,25 +1,26 @@
 import React, { useEffect, useState } from "react";
 import { fetchSubcategories } from "../../services/quiz";
+import { useParams, useNavigate } from "react-router-dom";
 
 interface Subcategory {
   _id: string;
   name: string;
 }
 
-interface SubcategoryListProps {
-  categoryId: string;
-}
-
-const SubcategoryList: React.FC<SubcategoryListProps> = ({ categoryId }) => {
+const SubcategoryList: React.FC = () => {
+  const { categoryId } = useParams<{ categoryId: string }>();
   const [subcategories, setSubcategories] = useState<Subcategory[]>([]);
+  const navigate = useNavigate();
 
   useEffect(() => {
     const loadSubcategories = async () => {
-      try {
-        const data = await fetchSubcategories(categoryId);
-        setSubcategories(data);
-      } catch (error) {
-        console.error("Failed to fetch subcategories:", error);
+      if (categoryId) {
+        try {
+          const data = await fetchSubcategories(categoryId);
+          setSubcategories(data);
+        } catch (error) {
+          console.error("Failed to fetch subcategories:", error);
+        }
       }
     };
 
@@ -31,7 +32,11 @@ const SubcategoryList: React.FC<SubcategoryListProps> = ({ categoryId }) => {
       <h1>Subcategories</h1>
       <ul>
         {subcategories.map((subcategory) => (
-          <li key={subcategory._id}>{subcategory.name}</li>
+          <li key={subcategory._id}>
+            <button onClick={() => navigate(`/learn/${subcategory._id}`)}>
+              {subcategory.name}
+            </button>
+          </li>
         ))}
       </ul>
     </div>
