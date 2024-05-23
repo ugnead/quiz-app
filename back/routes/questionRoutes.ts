@@ -3,6 +3,6 @@ import { getQuestionsBySubcategory } from "../controllers/questionController";
 
 const router = express.Router();
 
-router.route("/subcategory/:subcategoryId").get(getQuestionsBySubcategory);
+router.route("/:subcategoryId").get(getQuestionsBySubcategory);
 
 export default router;
