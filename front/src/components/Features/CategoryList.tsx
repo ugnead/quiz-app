@@ -25,12 +25,12 @@ const CategoryList: React.FC = () => {
   }, []);
 
   return (
-    <div>
-      <h1>Categories</h1>
-      <ul>
+    <div className="px-5 py-10">
+      <h1 className="pb-5" >Categories</h1>
+      <ul className='flex flex-col space-y-4'>
         {categories.map((category) => (
           <li key={category._id}>
-            <button onClick={() => navigate(`/subcategories/${category._id}`)}>
+            <button className="w-full" onClick={() => navigate(`/subcategories/${category._id}`)}>
               {category.name}
             </button>
           </li>
