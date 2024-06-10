@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { fetchSubcategories } from "../../services/quiz";
+import { fetchCategoryById, fetchSubcategories } from "../../services/quiz";
 import { useParams, useNavigate } from "react-router-dom";
 
 interface Subcategory {
@@ -10,14 +10,19 @@ interface Subcategory {
 const SubcategoryList: React.FC = () => {
   const { categoryId } = useParams<{ categoryId: string }>();
   const [subcategories, setSubcategories] = useState<Subcategory[]>([]);
+  const [category, setCategory] = useState<Category | null>(null);
   const navigate = useNavigate();
 
   useEffect(() => {
     const loadSubcategories = async () => {
       if (categoryId) {
         try {
-          const data = await fetchSubcategories(categoryId);
-          setSubcategories(data);
+          const [categoryData, subcategoryData] = await Promise.all([
+            fetchCategoryById(categoryId),
+            fetchSubcategories(categoryId)
+          console.error("Failed to fetch subcategories or category:", error);
+          setCategory(categoryData);
+          setSubcategories(subcategoryData);
         } catch (error) {
           console.error("Failed to fetch subcategories:", error);
         }
