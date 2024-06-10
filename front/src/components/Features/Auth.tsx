@@ -1,5 +1,6 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useCallback } from "react";
 import { verifyToken, loginUser, logoutUser } from "../../services/auth";
+import { useNavigate, useLocation } from "react-router-dom";
 
 declare global {
   interface Window {
@@ -45,6 +46,51 @@ const clientId = import.meta.env.VITE_GOOGLE_CLIENT_ID;
 
 const Auth: React.FC = () => {
   const [user, setUser] = useState<UserProfile | null>(null);
+  const navigate = useNavigate();
+  const location = useLocation();
+
+  useEffect(() => {
+    const initializeUser = async () => {
+      try {
+        const user = await verifyToken();
+        if (user) {
+          setUser(user);
+          if (location.pathname === "/") {
+            navigate("/categories");
+          }
+        }
+      } catch (error) {
+        console.error("Failed to verify token or token expired:", error);
+        setUser(null);
+      }
+    };
+
+    initializeUser();
+  }, [navigate]);
+
+  const handleLogin = useCallback(
+    async (response: CredentialResponse) => {
+      try {
+        const user = await loginUser(response.credential);
+        setUser(user);
+        navigate("/categories");
+      } catch (error) {
+        console.error("Login failed:", error);
+      }
+    },
+    [navigate]
+  );
+
+  const handlelogout = async () => {
+    try {
+      if (user) {
+        await logoutUser(user.email);
+        setUser(null);
+      }
+    } catch (error) {
+      console.error("Logout failed:", error);
+    }
+  };
 
   useEffect(() => {
     if (window.google) {
@@ -64,50 +110,12 @@ const Auth: React.FC = () => {
         );
       }
     }
-  }, [user]);
-
-  useEffect(() => {
-    const initializeUser = async () => {
-      try {
-        const user = await verifyToken();
-        if (user) {
-          setUser(user);
-        }
-      } catch (error) {
-        console.error("Failed to verify token or token expired:", error);
-        setUser(null);
-      }
-    };
-
-    initializeUser();
-  }, []);
-
-  const handleLogin = async (response: CredentialResponse) => {
-    try {
-      const user = await loginUser(response.credential);
-      setUser(user);
-    } catch (error) {
-      console.error("Login failed:", error);
-    }
-  };
-
-  const handlelogout = async () => {
-    try {
-      if (user) {
-        await logoutUser(user.email);
-        setUser(null);
-      }
-    } catch (error) {
-      console.error("Logout failed:", error);
-    }
-  };
+  }, [user, handleLogin]);
 
   return (
     <div>
       {user ? (
         <div>
-          <h3>{user.name}</h3>
-          <p>{user.email}</p>
           <button onClick={handlelogout}>Logout</button>
         </div>
       ) : (
