@@ -5,6 +5,11 @@ export const fetchCategories = async () => {
   return response.data.data.categories;
 };
 
+export const fetchCategoryById = async (categoryId: string) => {
+  const response = await api.get(`/categories/${categoryId}`);
+  return response.data.data.category;
+};
+
 export const fetchSubcategories = async (categoryId: string) => {
   const response = await api.get(`/subcategories/${categoryId}`);
   return response.data.data.subcategories;

@@ -29,7 +29,7 @@ const SubcategoryList: React.FC = () => {
 
   return (
     <div>
-      <h1>Subcategories</h1>
+      <h1 className="pb-12 text-center">{category?.name}</h1>
       <ul>
         {subcategories.map((subcategory) => (
           <li key={subcategory._id}>
