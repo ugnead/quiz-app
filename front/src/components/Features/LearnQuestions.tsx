@@ -62,7 +62,7 @@ const LearnQuestions: React.FC = () => {
     <div>
       <h1>Learn</h1>
       <h2>{currentQuestion.question}</h2>
-      <ul>
+      <ul className="flex flex-col space-y-4">
         {currentQuestion.options.map((option) => (
           <li key={option}>
             <button
