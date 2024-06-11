@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { fetchCategories } from "../../services/quiz";
 import { useNavigate } from "react-router-dom";
+import OptionsList from "../Common/OptionsList";
 
 interface Category {
   _id: string;
@@ -24,18 +25,19 @@ const CategoryList: React.FC = () => {
     loadCategories();
   }, []);
 
+  const handleCategorySelect = (categoryId: string) => {
+    navigate(`/subcategories/${categoryId}`);
+  };
+
+  const categoryOptions = categories.map(category => ({ id: category._id, name: category.name }));
+
   return (
-    <div className="px-5 py-10">
+    <div className="w-96">
       <h1 className="pb-12 text-center">Categories</h1>
-      <ul className="flex flex-col space-y-4">
-        {categories.map((category) => (
-          <li key={category._id}>
-            <button className="w-80" onClick={() => navigate(`/subcategories/${category._id}`)}>
-              {category.name}
-            </button>
-          </li>
-        ))}
-      </ul>
+      <OptionsList 
+        options={categoryOptions}
+        onSelectOption={handleCategorySelect} 
+      />
     </div>
   );
 };

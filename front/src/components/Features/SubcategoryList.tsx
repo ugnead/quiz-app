@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { fetchCategoryById, fetchSubcategories } from "../../services/quiz";
 import { useParams, useNavigate } from "react-router-dom";
+import OptionsList from "../Common/OptionsList";
 
 interface Subcategory {
   _id: string;
@@ -37,21 +38,19 @@ const SubcategoryList: React.FC = () => {
     loadSubcategories();
   }, [categoryId]);
 
+  const handleSubcategorySelect = (subcategoryId: string) => {
+    navigate(`/learn/${subcategoryId}`);
+  };
+
+  const subcategoryOptions = subcategories.map(subcategory => ({ id: subcategory._id, name: subcategory.name }));
+
   return (
-    <div className="px-5 py-10">
+    <div className="w-96">
       <h1 className="pb-12 text-center">{category?.name}</h1>
-      <ul className="flex flex-col space-y-4">
-        {subcategories.map((subcategory) => (
-          <li key={subcategory._id}>
-            <button
-              className="w-80"
-              onClick={() => navigate(`/learn/${subcategory._id}`)}
-            >
-              {subcategory.name}
-            </button>
-          </li>
-        ))}
-      </ul>
+      <OptionsList 
+        options={subcategoryOptions}
+        onSelectOption={handleSubcategorySelect} 
+      />
     </div>
   );
 };
