@@ -4,6 +4,7 @@ import {
   updateUserProgress,
 } from "../../services/quiz";
 import { useParams } from "react-router-dom";
+import OptionsList from "../Common/OptionsList";
 
 interface Question {
   _id: string;
@@ -54,42 +55,51 @@ const LearnQuestions: React.FC = () => {
     setCurrentQuestionIndex((prevIndex) => (prevIndex + 1) % questions.length);
   };
 
-  if (questions.length === 0) return <div>No questions available</div>;
+  if (questions.length === 0) return <div className="text-lg">No questions available</div>;
 
   const currentQuestion = questions[currentQuestionIndex];
 
+  const optionList = currentQuestion.options.map(option => ({ id: option, name: option }));
+
   return (
-    <div>
-      <h1>Learn</h1>
-      <h2>{currentQuestion.question}</h2>
-      <ul className="flex flex-col space-y-4">
-        {currentQuestion.options.map((option) => (
-          <li key={option}>
-            <button
-              onClick={() => handleOptionSelect(option)}
-              disabled={showExplanation}
-            >
-              {option}
-            </button>
-          </li>
-        ))}
-      </ul>
-      <button
-        onClick={handleSubmit}
-        disabled={!selectedOption || showExplanation}
-      >
-        Submit
-      </button>
-      {showExplanation && (
-        <div>
-          {selectedOption === currentQuestion.correctAnswer ? (
-            <p>Correct!</p>
-          ) : (
-            <p>Incorrect!</p>
-          )}
-          <p>{currentQuestion.explanation}</p>
-          <button onClick={handleNextQuestion}>Next Question</button>
+    <div className="w-96">
+      <h2 className="pb-6 text-center">{currentQuestion.question}</h2>
+      <OptionsList
+        options={optionList}
+        selectedOption={selectedOption}
+        correctAnswer={currentQuestion.correctAnswer}
+        onSelectOption={handleOptionSelect}
+        showExplanation={showExplanation}
+      />
+      {!showExplanation && (
+        <div className="flex justify-end mt-7">
+          <button
+            className="cursor-pointer"
+            onClick={handleSubmit}
+            disabled={!selectedOption}
+          >
+            Submit
+          </button>
         </div>
+      )}
+      {showExplanation && (
+        <>
+          <div className="flex justify-between my-7">
+            {selectedOption === currentQuestion.correctAnswer ? (
+              <p className="pt-1.5 pe-5 font-bold text-lg text-green-600">
+                Correct!
+              </p>
+            ) : (
+              <p className="pt-1.5 pe-5 font-bold text-lg text-red-600">
+                Incorrect!
+              </p>
+            )}
+            <button onClick={handleNextQuestion} className="cursor-pointer">
+              Next Question
+            </button>
+          </div>
+          <p className="text-lg">{currentQuestion.explanation}</p>
+        </>
       )}
     </div>
   );
