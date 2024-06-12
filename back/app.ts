@@ -29,7 +29,6 @@ app.use(apiLimiter);
 app.use("/api/v1/auth", authRouter);
 app.use("/api/v1/categories", verifyToken, categoryRouter);
 app.use("/api/v1/subcategories", verifyToken, subcategoryRouter);
-app.use("/api/v1/questions", verifyToken, questionRouter);
-app.use("/api/v1/learn", verifyToken, userProgressRouter);
+app.use("/api/v1/questions", verifyToken, userProgressRouter);
 
 export default app;
