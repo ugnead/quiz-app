@@ -5,6 +5,7 @@ interface IUserProgress extends Document {
   subcategory: Schema.Types.ObjectId;
   question: Schema.Types.ObjectId;
   correctAnswersCount: number;
+  mode: "learn" | "test";
 }
 
 let userProgressSchema = new Schema<IUserProgress>({
@@ -12,6 +13,7 @@ let userProgressSchema = new Schema<IUserProgress>({
   subcategory: { type: Schema.Types.ObjectId, ref: "Subcategory", required: true },
   question: { type: Schema.Types.ObjectId, ref: "Question", required: true },
   correctAnswersCount: { type: Number, default: 0 },
+  mode: { type: String, enum: ["learn", "test"], required: true },
 });
 
 const UserProgress = model<IUserProgress>("UserProgress", userProgressSchema);
