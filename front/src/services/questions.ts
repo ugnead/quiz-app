@@ -15,25 +15,32 @@ export const fetchSubcategories = async (categoryId: string) => {
   return response.data.data.subcategories;
 };
 
-export const fetchQuestionsBySubcategory = async (subcategoryId: string) => {
-  const response = await api.get(`/questions/${subcategoryId}`);
-  return response.data.data.questions;
+export const fetchUserProgress = async (subcategoryId: string) => {
+  const response = await api.get(`/questions/${subcategoryId}/progress`);
+  return response.data.data;
 };
 
 export const fetchQuestionsForLearning = async (subcategoryId: string) => {
-  const response = await api.get(`/learn/${subcategoryId}`);
+  const response = await api.get(`/questions/${subcategoryId}/learn`);
   return response.data.data.questions;
-}
+};
+
+export const fetchQuestionsForTesting = async (subcategoryId: string) => {
+  const response = await api.get(`/questions/${subcategoryId}/test`);
+  return response.data.data.questions;
+};
 
 export const updateUserProgress = async (
   questionId: string,
   subcategoryId: string,
-  isCorrect: boolean
+  isCorrect: boolean,
+  mode: "learn" | "test"
 ) => {
-  const response = await api.post(`/learn/user_progress`, {
+  const response = await api.post(`/questions/user_progress`, {
     questionId,
     subcategoryId,
     isCorrect,
+    mode,
   });
   return response.data;
-}
+};
