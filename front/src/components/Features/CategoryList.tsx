@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { fetchCategories } from "../../services/quiz";
+import { fetchCategories } from "../../services/questions";
 import { useNavigate } from "react-router-dom";
 import OptionsList from "../Common/OptionsList";
 
@@ -29,14 +29,17 @@ const CategoryList: React.FC = () => {
     navigate(`/subcategories/${categoryId}`);
   };
 
-  const categoryOptions = categories.map(category => ({ id: category._id, name: category.name }));
+  const categoryOptions = categories.map((category) => ({
+    id: category._id,
+    name: category.name,
+  }));
 
   return (
     <div className="w-96">
       <h1 className="pb-12 text-center">Categories</h1>
-      <OptionsList 
+      <OptionsList
         options={categoryOptions}
-        onSelectOption={handleCategorySelect} 
+        onSelectOption={handleCategorySelect}
       />
     </div>
   );
