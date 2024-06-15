@@ -6,6 +6,7 @@ import Auth from "./components/Features/Auth";
 import CategoryList from "./components/Features/CategoryList";
 import SubcategoryList from "./components/Features/SubcategoryList";
 import LearnQuestions from "./components/Features/LearnQuestions";
+import TestQuestions from "./components/Features/TestQuestions";
 import ErrorBoundary from "./components/Common/ErrorBoundary";
 import Navigation from "./components/Common/Navigation";
 
@@ -24,6 +25,7 @@ const App: React.FC = () => {
                 element={<SubcategoryList />}
               />
               <Route path="/learn/:subcategoryId" element={<LearnQuestions />} />
+              <Route path="/test/:subcategoryId" element={<TestQuestions />} />
             </Routes>
           </div>
         </Router>
