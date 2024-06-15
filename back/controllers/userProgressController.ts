@@ -96,7 +96,7 @@ export const getUserProgress = async (
       },
     });
   } catch (error) {
-    res.status(500).json({
+    res.status(404).json({
       status: "fail",
       message: error,
     });
@@ -130,12 +130,13 @@ export const updateUserProgress = async (
         subcategory: req.body.subcategoryId,
         question: questionId,
         correctAnswersCount: isCorrect ? 1 : 0,
+        mode,
       });
     }
 
     res.status(200).json({ status: "success" });
   } catch (error) {
-    res.status(500).json({
+    res.status(404).json({
       status: "fail",
       message: error,
     });
