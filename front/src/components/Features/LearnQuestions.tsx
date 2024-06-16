@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import {
   fetchQuestionsForLearning,
   updateUserProgress,
-} from "../../services/quiz";
+} from "../../services/questions";
 import { useParams } from "react-router-dom";
 import OptionsList from "../Common/OptionsList";
 
@@ -44,7 +44,7 @@ const LearnQuestions: React.FC = () => {
     const currentQuestion = questions[currentQuestionIndex];
     const isCorrect = selectedOption === currentQuestion.correctAnswer;
 
-    await updateUserProgress(currentQuestion._id, subcategoryId!, isCorrect);
+    await updateUserProgress(currentQuestion._id, subcategoryId!, isCorrect, "learn");
 
     setShowExplanation(true);
   };
@@ -55,11 +55,15 @@ const LearnQuestions: React.FC = () => {
     setCurrentQuestionIndex((prevIndex) => (prevIndex + 1) % questions.length);
   };
 
-  if (questions.length === 0) return <div className="text-lg">No questions available</div>;
+  if (questions.length === 0)
+    return <div className="text-lg">No questions available</div>;
 
   const currentQuestion = questions[currentQuestionIndex];
 
-  const optionList = currentQuestion.options.map(option => ({ id: option, name: option }));
+  const optionList = currentQuestion.options.map((option) => ({
+    id: option,
+    name: option,
+  }));
 
   return (
     <div className="w-96">
