@@ -83,16 +83,15 @@ export const getUserProgress = async (
 
     const learnedQuestions = learnProgress.filter(up => up.correctAnswersCount >= 2).length;
     const totalQuestions = await Question.countDocuments({ subcategory: subcategoryId });
-    const lastTestScore = testProgress.length > 0 
-      ? Math.round((testProgress.filter(up => up.correctAnswersCount >= 1).length / testProgress.length) * 100)
-      : null;
+    const correctTestAnswers = testProgress.filter(up => up.correctAnswersCount >= 1).length;
 
     res.status(200).json({
       status: "success",
       data: {
+        subcategoryId,
         learnedQuestions,
         totalQuestions,
-        lastTestScore,
+        correctTestAnswers,
       },
     });
   } catch (error) {

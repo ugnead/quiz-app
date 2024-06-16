@@ -1,7 +1,11 @@
 import React, { useEffect, useState } from "react";
-import { fetchCategoryById, fetchSubcategories } from "../../services/quiz";
+import {
+  fetchCategoryById,
+  fetchSubcategories,
+  fetchUserProgress,
+} from "../../services/questions";
 import { useParams, useNavigate } from "react-router-dom";
-import OptionsList from "../Common/OptionsList";
+import { FaCheckCircle, FaTimesCircle } from "react-icons/fa";
 
 interface Subcategory {
   _id: string;
@@ -13,10 +17,18 @@ interface Category {
   name: string;
 }
 
+interface SubcategoryProgress {
+  subcategoryId: string;
+  learnedQuestions: number;
+  totalQuestions: number;
+  correctTestAnswers: number | null;
+}
+
 const SubcategoryList: React.FC = () => {
   const { categoryId } = useParams<{ categoryId: string }>();
   const [subcategories, setSubcategories] = useState<Subcategory[]>([]);
   const [category, setCategory] = useState<Category | null>(null);
+  const [progressData, setProgressData] = useState<SubcategoryProgress[]>([]);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -25,10 +37,16 @@ const SubcategoryList: React.FC = () => {
         try {
           const [categoryData, subcategoryData] = await Promise.all([
             fetchCategoryById(categoryId),
-            fetchSubcategories(categoryId)
+            fetchSubcategories(categoryId),
           ]);
           setCategory(categoryData);
           setSubcategories(subcategoryData);
+
+          const progressPromises = subcategoryData.map(
+            (subcategory: Subcategory) => fetchUserProgress(subcategory._id)
+          );
+          const progressResults = await Promise.all(progressPromises);
+          setProgressData(progressResults);
         } catch (error) {
           console.error("Failed to fetch subcategories or category:", error);
         }
@@ -38,19 +56,73 @@ const SubcategoryList: React.FC = () => {
     loadSubcategories();
   }, [categoryId]);
 
-  const handleSubcategorySelect = (subcategoryId: string) => {
+  const handleLearnSelect = (subcategoryId: string) => {
     navigate(`/learn/${subcategoryId}`);
   };
 
-  const subcategoryOptions = subcategories.map(subcategory => ({ id: subcategory._id, name: subcategory.name }));
+  const handleTestSelect = (subcategoryId: string) => {
+    navigate(`/test/${subcategoryId}`);
+  };
+
+  const getLearnIcon = (progress: SubcategoryProgress) => {
+    if (progress.learnedQuestions === progress.totalQuestions) {
+      return <FaCheckCircle className="text-green-500 ml-2 mt-0.5" />;
+    }
+    return null;
+  };
+
+  const getTestIcon = (progress: SubcategoryProgress) => {
+    if (progress.correctTestAnswers === null) return null;
+    if (progress.correctTestAnswers / progress.totalQuestions >= 0.8) {
+      return <FaCheckCircle className="text-green-500 ml-2 mt-0.5" />;
+    } else if (
+      progress.correctTestAnswers / progress.totalQuestions < 0.8 &&
+      progress.correctTestAnswers > 0
+    ) {
+      return <FaTimesCircle className="text-red-500 ml-2 mt-0.5" />;
+    }
+    return null;
+  };
 
   return (
-    <div className="w-96">
+    <div>
       <h1 className="pb-12 text-center">{category?.name}</h1>
-      <OptionsList 
-        options={subcategoryOptions}
-        onSelectOption={handleSubcategorySelect} 
-      />
+      <ul className="flex flex-col space-y-4">
+        {subcategories.map((subcategory) => {
+          const progress = progressData.find(
+            (progress) => progress.subcategoryId === subcategory._id
+          );
+          return (
+            <li
+              key={subcategory._id}
+              className="flex justify-between items-center"
+            >
+              <span className="pb-1 pe-5 font-bold text-lg">
+                {subcategory.name}
+              </span>
+              <div className="flex space-x-4">
+                <button className="flex items-center justify-center w-40 text-nowrap" onClick={() => handleLearnSelect(subcategory._id)}>
+                  Learn{" "}
+                  {progress
+                    ? `${progress.learnedQuestions}/${progress.totalQuestions}`
+                    : ""}
+                  {progress && getLearnIcon(progress)}
+                </button>
+                <button
+                  className="flex items-center justify-center bg-blue-600 w-40 text-nowrap"
+                  onClick={() => handleTestSelect(subcategory._id)}
+                >
+                  Test{" "}
+                  {progress && progress.correctTestAnswers !== null
+                    ? `${progress.correctTestAnswers}/${progress.totalQuestions}`
+                    : ""}
+                  {progress && getTestIcon(progress)}
+                </button>
+              </div>
+            </li>
+          );
+        })}
+      </ul>
     </div>
   );
 };
