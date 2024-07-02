@@ -10,27 +10,61 @@ export const getQuestionsForLearning = async (
   const { subcategoryId } = req.params;
 
   try {
+    const allQuestions = await Question.find({ subcategory: subcategoryId });
+
     const userProgress = await UserProgress.find({
       user: userId,
       subcategory: subcategoryId,
       mode: "learn",
     });
-    const learnedQuestionIds = userProgress
-      .filter((up) => up.correctAnswersCount >= 2)
-      .map((up) => up.question);
-    const questions = await Question.find({
-      subcategory: subcategoryId,
-      _id: { $nin: learnedQuestionIds },
-    });
+
+    const unansweredQuestions = allQuestions.filter(
+      (question) =>
+        !userProgress.some(
+          (progress) => progress.question.toString() === question._id.toString()
+        )
+    );
+
+    const incorrectlyAnsweredQuestions = userProgress
+      .filter((progress) => progress.correctAnswersCount === 0)
+      .map((progress) =>
+        allQuestions.find(
+          (question) => question._id.toString() === progress.question.toString()
+        )
+      );
+
+    const answeredOnceQuestions = userProgress
+      .filter((progress) => progress.correctAnswersCount === 1)
+      .map((progress) =>
+        allQuestions.find(
+          (question) => question._id.toString() === progress.question.toString()
+        )
+      );
+
+    const answeredTwiceOrMoreQuestions = userProgress
+      .filter((progress) => progress.correctAnswersCount >= 2)
+      .map((progress) =>
+        allQuestions.find(
+          (question) => question._id.toString() === progress.question.toString()
+        )
+      );
+
+    const combinedQuestions = [
+      ...unansweredQuestions,
+      ...incorrectlyAnsweredQuestions,
+      ...answeredOnceQuestions,
+      ...answeredTwiceOrMoreQuestions,
+    ];
 
     res.status(200).json({
       status: "success",
-      results: questions.length,
+      results: combinedQuestions.length,
       data: {
-        questions,
+        questions: combinedQuestions,
       },
     });
   } catch (error) {
+    console.error("Error fetching questions for learning:", error);
     res.status(404).json({
       status: "fail",
       message: error,

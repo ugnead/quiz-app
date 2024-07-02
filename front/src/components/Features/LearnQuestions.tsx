@@ -20,12 +20,14 @@ const LearnQuestions: React.FC = () => {
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
   const [selectedOption, setSelectedOption] = useState<string | null>(null);
   const [showExplanation, setShowExplanation] = useState(false);
+  const [submissionCount, setSubmissionCount] = useState(0);
 
   useEffect(() => {
     const loadQuestions = async () => {
       if (subcategoryId) {
         try {
           const data = await fetchQuestionsForLearning(subcategoryId);
+          console.log("Fetched questions:", data)
           setQuestions(data);
         } catch (error) {
           console.error("Failed to fetch questions:", error);
@@ -44,15 +46,34 @@ const LearnQuestions: React.FC = () => {
     const currentQuestion = questions[currentQuestionIndex];
     const isCorrect = selectedOption === currentQuestion.correctAnswer;
 
-    await updateUserProgress(currentQuestion._id, subcategoryId!, isCorrect, "learn");
+    await updateUserProgress(
+      currentQuestion._id,
+      subcategoryId!,
+      isCorrect,
+      "learn"
+    );
 
     setShowExplanation(true);
+    setSubmissionCount((prevCount) => prevCount + 1);
   };
 
-  const handleNextQuestion = () => {
+  const handleNextQuestion = async () => {
     setSelectedOption(null);
     setShowExplanation(false);
-    setCurrentQuestionIndex((prevIndex) => (prevIndex + 1) % questions.length);
+
+    if (submissionCount >= 5) {
+      try {
+        const data = await fetchQuestionsForLearning(subcategoryId!);
+        console.log("Refetched questions:", data)
+        setQuestions(data);
+        setCurrentQuestionIndex(0);
+        setSubmissionCount(0);
+      } catch (error) {
+        console.error("Failed to refetch questions:", error);
+      }
+    } else {
+      setCurrentQuestionIndex((prevIndex) => (prevIndex + 1) % questions.length);
+    }
   };
 
   if (questions.length === 0)
