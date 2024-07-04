@@ -117,7 +117,10 @@ export const getUserProgress = async (
 
     const learnedQuestions = learnProgress.filter(up => up.correctAnswersCount >= 2).length;
     const totalQuestions = await Question.countDocuments({ subcategory: subcategoryId });
-    const correctTestAnswers = testProgress.filter(up => up.correctAnswersCount >= 1).length;
+    const correctTestAnswers = testProgress.length > 0
+      ? testProgress.filter(up => up.correctAnswersCount >= 1).length
+      : null;
+
 
     res.status(200).json({
       status: "success",

@@ -46,6 +46,7 @@ const SubcategoryList: React.FC = () => {
             (subcategory: Subcategory) => fetchUserProgress(subcategory._id)
           );
           const progressResults = await Promise.all(progressPromises);
+          console.log("Progress results:", progressResults);
           setProgressData(progressResults);
         } catch (error) {
           console.error("Failed to fetch subcategories or category:", error);
@@ -75,13 +76,8 @@ const SubcategoryList: React.FC = () => {
     if (progress.correctTestAnswers === null) return null;
     if (progress.correctTestAnswers / progress.totalQuestions >= 0.8) {
       return <FaCheckCircle className="text-green-500 ml-2 mt-0.5" />;
-    } else if (
-      progress.correctTestAnswers / progress.totalQuestions < 0.8 &&
-      progress.correctTestAnswers > 0
-    ) {
-      return <FaTimesCircle className="text-red-500 ml-2 mt-0.5" />;
     }
-    return null;
+    return <FaTimesCircle className="text-red-500 ml-2 mt-0.5" />;
   };
 
   return (
