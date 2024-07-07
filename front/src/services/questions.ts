@@ -44,3 +44,8 @@ export const updateUserProgress = async (
   });
   return response.data;
 };
+
+export const clearTestProgress = async (subcategoryId: string) => {
+  const response = await api.delete(`/questions/${subcategoryId}/clear_test_progress`);
+  return response.data;
+};
