@@ -178,3 +178,27 @@ export const updateUserProgress = async (
     });
   }
 };
+
+export const clearTestProgress = async (
+  req: Request,
+  res: Response
+): Promise<void> => {
+  const { userId } = (req as any).user;
+  const { subcategoryId } = req.params;
+
+  try {
+    await UserProgress.deleteMany({
+      user: userId,
+      subcategory: subcategoryId,
+      mode: "test",
+    });
+
+    res.status(200).json({ status: "success", message: "Test progress cleared" });
+  } catch (error) {
+    res.status(500).json({
+      status: "fail",
+      message: error,
+    });
+  }
+};
+
