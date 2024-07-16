@@ -3,9 +3,12 @@ import {
   fetchQuestionsForTesting,
   updateUserProgress,
   clearTestProgress,
+  fetchSubcategoryById,
 } from "../../services/questions";
 import { useParams } from "react-router-dom";
 import OptionsList from "../Common/OptionsList";
+import Modal from "../Common/Modal";
+import { useNavigationBlocker } from "../../hooks/useNavigationBlocker";
 
 interface Question {
   _id: string;
@@ -23,6 +26,31 @@ const TestQuestions: React.FC = () => {
   const [showExplanation, setShowExplanation] = useState(false);
   const [score, setScore] = useState(0);
   const [isTestFinished, setIsTestFinished] = useState(false);
+  const [categoryId, setCategoryId] = useState<string | null>(null);
+
+  useEffect(() => {
+    const loadSubcategory = async () => {
+      if (subcategoryId) {
+        try {
+          console.log("Fetching subcategory with ID:", subcategoryId);
+          const subcategory = await fetchSubcategoryById(subcategoryId);
+          console.log("Fetched subcategory:", subcategory);
+          setCategoryId(subcategory.category);
+        } catch (error) {
+          console.error("Failed to fetch subcategory:", error);
+        }
+      }
+    };
+
+    loadSubcategory();
+  }, [subcategoryId]);
+
+  const {
+    isBlocked,
+    confirmNavigation,
+    cancelNavigation,
+    message
+  } = useNavigationBlocker(!isTestFinished, categoryId, "Are you sure you want to end the test? Your progress will be lost.");
 
   useEffect(() => {
     const loadQuestions = async () => {
@@ -68,6 +96,14 @@ const TestQuestions: React.FC = () => {
     } else {
       setIsTestFinished(true);
     }
+  };
+
+  const handleConfirmEndTest = () => {
+    confirmNavigation();
+  };
+
+  const handleCancelEndTest = () => {
+    cancelNavigation();
   };
 
   if (questions.length === 0) return <div>No questions available</div>;
@@ -130,6 +166,12 @@ const TestQuestions: React.FC = () => {
           <p className="text-wrap text-lg">{currentQuestion.explanation}</p>
         </>
       )}
+      <Modal
+        isOpen={isBlocked}
+        onConfirm={handleConfirmEndTest}
+        onCancel={handleCancelEndTest}
+        message={message}
+      />
     </div>
   );
 };
