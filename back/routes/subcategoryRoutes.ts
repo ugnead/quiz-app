@@ -1,8 +1,9 @@
 import express from 'express';
-import { getAllSubcategories } from "../controllers/subcategoryController";
+import { getAllSubcategories, getSubcategoryById } from "../controllers/subcategoryController";
 
 const router = express.Router();
 
-router.route("/:categoryId").get(getAllSubcategories);
+router.route("/category/:categoryId").get(getAllSubcategories);
+router.route("/:subcategoryId").get(getSubcategoryById);
 
 export default router;
