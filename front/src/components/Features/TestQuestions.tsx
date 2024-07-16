@@ -32,9 +32,7 @@ const TestQuestions: React.FC = () => {
     const loadSubcategory = async () => {
       if (subcategoryId) {
         try {
-          console.log("Fetching subcategory with ID:", subcategoryId);
           const subcategory = await fetchSubcategoryById(subcategoryId);
-          console.log("Fetched subcategory:", subcategory);
           setCategoryId(subcategory.category);
         } catch (error) {
           console.error("Failed to fetch subcategory:", error);

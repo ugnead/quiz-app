@@ -28,10 +28,8 @@ export const getSubcategoryById = async (
 ): Promise<void> => {
   try {
     const subcategoryId = req.params.subcategoryId;
-    console.log(`Fetching subcategory with ID: ${subcategoryId}`); // Add this line
 
     const subcategory = await Subcategory.findById(subcategoryId);
-    console.log(`Fetched subcategory:`, subcategory); // Add this line
 
     if (!subcategory) {
       res.status(404).json({
@@ -48,7 +46,6 @@ export const getSubcategoryById = async (
       },
     });
   } catch (error) {
-    console.error("Error fetching subcategory:", error); // Add this line
     res.status(404).json({
       status: "fail",
       message: error,

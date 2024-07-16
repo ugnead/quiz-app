@@ -14,7 +14,6 @@ export const useNavigationBlocker = (shouldBlock: boolean, categoryId: string | 
       setIsBlocked(true);
       const nextPath = categoryId ? `/subcategories/${categoryId}` : '';
       setNextLocation(nextPath);
-      console.log('Blocked navigation to:', nextPath);
       window.history.pushState({ modalOpened: true }, "");
     }
   }, [shouldBlock, categoryId]);
@@ -22,7 +21,7 @@ export const useNavigationBlocker = (shouldBlock: boolean, categoryId: string | 
   const handleBeforeUnload = useCallback((event: BeforeUnloadEvent) => {
     if (shouldBlock) {
       event.preventDefault();
-      event.returnValue = ''; // Some browsers require this to show a dialog
+      event.returnValue = '';
     }
   }, [shouldBlock]);
 
@@ -39,19 +38,16 @@ export const useNavigationBlocker = (shouldBlock: boolean, categoryId: string | 
   }, [blockNavigation, handleBeforeUnload, shouldBlock]);
 
   const confirmNavigation = () => {
-    console.log('Confirm navigation:', nextLocation);
     setIsBlocked(false);
     if (nextLocation) {
-      console.log('Navigating to:', nextLocation);
       navigate(nextLocation);
     }
   };
 
   const cancelNavigation = () => {
-    console.log('Cancel navigation');
     setIsBlocked(false);
     setNextLocation(null);
-    window.history.pushState(null, "", location.pathname); // Reset the state to current location
+    window.history.pushState(null, "", location.pathname);
   };
 
   return { isBlocked, confirmNavigation, cancelNavigation, message };

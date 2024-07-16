@@ -46,7 +46,6 @@ const SubcategoryList: React.FC = () => {
             (subcategory: Subcategory) => fetchUserProgress(subcategory._id)
           );
           const progressResults = await Promise.all(progressPromises);
-          console.log("Progress results:", progressResults);
           setProgressData(progressResults);
         } catch (error) {
           console.error("Failed to fetch subcategories or category:", error);
