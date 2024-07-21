@@ -1,45 +1,39 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useState } from "react";
 
-interface TestTimerProps {
+interface TimerProps {
   duration: number;
   onTimeUp: () => void;
   label?: string;
 }
 
-const TestTimer: React.FC<TestTimerProps> = ({ duration, onTimeUp, label = "Time left" }) => {
+const Timer: React.FC<TimerProps> = ({ duration, onTimeUp, label }) => {
   const [timeLeft, setTimeLeft] = useState(duration);
-  const timerRef = useRef<NodeJS.Timeout | null>(null);
 
   useEffect(() => {
-    if (timerRef.current) {
-      clearInterval(timerRef.current);
+    if (timeLeft === 0) {
+      onTimeUp();
+      return;
     }
 
-    timerRef.current = setInterval(() => {
-      setTimeLeft((prevTime) => {
-        if (prevTime <= 1) {
-          clearInterval(timerRef.current!);
-          onTimeUp();
-          return 0;
-        }
-        return prevTime - 1;
-      });
+    const timerId = setInterval(() => {
+      setTimeLeft((prevTime) => prevTime - 1);
     }, 1000);
 
-    return () => {
-      if (timerRef.current) {
-        clearInterval(timerRef.current);
-      }
-    };
-  }, [duration, onTimeUp]);
+    return () => clearInterval(timerId);
+  }, [timeLeft, onTimeUp]);
 
   const formatTime = (seconds: number) => {
     const minutes = Math.floor(seconds / 60);
-    const remainingSeconds = seconds % 60;
-    return `${minutes}:${remainingSeconds < 10 ? "0" : ""}${remainingSeconds}`;
+    const secs = seconds % 60;
+    return `${minutes}:${secs < 10 ? '0' : ''}${secs}`;
   };
 
-  return <div className="pt-1 pe-5 font-bold text-lg ">{label}: {formatTime(timeLeft)}</div>;
+  return (
+    <div className="pt-1 pe-5 font-bold text-lg">
+      {label && <span>{label}: </span>}
+      <span>{formatTime(timeLeft)}</span>
+    </div>
+  );
 };
 
-export default TestTimer;
+export default Timer;
