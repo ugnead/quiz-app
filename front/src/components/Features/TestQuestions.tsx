@@ -61,6 +61,17 @@ const TestQuestions: React.FC = () => {
     loadQuestions();
   }, [subcategoryId]);
 
+  useEffect(() => {
+    const updateProgressForCurrentQuestion = async () => {
+      if (questions.length > 0) {
+        const currentQuestion = questions[currentQuestionIndex];
+        await updateUserProgress(currentQuestion._id, subcategoryId!, false, "test");
+      }
+    };
+
+    updateProgressForCurrentQuestion();
+  }, [currentQuestionIndex, questions, subcategoryId]);
+
   const handleOptionSelect = (option: string) => {
     setSelectedOption(option);
   };
@@ -121,8 +132,8 @@ const TestQuestions: React.FC = () => {
   if (isTestFinished) {
     return (
       <div className="w-96">
-        <h2 className="pb-6 text-center">Test Finished</h2>
-        <p className="text-center">
+        <h2 className="mb-5 text-center">Test Finished</h2>
+        <p className="text-center text-lg">
           Your score: {score}/{questions.length}
         </p>
       </div>
@@ -142,7 +153,7 @@ const TestQuestions: React.FC = () => {
           End Test
         </button>
       </div>
-      <h2 className="pb-6 text-center">{currentQuestion.question}</h2>
+      <h2 className="mb-6 text-center">{currentQuestion.question}</h2>
       <OptionsList
         options={optionList}
         selectedOption={selectedOption}
@@ -184,7 +195,7 @@ const TestQuestions: React.FC = () => {
         isOpen={isModalOpen}
         onConfirm={handleConfirmEndTest}
         onCancel={handleCancelEndTest}
-        message="Are you sure you want to end the test? Your progress will be lost."
+        message="Are you sure you want to end the test?"
       />
     </div>
   );
