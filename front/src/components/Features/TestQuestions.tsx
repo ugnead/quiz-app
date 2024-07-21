@@ -5,10 +5,10 @@ import {
   clearTestProgress,
   fetchSubcategoryById,
 } from "../../services/questions";
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import OptionsList from "../Common/OptionsList";
 import Modal from "../Common/Modal";
-import { useNavigationBlocker } from "../../hooks/useNavigationBlocker";
+import Timer from "../Common/Timer";
 
 interface Question {
   _id: string;
@@ -19,6 +19,7 @@ interface Question {
 }
 
 const TestQuestions: React.FC = () => {
+  const navigate = useNavigate();
   const { subcategoryId } = useParams<{ subcategoryId: string }>();
   const [questions, setQuestions] = useState<Question[]>([]);
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
@@ -26,6 +27,7 @@ const TestQuestions: React.FC = () => {
   const [showExplanation, setShowExplanation] = useState(false);
   const [score, setScore] = useState(0);
   const [isTestFinished, setIsTestFinished] = useState(false);
+  const [isModalOpen, setIsModalOpen] = useState(false);
   const [categoryId, setCategoryId] = useState<string | null>(null);
 
   useEffect(() => {
@@ -42,13 +44,6 @@ const TestQuestions: React.FC = () => {
 
     loadSubcategory();
   }, [subcategoryId]);
-
-  const {
-    isBlocked,
-    confirmNavigation,
-    cancelNavigation,
-    message
-  } = useNavigationBlocker(!isTestFinished, categoryId, "Are you sure you want to end the test? Your progress will be lost.");
 
   useEffect(() => {
     const loadQuestions = async () => {
@@ -96,12 +91,22 @@ const TestQuestions: React.FC = () => {
     }
   };
 
+  const handleEndTest = () => {
+    setIsModalOpen(true);
+  };
+
   const handleConfirmEndTest = () => {
-    confirmNavigation();
+    setIsModalOpen(false);
+    setIsTestFinished(true);
+    navigate(`/subcategories/${categoryId}`);
   };
 
   const handleCancelEndTest = () => {
-    cancelNavigation();
+    setIsModalOpen(false);
+  };
+
+  const handleTimeUp = () => {
+    setIsTestFinished(true);
   };
 
   if (questions.length === 0) return <div>No questions available</div>;
@@ -126,6 +131,17 @@ const TestQuestions: React.FC = () => {
 
   return (
     <div className="w-96">
+      
+      <div className="flex justify-between mb-5">
+        <Timer
+          duration={questions.length * 60}
+          onTimeUp={handleTimeUp}
+          label="Time left"
+        />
+        <button className="bg-red-500" onClick={handleEndTest}>
+          End Test
+        </button>
+      </div>
       <h2 className="pb-6 text-center">{currentQuestion.question}</h2>
       <OptionsList
         options={optionList}
@@ -165,10 +181,10 @@ const TestQuestions: React.FC = () => {
         </>
       )}
       <Modal
-        isOpen={isBlocked}
+        isOpen={isModalOpen}
         onConfirm={handleConfirmEndTest}
         onCancel={handleCancelEndTest}
-        message={message}
+        message="Are you sure you want to end the test? Your progress will be lost."
       />
     </div>
   );
