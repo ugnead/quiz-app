@@ -19,15 +19,15 @@ const Modal: React.FC<ModalProps> = ({
     <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
       <div className="bg-white p-6 rounded-md">
         <p className="mb-4">{message}</p>
-        <div className="flex justify-end space-x-4">
+        <div className="flex justify-between space-x-4">
           <button
-            className="bg-red-500 text-white px-4 py-2 rounded-md"
+            className="bg-red-500"
             onClick={onCancel}
           >
             Cancel
           </button>
           <button
-            className="bg-green-500 text-white px-4 py-2 rounded-md"
+            className="bg-green-500"
             onClick={onConfirm}
           >
             Confirm
