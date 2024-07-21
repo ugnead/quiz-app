@@ -80,12 +80,7 @@ const TestQuestions: React.FC = () => {
     const currentQuestion = questions[currentQuestionIndex];
     const isCorrect = selectedOption === currentQuestion.correctAnswer;
 
-    await updateUserProgress(
-      currentQuestion._id,
-      subcategoryId!,
-      isCorrect,
-      "test"
-    );
+    await updateUserProgress(currentQuestion._id, subcategoryId!, isCorrect, "test");
 
     if (isCorrect) setScore(score + 1);
 
@@ -109,7 +104,6 @@ const TestQuestions: React.FC = () => {
   const handleConfirmEndTest = () => {
     setIsModalOpen(false);
     setIsTestFinished(true);
-    navigate(`/subcategories/${categoryId}`);
   };
 
   const handleCancelEndTest = () => {
@@ -120,7 +114,11 @@ const TestQuestions: React.FC = () => {
     setIsTestFinished(true);
   };
 
-  if (questions.length === 0) return <div>No questions available</div>;
+  const handleBackToSubcategories = () => {
+    navigate(`/subcategories/${categoryId}`);
+  };
+
+  if (questions.length === 0) return <div className="text-lg">No questions available</div>;
 
   const currentQuestion = questions[currentQuestionIndex];
 
@@ -131,18 +129,20 @@ const TestQuestions: React.FC = () => {
 
   if (isTestFinished) {
     return (
-      <div className="w-96">
-        <h2 className="mb-5 text-center">Test Finished</h2>
-        <p className="text-center text-lg">
+      <div className="w-96 text-center">
+        <h2 className="mb-5">Test Finished</h2>
+        <p className="mb-5 text-lg">
           Your score: {score}/{questions.length}
         </p>
+        <button onClick={handleBackToSubcategories}>
+          Back to Subcategories
+        </button>
       </div>
     );
   }
 
   return (
     <div className="w-96">
-      
       <div className="flex justify-between mb-5">
         <Timer
           duration={questions.length * 60}
@@ -185,7 +185,7 @@ const TestQuestions: React.FC = () => {
               </p>
             )}
             <button onClick={handleNextQuestion} className="cursor-pointer">
-              Next Question
+              {currentQuestionIndex + 1 < questions.length ? "Next Question" : "Finish Test"}
             </button>
           </div>
           <p className="text-wrap text-lg">{currentQuestion.explanation}</p>
