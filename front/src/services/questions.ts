@@ -11,9 +11,15 @@ export const fetchCategoryById = async (categoryId: string) => {
 };
 
 export const fetchSubcategories = async (categoryId: string) => {
-  const response = await api.get(`/subcategories/${categoryId}`);
+  const response = await api.get(`/subcategories/category/${categoryId}`);
   return response.data.data.subcategories;
 };
+
+export const fetchSubcategoryById = async (subcategoryId: string) => {
+  const response = await api.get(`/subcategories/${subcategoryId}`);
+  return response.data.data.subcategory;
+};
+
 
 export const fetchUserProgress = async (subcategoryId: string) => {
   const response = await api.get(`/questions/${subcategoryId}/progress`);
