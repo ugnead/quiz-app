@@ -5,7 +5,7 @@ import {
   fetchUserProgress,
 } from "../../services/questions";
 import { useParams, useNavigate } from "react-router-dom";
-import { FaCheckCircle, FaTimesCircle } from "react-icons/fa";
+import { FaCheckCircle, FaTimesCircle, FaArrowLeft } from "react-icons/fa";
 
 interface Subcategory {
   _id: string;
@@ -64,6 +64,10 @@ const SubcategoryList: React.FC = () => {
     navigate(`/test/${subcategoryId}`);
   };
 
+  const handleBackToCategories = () => {
+    navigate("/categories");
+  };
+
   const getLearnIcon = (progress: SubcategoryProgress) => {
     if (progress.learnedQuestions === progress.totalQuestions) {
       return <FaCheckCircle className="text-green-500 ml-2 mt-0.5" />;
@@ -81,7 +85,15 @@ const SubcategoryList: React.FC = () => {
 
   return (
     <div>
-      <h1 className="pb-12 text-center">{category?.name}</h1>
+      <div className="flex items-center justify-center relative pb-12">
+        <button
+          onClick={handleBackToCategories}
+          className="absolute top-2 left-0 p-2 rounded-full"
+        >
+          <FaArrowLeft className="text-2xl" />
+        </button>
+        <h1>{category?.name}</h1>
+      </div>
       <ul className="flex flex-col space-y-4">
         {subcategories.map((subcategory) => {
           const progress = progressData.find(
@@ -96,7 +108,10 @@ const SubcategoryList: React.FC = () => {
                 {subcategory.name}
               </span>
               <div className="flex space-x-4">
-                <button className="flex items-center justify-center w-40 text-nowrap" onClick={() => handleLearnSelect(subcategory._id)}>
+                <button
+                  className="flex items-center justify-center w-40 text-nowrap"
+                  onClick={() => handleLearnSelect(subcategory._id)}
+                >
                   Learn{" "}
                   {progress
                     ? `${progress.learnedQuestions}/${progress.totalQuestions}`
@@ -104,7 +119,7 @@ const SubcategoryList: React.FC = () => {
                   {progress && getLearnIcon(progress)}
                 </button>
                 <button
-                  className="flex items-center justify-center bg-blue-600 w-40 text-nowrap"
+                  className="flex items-center justify-center bg-blue-600 w-40 text-nowrap text-white rounded-md"
                   onClick={() => handleTestSelect(subcategory._id)}
                 >
                   Test{" "}
