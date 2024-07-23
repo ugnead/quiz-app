@@ -9,6 +9,7 @@ import { useParams, useNavigate } from "react-router-dom";
 import OptionsList from "../Common/OptionsList";
 import Modal from "../Common/Modal";
 import Timer from "../Common/Timer";
+import { FaArrowLeft } from "react-icons/fa";
 
 interface Question {
   _id: string;
@@ -65,7 +66,12 @@ const TestQuestions: React.FC = () => {
     const updateProgressForCurrentQuestion = async () => {
       if (questions.length > 0) {
         const currentQuestion = questions[currentQuestionIndex];
-        await updateUserProgress(currentQuestion._id, subcategoryId!, false, "test");
+        await updateUserProgress(
+          currentQuestion._id,
+          subcategoryId!,
+          false,
+          "test"
+        );
       }
     };
 
@@ -80,7 +86,12 @@ const TestQuestions: React.FC = () => {
     const currentQuestion = questions[currentQuestionIndex];
     const isCorrect = selectedOption === currentQuestion.correctAnswer;
 
-    await updateUserProgress(currentQuestion._id, subcategoryId!, isCorrect, "test");
+    await updateUserProgress(
+      currentQuestion._id,
+      subcategoryId!,
+      isCorrect,
+      "test"
+    );
 
     if (isCorrect) setScore(score + 1);
 
@@ -118,7 +129,8 @@ const TestQuestions: React.FC = () => {
     navigate(`/subcategories/${categoryId}`);
   };
 
-  if (questions.length === 0) return <div className="text-lg">No questions available</div>;
+  if (questions.length === 0)
+    return <div className="text-lg">No questions available</div>;
 
   const currentQuestion = questions[currentQuestionIndex];
 
@@ -131,11 +143,15 @@ const TestQuestions: React.FC = () => {
     return (
       <div className="w-96 text-center">
         <h2 className="mb-5">Test Finished</h2>
-        <p className="mb-5 text-lg">
+        <p className="mb-5 text-xl">
           Your score: {score}/{questions.length}
         </p>
-        <button onClick={handleBackToSubcategories}>
-          Back to Subcategories
+        <button
+          className="flex items-center mx-auto"
+          onClick={handleBackToSubcategories}
+        >
+          <FaArrowLeft className="me-3" />
+          <div>Back to Subcategories</div>
         </button>
       </div>
     );
@@ -164,7 +180,7 @@ const TestQuestions: React.FC = () => {
       {!showExplanation && (
         <div className="flex justify-end mt-7">
           <button
-            className="cursor-pointer"
+            className={`cursor-pointer ${!selectedOption ? 'opacity-60 cursor-not-allowed' : ''}`}
             onClick={handleSubmit}
             disabled={!selectedOption}
           >
@@ -185,7 +201,9 @@ const TestQuestions: React.FC = () => {
               </p>
             )}
             <button onClick={handleNextQuestion} className="cursor-pointer">
-              {currentQuestionIndex + 1 < questions.length ? "Next Question" : "Finish Test"}
+              {currentQuestionIndex + 1 < questions.length
+                ? "Next Question"
+                : "Finish Test"}
             </button>
           </div>
           <p className="text-wrap text-lg">{currentQuestion.explanation}</p>

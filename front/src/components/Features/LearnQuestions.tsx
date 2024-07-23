@@ -97,7 +97,7 @@ const LearnQuestions: React.FC = () => {
       {!showExplanation && (
         <div className="flex justify-end mt-7">
           <button
-            className="cursor-pointer"
+            className={`cursor-pointer ${!selectedOption ? 'opacity-60 cursor-not-allowed' : ''}`}
             onClick={handleSubmit}
             disabled={!selectedOption}
           >
