@@ -27,7 +27,6 @@ const LearnQuestions: React.FC = () => {
       if (subcategoryId) {
         try {
           const data = await fetchQuestionsForLearning(subcategoryId);
-          console.log("Fetched questions:", data)
           setQuestions(data);
         } catch (error) {
           console.error("Failed to fetch questions:", error);
@@ -64,7 +63,6 @@ const LearnQuestions: React.FC = () => {
     if (submissionCount >= 5) {
       try {
         const data = await fetchQuestionsForLearning(subcategoryId!);
-        console.log("Refetched questions:", data)
         setQuestions(data);
         setCurrentQuestionIndex(0);
         setSubmissionCount(0);
