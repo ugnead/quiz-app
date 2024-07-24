@@ -14,6 +14,13 @@ interface Question {
   explanation: string;
 }
 
+interface AnsweredQuestion {
+  questionIndex: number;
+  isCorrect: boolean;
+  selectedOption: string;
+  answerSequence: number;
+}
+
 const LearnQuestions: React.FC = () => {
   const { subcategoryId } = useParams<{ subcategoryId: string }>();
   const [questions, setQuestions] = useState<Question[]>([]);
@@ -21,6 +28,10 @@ const LearnQuestions: React.FC = () => {
   const [selectedOption, setSelectedOption] = useState<string | null>(null);
   const [showExplanation, setShowExplanation] = useState(false);
   const [submissionCount, setSubmissionCount] = useState(0);
+  const [answeredQuestions, setAnsweredQuestions] = useState<
+    AnsweredQuestion[]
+  >([]);
+  const [answerSequence, setAnswerSequence] = useState(0);
 
   useEffect(() => {
     const loadQuestions = async () => {
@@ -54,6 +65,16 @@ const LearnQuestions: React.FC = () => {
 
     setShowExplanation(true);
     setSubmissionCount((prevCount) => prevCount + 1);
+    setAnsweredQuestions((prev) => [
+      ...prev,
+      {
+        questionIndex: currentQuestionIndex,
+        isCorrect,
+        selectedOption: selectedOption!,
+        answerSequence: answerSequence + 1,
+      },
+    ]);
+    setAnswerSequence(answerSequence + 1);
   };
 
   const handleNextQuestion = async () => {
@@ -70,7 +91,20 @@ const LearnQuestions: React.FC = () => {
         console.error("Failed to refetch questions:", error);
       }
     } else {
-      setCurrentQuestionIndex((prevIndex) => (prevIndex + 1) % questions.length);
+      setCurrentQuestionIndex(
+        (prevIndex) => (prevIndex + 1) % questions.length
+      );
+    }
+  };
+
+  const handleReviewQuestion = (sequence: number) => {
+    const answeredQuestion = answeredQuestions.find(
+      (aq) => aq.answerSequence === sequence
+    );
+    if (answeredQuestion) {
+      setCurrentQuestionIndex(answeredQuestion.questionIndex);
+      setSelectedOption(answeredQuestion.selectedOption);
+      setShowExplanation(true);
     }
   };
 
@@ -97,7 +131,9 @@ const LearnQuestions: React.FC = () => {
       {!showExplanation && (
         <div className="flex justify-end mt-7">
           <button
-            className={`cursor-pointer ${!selectedOption ? 'opacity-60 cursor-not-allowed' : ''}`}
+            className={`cursor-pointer ${
+              !selectedOption ? "opacity-50 cursor-not-allowed" : ""
+            }`}
             onClick={handleSubmit}
             disabled={!selectedOption}
           >
@@ -124,6 +160,20 @@ const LearnQuestions: React.FC = () => {
           <p className="text-lg">{currentQuestion.explanation}</p>
         </>
       )}
+      <div className="mt-4 flex flex-wrap">
+        {answeredQuestions.map(({ answerSequence, isCorrect }, index) => {
+          const colorClass = isCorrect ? "bg-green-500" : "bg-red-500";
+          return (
+            <button
+              key={answerSequence}
+              onClick={() => handleReviewQuestion(answerSequence)}
+              className={`w-11 mx-1 mb-2 px-0 py-2 rounded-full text-white ${colorClass}`}
+            >
+              {index + 1}
+            </button>
+          );
+        })}
+      </div>
     </div>
   );
 };
