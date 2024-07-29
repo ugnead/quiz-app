@@ -5,6 +5,8 @@ import {
 } from "../../services/questions";
 import { useParams } from "react-router-dom";
 import OptionsList from "../Common/OptionsList";
+import QuestionExplanation from "../Common/QuestionExplanation";
+import ReviewAnswer from "../Common/ReviewAnswer";
 
 interface Question {
   _id: string;
@@ -128,8 +130,8 @@ const LearnQuestions: React.FC = () => {
         onSelectOption={handleOptionSelect}
         showExplanation={showExplanation}
       />
-      {!showExplanation && (
-        <div className="flex justify-end mt-7">
+      <div className="flex justify-end mt-7">
+        {!showExplanation ? (
           <button
             className={`cursor-pointer ${
               !selectedOption ? "opacity-50 cursor-not-allowed" : ""
@@ -139,41 +141,23 @@ const LearnQuestions: React.FC = () => {
           >
             Submit
           </button>
-        </div>
-      )}
-      {showExplanation && (
-        <>
-          <div className="flex justify-between my-7">
-            {selectedOption === currentQuestion.correctAnswer ? (
-              <p className="pt-1.5 pe-5 font-bold text-lg text-green-600">
-                Correct!
-              </p>
-            ) : (
-              <p className="pt-1.5 pe-5 font-bold text-lg text-red-600">
-                Incorrect!
-              </p>
-            )}
-            <button onClick={handleNextQuestion} className="cursor-pointer">
-              Next Question
-            </button>
-          </div>
-          <p className="text-lg">{currentQuestion.explanation}</p>
-        </>
-      )}
-      <div className="mt-4 flex flex-wrap">
-        {answeredQuestions.map(({ answerSequence, isCorrect }, index) => {
-          const colorClass = isCorrect ? "bg-green-500" : "bg-red-500";
-          return (
-            <button
-              key={answerSequence}
-              onClick={() => handleReviewQuestion(answerSequence)}
-              className={`w-11 mx-1 mb-2 px-0 py-2 rounded-full text-white ${colorClass}`}
-            >
-              {index + 1}
-            </button>
-          );
-        })}
+        ) : (
+          <button onClick={handleNextQuestion} className="cursor-pointer">
+            Next Question
+          </button>
+        )}
       </div>
+      <ReviewAnswer
+        answeredQuestions={answeredQuestions}
+        handleReviewQuestion={handleReviewQuestion}
+      />
+      {showExplanation && (
+        <QuestionExplanation
+          selectedOption={selectedOption}
+          correctAnswer={currentQuestion.correctAnswer}
+          explanation={currentQuestion.explanation}
+        />
+      )}
     </div>
   );
 };
