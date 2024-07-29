@@ -9,6 +9,8 @@ import { useParams, useNavigate } from "react-router-dom";
 import OptionsList from "../Common/OptionsList";
 import Modal from "../Common/Modal";
 import Timer from "../Common/Timer";
+import QuestionExplanation from "../Common/QuestionExplanation";
+import ReviewAnswer from "../Common/ReviewAnswer";
 import { FaArrowLeft } from "react-icons/fa";
 
 interface Question {
@@ -17,6 +19,13 @@ interface Question {
   options: string[];
   correctAnswer: string;
   explanation: string;
+}
+
+interface AnsweredQuestion {
+  questionIndex: number;
+  isCorrect: boolean;
+  selectedOption: string;
+  answerSequence: number;
 }
 
 const TestQuestions: React.FC = () => {
@@ -30,6 +39,11 @@ const TestQuestions: React.FC = () => {
   const [isTestFinished, setIsTestFinished] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [categoryId, setCategoryId] = useState<string | null>(null);
+  const [answeredQuestions, setAnsweredQuestions] = useState<
+    AnsweredQuestion[]
+  >([]);
+  const [answerSequence, setAnswerSequence] = useState(0);
+  const [isReviewing, setIsReviewing] = useState(false);
 
   useEffect(() => {
     const loadSubcategory = async () => {
@@ -95,10 +109,16 @@ const TestQuestions: React.FC = () => {
 
     if (isCorrect) setScore(score + 1);
 
-    setShowExplanation(true);
-  };
-
-  const handleNextQuestion = () => {
+    setAnsweredQuestions((prev) => [
+      ...prev,
+      {
+        questionIndex: currentQuestionIndex,
+        isCorrect,
+        selectedOption: selectedOption!,
+        answerSequence: answerSequence + 1,
+      },
+    ]);
+    setAnswerSequence(answerSequence + 1);
     setSelectedOption(null);
     setShowExplanation(false);
     if (currentQuestionIndex + 1 < questions.length) {
@@ -129,6 +149,25 @@ const TestQuestions: React.FC = () => {
     navigate(`/subcategories/${categoryId}`);
   };
 
+  const handleReviewAnswers = () => {
+    setIsReviewing(true);
+    const firstAnsweredQuestion = answeredQuestions[0];
+    setCurrentQuestionIndex(firstAnsweredQuestion.questionIndex);
+    setSelectedOption(firstAnsweredQuestion.selectedOption);
+    setShowExplanation(true);
+  };
+
+  const handleReviewQuestion = (sequence: number) => {
+    const answeredQuestion = answeredQuestions.find(
+      (aq) => aq.answerSequence === sequence
+    );
+    if (answeredQuestion) {
+      setCurrentQuestionIndex(answeredQuestion.questionIndex);
+      setSelectedOption(answeredQuestion.selectedOption);
+      setShowExplanation(true);
+    }
+  };
+
   if (questions.length === 0)
     return <div className="text-lg">No questions available</div>;
 
@@ -139,20 +178,49 @@ const TestQuestions: React.FC = () => {
     name: option,
   }));
 
-  if (isTestFinished) {
+  if (isTestFinished && !isReviewing) {
     return (
       <div className="w-96 text-center">
         <h2 className="mb-5">Test Finished</h2>
         <p className="mb-5 text-xl">
           Your score: {score}/{questions.length}
         </p>
-        <button
-          className="flex items-center mx-auto"
-          onClick={handleBackToSubcategories}
-        >
-          <FaArrowLeft className="me-3" />
-          <div>Back to Subcategories</div>
-        </button>
+        <div>
+          <button className="w-60 bg-blue-600" onClick={handleReviewAnswers}>
+            <div>Review Answers</div>
+          </button>
+          <div className="m-2 text-xl">OR</div>
+          <button
+            className="flex items-center mx-auto w-60"
+            onClick={handleBackToSubcategories}
+          >
+            <FaArrowLeft className="me-3" />
+            <div>Back to Subcategories</div>
+          </button>
+        </div>
+      </div>
+    );
+  }
+
+  if (isTestFinished && isReviewing) {
+    return (
+      <div className="w-96">
+        <h2 className="mb-6 text-center">{currentQuestion.question}</h2>
+        <OptionsList
+          options={optionList}
+          selectedOption={selectedOption}
+          correctAnswer={currentQuestion.correctAnswer}
+          showExplanation={true}
+        />
+        <ReviewAnswer
+          answeredQuestions={answeredQuestions}
+          handleReviewQuestion={handleReviewQuestion}
+        />
+        <QuestionExplanation
+          selectedOption={selectedOption}
+          correctAnswer={currentQuestion.correctAnswer}
+          explanation={currentQuestion.explanation}
+        />
       </div>
     );
   }
@@ -175,40 +243,20 @@ const TestQuestions: React.FC = () => {
         selectedOption={selectedOption}
         correctAnswer={currentQuestion.correctAnswer}
         onSelectOption={handleOptionSelect}
-        showExplanation={showExplanation}
       />
-      {!showExplanation && (
-        <div className="flex justify-end mt-7">
+      <div className="flex justify-end mt-7">
+        {!isTestFinished && (
           <button
-            className={`cursor-pointer ${!selectedOption ? 'opacity-60 cursor-not-allowed' : ''}`}
+            className={`cursor-pointer ${
+              !selectedOption ? "opacity-50 cursor-not-allowed" : ""
+            }`}
             onClick={handleSubmit}
             disabled={!selectedOption}
           >
             Submit
           </button>
-        </div>
-      )}
-      {showExplanation && (
-        <>
-          <div className="flex justify-between my-7">
-            {selectedOption === currentQuestion.correctAnswer ? (
-              <p className="pt-1.5 pe-5 font-bold text-lg text-green-600">
-                Correct!
-              </p>
-            ) : (
-              <p className="pt-1.5 pe-5 font-bold text-lg text-red-600">
-                Incorrect!
-              </p>
-            )}
-            <button onClick={handleNextQuestion} className="cursor-pointer">
-              {currentQuestionIndex + 1 < questions.length
-                ? "Next Question"
-                : "Finish Test"}
-            </button>
-          </div>
-          <p className="text-wrap text-lg">{currentQuestion.explanation}</p>
-        </>
-      )}
+        )}
+      </div>
       <Modal
         isOpen={isModalOpen}
         onConfirm={handleConfirmEndTest}
