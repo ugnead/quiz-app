@@ -9,7 +9,7 @@ interface OptionsListProps {
   options: Option[];
   selectedOption?: string | null;
   correctAnswer?: string;
-  onSelectOption: (optionId: string) => void;
+  onSelectOption?: (optionId: string) => void;
   showExplanation?: boolean;
 }
 
@@ -33,7 +33,7 @@ const OptionsList: React.FC<OptionsListProps> = ({
         <li key={option.id}>
           <button
             className={getOptionClass(option.id)}
-            onClick={() => onSelectOption(option.id)}
+            onClick={() => onSelectOption && onSelectOption(option.id)}
             disabled={showExplanation}
           >
             {option.name}
