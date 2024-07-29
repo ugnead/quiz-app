@@ -119,7 +119,7 @@ const SubcategoryList: React.FC = () => {
                   {progress && getLearnIcon(progress)}
                 </button>
                 <button
-                  className="flex items-center justify-center bg-blue-600 w-40 text-nowrap text-white rounded-md"
+                  className="flex items-center justify-center bg-blue-600 w-40 text-nowrap"
                   onClick={() => handleTestSelect(subcategory._id)}
                 >
                   Test{" "}
