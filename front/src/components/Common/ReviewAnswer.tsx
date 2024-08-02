@@ -16,8 +16,15 @@ const ReviewAnswer: React.FC<ReviewAnswerProps> = ({
 }) => {
   return (
     <div className="mt-4 flex flex-wrap">
-      {answeredQuestions.map(({ answerSequence, isCorrect }, index) => {
-        const colorClass = isCorrect ? "bg-green-500" : "bg-red-500";
+      {answeredQuestions.map(({ answerSequence, isCorrect, selectedOption }, index) => {
+        let colorClass;
+        if (selectedOption === null) {
+          colorClass = "bg-yellow-500";
+        } else if (isCorrect) {
+          colorClass = "bg-green-500";
+        } else {
+          colorClass = "bg-red-500";
+        }
         return (
           <button
             key={answerSequence}
