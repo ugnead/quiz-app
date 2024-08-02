@@ -11,18 +11,29 @@ const QuestionExplanation: React.FC<QuestionExplanationProps> = ({
   correctAnswer,
   explanation,
 }) => {
+  let statusText = "";
+  if (selectedOption === null) {
+    statusText = "Not Answered";
+  } else if (selectedOption === correctAnswer) {
+    statusText = "Correct!";
+  } else {
+    statusText = "Incorrect!";
+  }
+
   return (
     <>
       <div className="flex justify-between mb-3">
-        {selectedOption === correctAnswer ? (
-          <p className="pt-1.5 font-bold text-lg text-green-600">
-            Correct!
-          </p>
-        ) : (
-          <p className="pt-1.5 font-bold text-lg text-red-600">
-            Incorrect!
-          </p>
-        )}
+        <p
+          className={`pt-1.5 font-bold text-lg ${
+            selectedOption === correctAnswer
+              ? "text-green-600"
+              : selectedOption === null
+              ? "text-yellow-600"
+              : "text-red-600"
+          }`}
+        >
+          {statusText}
+        </p>
       </div>
       <p className="text-lg">{explanation}</p>
     </>
