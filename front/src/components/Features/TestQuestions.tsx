@@ -24,7 +24,7 @@ interface Question {
 interface AnsweredQuestion {
   questionIndex: number;
   isCorrect: boolean;
-  selectedOption: string;
+  selectedOption: string | null;
   answerSequence: number;
 }
 
@@ -34,7 +34,6 @@ const TestQuestions: React.FC = () => {
   const [questions, setQuestions] = useState<Question[]>([]);
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
   const [selectedOption, setSelectedOption] = useState<string | null>(null);
-  const [showExplanation, setShowExplanation] = useState(false);
   const [score, setScore] = useState(0);
   const [isTestFinished, setIsTestFinished] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -114,13 +113,12 @@ const TestQuestions: React.FC = () => {
       {
         questionIndex: currentQuestionIndex,
         isCorrect,
-        selectedOption: selectedOption!,
+        selectedOption: selectedOption,
         answerSequence: answerSequence + 1,
       },
     ]);
     setAnswerSequence(answerSequence + 1);
     setSelectedOption(null);
-    setShowExplanation(false);
     if (currentQuestionIndex + 1 < questions.length) {
       setCurrentQuestionIndex(currentQuestionIndex + 1);
     } else {
@@ -132,8 +130,25 @@ const TestQuestions: React.FC = () => {
     setIsModalOpen(true);
   };
 
-  const handleConfirmEndTest = () => {
+  const handleConfirmEndTest = async () => {
     setIsModalOpen(false);
+
+    const unansweredQuestions = questions.slice(currentQuestionIndex);
+    for (const question of unansweredQuestions) {
+      await updateUserProgress(question._id, subcategoryId!, false, "test");
+    }
+
+    const unansweredAnswers: AnsweredQuestion[] = unansweredQuestions.map(
+      (question, index) => ({
+        questionIndex: currentQuestionIndex + index,
+        isCorrect: false,
+        selectedOption: null,
+        answerSequence: answerSequence + index + 1,
+      })
+    );
+
+    setAnsweredQuestions((prev) => [...prev, ...unansweredAnswers]);
+    setAnswerSequence(answerSequence + unansweredQuestions.length);
     setIsTestFinished(true);
   };
 
@@ -142,7 +157,7 @@ const TestQuestions: React.FC = () => {
   };
 
   const handleTimeUp = () => {
-    setIsTestFinished(true);
+    handleConfirmEndTest();
   };
 
   const handleBackToSubcategories = () => {
@@ -154,7 +169,6 @@ const TestQuestions: React.FC = () => {
     const firstAnsweredQuestion = answeredQuestions[0];
     setCurrentQuestionIndex(firstAnsweredQuestion.questionIndex);
     setSelectedOption(firstAnsweredQuestion.selectedOption);
-    setShowExplanation(true);
   };
 
   const handleReviewQuestion = (sequence: number) => {
@@ -164,7 +178,6 @@ const TestQuestions: React.FC = () => {
     if (answeredQuestion) {
       setCurrentQuestionIndex(answeredQuestion.questionIndex);
       setSelectedOption(answeredQuestion.selectedOption);
-      setShowExplanation(true);
     }
   };
 
@@ -211,6 +224,7 @@ const TestQuestions: React.FC = () => {
           selectedOption={selectedOption}
           correctAnswer={currentQuestion.correctAnswer}
           showExplanation={true}
+          onSelectOption={() => {}}
         />
         <ReviewAnswer
           answeredQuestions={answeredQuestions}
@@ -268,3 +282,4 @@ const TestQuestions: React.FC = () => {
 };
 
 export default TestQuestions;
+
