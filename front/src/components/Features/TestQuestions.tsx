@@ -77,7 +77,7 @@ const TestQuestions: React.FC = () => {
 
   useEffect(() => {
     const updateProgressForCurrentQuestion = async () => {
-      if (questions.length > 0) {
+      if (questions.length > 0 && !isTestFinished && !isReviewing) {
         const currentQuestion = questions[currentQuestionIndex];
         await updateUserProgress(
           currentQuestion._id,
@@ -89,7 +89,7 @@ const TestQuestions: React.FC = () => {
     };
 
     updateProgressForCurrentQuestion();
-  }, [currentQuestionIndex, questions, subcategoryId]);
+  }, [currentQuestionIndex, questions, subcategoryId, isTestFinished, isReviewing]);
 
   const handleOptionSelect = (option: string) => {
     setSelectedOption(option);
@@ -251,7 +251,10 @@ const TestQuestions: React.FC = () => {
           End Test
         </button>
       </div>
-      <h2 className="mb-6 text-center">{currentQuestion.question}</h2>
+      <h2 className="mb-3 text-center">{currentQuestion.question}</h2>
+      <p className="text-center text-sm mb-4">
+        Question {currentQuestionIndex + 1} / {questions.length}
+      </p>
       <OptionsList
         options={optionList}
         selectedOption={selectedOption}
@@ -282,4 +285,3 @@ const TestQuestions: React.FC = () => {
 };
 
 export default TestQuestions;
-
