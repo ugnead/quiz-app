@@ -109,7 +109,7 @@ const SubcategoryList: React.FC = () => {
               </span>
               <div className="flex space-x-4">
                 <button
-                  className="flex items-center justify-center w-40 text-nowrap"
+                  className="flex items-center justify-center w-32 sm:w-40 text-nowrap px-2"
                   onClick={() => handleLearnSelect(subcategory._id)}
                 >
                   Learn{" "}
@@ -119,7 +119,7 @@ const SubcategoryList: React.FC = () => {
                   {progress && getLearnIcon(progress)}
                 </button>
                 <button
-                  className="flex items-center justify-center bg-blue-600 w-40 text-nowrap"
+                  className="flex items-center justify-center bg-blue-600 w-32 sm:w-40 text-nowrap px-2"
                   onClick={() => handleTestSelect(subcategory._id)}
                 >
                   Test{" "}
