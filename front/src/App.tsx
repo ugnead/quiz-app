@@ -16,7 +16,7 @@ const App: React.FC = () => {
       <ErrorBoundary>
         <Router>
           <Navigation />
-          <div className='flex justify-center mx-5 my-10'>
+          <div className='flex justify-center mx-5 my-5 sm:my-10'>
             <Routes>
               <Route path="/" element={<Auth />} />
               <Route path="/categories" element={<CategoryList />} />
