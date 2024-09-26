@@ -74,6 +74,7 @@ const Auth: React.FC = () => {
         const user = await loginUser(response.credential);
         setUser(user);
         navigate("/categories");
+        window.location.reload()
       } catch (error) {
         console.error("Login failed:", error);
       }
