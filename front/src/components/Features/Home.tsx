@@ -3,15 +3,13 @@ import { useMediaQuery } from "react-responsive";
 import Auth from "./Auth";
 
 const Home: React.FC = () => {
-  // Define the media query for a large screen (e.g., 1024px or larger)
-  const isDesktopOrLaptop = useMediaQuery({
+  const isDesktop = useMediaQuery({
     query: "(min-width: 1024px)"
   });
 
   return (
     <div className="h-screen">
-      {isDesktopOrLaptop ? (
-        // Desktop and Laptop Design
+      {isDesktop ? (
         <div className="flex items-center h-full">
           <div className="w-3/4 h-3/4 bg-white shadow-lg rounded-lg overflow-hidden mx-auto flex">
             <div className="w-1/2 bg-primary flex items-center justify-center">
@@ -33,9 +31,7 @@ const Home: React.FC = () => {
           </div>
         </div>
       ) : (
-        // Mobile Design
-        <div className="h-screen flex flex-col">
-          {/* Top section with primary background color */}
+        <div className="flex h-screen flex-col">
           <div className="flex-1 flex items-end justify-center bg-primary p-4 h-1/2">
             <img
               src="images/banner.webp"
@@ -43,7 +39,6 @@ const Home: React.FC = () => {
               className="w-full max-w-xs h-auto"
             />
           </div>
-          {/* Bottom section with white background */}
           <div className="flex-1 flex flex-col items-center justify-top bg-white p-6 h-1/2">
             <h1 className="text-2xl md:text-3xl font-bold mb-4 text-center">
               Welcome to Quiz App
