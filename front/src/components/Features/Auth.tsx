@@ -1,6 +1,5 @@
-import React, { useEffect, useState, useCallback } from "react";
-import { verifyToken, loginUser, logoutUser } from "../../services/auth";
-import { useNavigate, useLocation } from "react-router-dom";
+import React, { useEffect } from "react";
+import { useAuth } from "../../contexts/AuthContext";
 
 declare global {
   interface Window {
@@ -21,7 +20,7 @@ declare global {
           ) => void;
           revoke: (
             email: string,
-            callback: (response: RevokeResponse) => void
+            callback: () => void
           ) => void;
         };
       };
@@ -33,71 +32,18 @@ interface CredentialResponse {
   credential: string;
 }
 
-interface UserProfile {
-  name: string;
-  email: string;
-}
-
-interface RevokeResponse {
-  error?: string;
-}
-
 const clientId = import.meta.env.VITE_GOOGLE_CLIENT_ID;
 
 const Auth: React.FC = () => {
-  const [user, setUser] = useState<UserProfile | null>(null);
-  const navigate = useNavigate();
-  const location = useLocation();
+  const { user, login, logout } = useAuth();
 
   useEffect(() => {
-    const initializeUser = async () => {
-      try {
-        const user = await verifyToken();
-        if (user) {
-          setUser(user);
-          if (location.pathname === "/") {
-            navigate("/categories");
-          }
-        }
-      } catch (error) {
-        console.error("Failed to verify token or token expired:", error);
-        setUser(null);
-      }
-    };
-
-    initializeUser();
-  }, [navigate]);
-
-  const handleLogin = useCallback(
-    async (response: CredentialResponse) => {
-      try {
-        const user = await loginUser(response.credential);
-        setUser(user);
-        navigate("/categories");
-        window.location.reload()
-      } catch (error) {
-        console.error("Login failed:", error);
-      }
-    },
-    [navigate]
-  );
-
-  const handlelogout = async () => {
-    try {
-      if (user) {
-        await logoutUser(user.email);
-        setUser(null);
-      }
-    } catch (error) {
-      console.error("Logout failed:", error);
-    }
-  };
-
-  useEffect(() => {
-    if (window.google) {
+    if (!user && window.google) {
       window.google.accounts.id.initialize({
         client_id: clientId,
-        callback: handleLogin,
+        callback: async (response: CredentialResponse) => {
+          await login(response.credential);
+        },
       });
 
       if (!user) {
@@ -111,13 +57,13 @@ const Auth: React.FC = () => {
         );
       }
     }
-  }, [user, handleLogin]);
+  }, [user, login]);
 
   return (
     <div>
       {user ? (
         <div>
-          <button onClick={handlelogout}>Logout</button>
+          <button onClick={logout}>Logout</button>
         </div>
       ) : (
         <div id="buttonDiv" key={user ? "logged-in" : "logged-out"}></div>
@@ -127,3 +73,4 @@ const Auth: React.FC = () => {
 };
 
 export default Auth;
+
