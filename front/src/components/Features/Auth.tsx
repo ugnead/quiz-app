@@ -18,10 +18,6 @@ declare global {
               shape: string;
             }
           ) => void;
-          revoke: (
-            email: string,
-            callback: () => void
-          ) => void;
         };
       };
     };
