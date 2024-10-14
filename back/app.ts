@@ -2,7 +2,6 @@ import express, { Express, Request, Response, NextFunction } from "express";
 import cors from "cors";
 import categoryRouter from "./routes/categoryRoutes";
 import subcategoryRouter from "./routes/subcategoryRoutes";
-import questionRouter from "./routes/questionRoutes";
 import userProgressRouter from "./routes/userProgressRoutes";
 import authRouter from "./routes/authRoutes";
 import { verifyToken } from "./middlewares/authMiddleware";

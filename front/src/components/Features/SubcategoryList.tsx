@@ -32,28 +32,30 @@ const SubcategoryList: React.FC = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    const loadSubcategories = async () => {
-      if (categoryId) {
-        try {
-          const [categoryData, subcategoryData] = await Promise.all([
-            fetchCategoryById(categoryId),
-            fetchSubcategories(categoryId),
-          ]);
-          setCategory(categoryData);
-          setSubcategories(subcategoryData);
+   
+      const loadSubcategories = async () => {
+        if (categoryId) {
+          try {
+            const [categoryData, subcategoryData] = await Promise.all([
+              fetchCategoryById(categoryId),
+              fetchSubcategories(categoryId),
+            ]);
+            setCategory(categoryData);
+            setSubcategories(subcategoryData);
 
-          const progressPromises = subcategoryData.map(
-            (subcategory: Subcategory) => fetchUserProgress(subcategory._id)
-          );
-          const progressResults = await Promise.all(progressPromises);
-          setProgressData(progressResults);
-        } catch (error) {
-          console.error("Failed to fetch subcategories or category:", error);
+            const progressPromises = subcategoryData.map(
+              (subcategory: Subcategory) => fetchUserProgress(subcategory._id)
+            );
+            const progressResults = await Promise.all(progressPromises);
+            setProgressData(progressResults);
+          } catch (error) {
+            console.error("Failed to fetch subcategories or category:", error);
+          }
         }
-      }
-    };
+      };
 
-    loadSubcategories();
+      loadSubcategories();
+
   }, [categoryId]);
 
   const handleLearnSelect = (subcategoryId: string) => {
@@ -100,10 +102,7 @@ const SubcategoryList: React.FC = () => {
             (progress) => progress.subcategoryId === subcategory._id
           );
           return (
-            <li
-              key={subcategory._id}
-              className="flex flex-col justify-between"
-            >
+            <li key={subcategory._id} className="flex flex-col justify-between">
               <span className="pb-1 pe-5 font-bold text-lg">
                 {subcategory.name}
               </span>

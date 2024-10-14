@@ -32,32 +32,38 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({
 
   useEffect(() => {
     const initializeUser = async () => {
-      try {
-        const user = await verifyToken();
-        setUser(user);
-      } catch (error) {
-        console.error("Failed to verify token or token expired:", error);
-        setUser(null);
+      const token = localStorage.getItem("jwtToken");
+      if (token) {
+        try {
+          const user = await verifyToken();
+          setUser(user);
+        } catch (error) {
+          console.error("Failed to verify token or token expired:", error);
+          setUser(null);
+        }
       }
     };
     initializeUser();
   }, []);
 
-  const login = useCallback(async (response: string) => {
-    try {
-      const user = await loginUser(response);
-      setUser(user);
-      navigate("/categories");
-    } catch (error) {
-      console.error("Login failed:", error);
-      throw error;
-    }
-  }, [navigate]);
+  const login = useCallback(
+    async (response: string) => {
+      try {
+        const user = await loginUser(response);
+        setUser(user);
+        navigate("/categories");
+      } catch (error) {
+        console.error("Login failed:", error);
+        throw error;
+      }
+    },
+    [navigate]
+  );
 
   const logout = async () => {
     try {
       if (user) {
-        await logoutUser(user.email);
+        logoutUser();
         setUser(null);
         navigate("/");
       }
