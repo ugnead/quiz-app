@@ -12,6 +12,7 @@ export const handleRefreshToken = async (
 ): Promise<void> => {
   const { refreshToken } = req.body;
   if (!refreshToken) {
+    console.log("No refresh token provided");
     res.sendStatus(401);
     return;
   }
@@ -19,6 +20,7 @@ export const handleRefreshToken = async (
   try {
     const user = await User.findOne({ refreshToken });
     if (!user) {
+      console.log("No user found with this refresh token");
       res.sendStatus(401);
       return;
     }
@@ -28,8 +30,10 @@ export const handleRefreshToken = async (
       process.env.REFRESH_TOKEN!,
       (err: Error | null) => {
         if (err) {
-          res.sendStatus(401);
+          console.log("Refresh token verification failed", err);
+          res.sendStatus(403);
         } else {
+          console.log("Refresh token valid, generating new access token");
           const accessToken = generateAccessToken(user._id.toString());
           res.json({ accessToken });
         }
