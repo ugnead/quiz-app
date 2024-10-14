@@ -121,7 +121,7 @@ const LearnQuestions: React.FC = () => {
   }));
 
   return (
-    <div className="w-96">
+    <div className="w-[30rem]">
       <h2 className="pb-6 text-center">{currentQuestion.question}</h2>
       <OptionsList
         options={optionList}

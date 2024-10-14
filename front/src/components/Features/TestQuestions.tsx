@@ -193,7 +193,7 @@ const TestQuestions: React.FC = () => {
 
   if (isTestFinished && !isReviewing) {
     return (
-      <div className="w-96 text-center">
+      <div className="w-[30rem] text-center">
         <h2 className="mb-5">Test Finished</h2>
         <p className="mb-5 text-xl">
           Your score: {score}/{questions.length}
@@ -217,7 +217,7 @@ const TestQuestions: React.FC = () => {
 
   if (isTestFinished && isReviewing) {
     return (
-      <div className="w-96">
+      <div className="w-[30rem]">
         <h2 className="mb-6 text-center">{currentQuestion.question}</h2>
         <OptionsList
           options={optionList}
@@ -240,7 +240,7 @@ const TestQuestions: React.FC = () => {
   }
 
   return (
-    <div className="w-96">
+    <div className="w-[30rem]">
       <div className="flex justify-between mb-5">
         <Timer
           duration={questions.length * 60}
