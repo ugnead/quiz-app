@@ -46,16 +46,7 @@ export async function loginUser(idToken: string): Promise<UserProfile> {
   }
 }
 
-export async function logoutUser(email: string): Promise<void> {
-  if (window.google?.accounts.id.revoke) {
-    window.google.accounts.id.revoke(email, async (response) => {
-      if (response.error) {
-        console.error("Error revoking access:", response.error);
-        throw new Error(response.error);
-      } else {
-        localStorage.removeItem("jwtToken");
-        localStorage.removeItem("refreshToken");
-      }
-    });
-  }
+export function logoutUser(): void {
+  localStorage.removeItem("jwtToken");
+  localStorage.removeItem("refreshToken");
 }
