@@ -29,7 +29,7 @@ export const googleAuth = async (req: Request, res: Response) => {
     await user.save();
 
     const accessToken = jwt.sign(
-      { userId: user._id, name: user.name, email: user.email },
+      { userId: user._id, name: user.name, email: user.email, role: user.role },
       process.env.JWT_TOKEN!,
       { expiresIn: "15m" }
     );

@@ -4,8 +4,8 @@ interface IUser extends Document {
   googleId: string;
   email: string;
   name: string;
-  role: string;
   refreshToken?: string;
+  role: "user" | "admin";
 }
 
 const userSchema = new Schema<IUser>({
@@ -13,6 +13,7 @@ const userSchema = new Schema<IUser>({
   email: { type: String, required: true },
   name: { type: String, required: true },
   refreshToken: { type: String },
+  role: { type: String, enum: ["user", "admin"], default: "user" },
 });
 
 const User = model<IUser>("User", userSchema);
