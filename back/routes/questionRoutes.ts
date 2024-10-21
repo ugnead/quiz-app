@@ -1,8 +1,20 @@
 import express from "express";
-import { getQuestionsBySubcategory } from "../controllers/questionController";
+import {
+  getQuestionsForLearning,
+  getQuestionsForTesting,
+  createQuestion,
+  updateQuestion,
+  deleteQuestion,
+} from "../controllers/questionController";
+import { isAdmin } from "../middlewares/isAdmin";
 
-const router = express.Router();
+const router = express.Router({ mergeParams: true });
 
-router.route("/:subcategoryId").get(getQuestionsBySubcategory);
+router.get("/learn", getQuestionsForLearning);
+router.get("/test", getQuestionsForTesting);
+
+router.post("/", isAdmin, createQuestion);
+router.put("/:questionId", isAdmin, updateQuestion);
+router.delete("/:questionId", isAdmin, deleteQuestion);
 
 export default router;
