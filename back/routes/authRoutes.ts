@@ -1,7 +1,10 @@
 import express from "express";
 import { googleAuth } from "../controllers/authController";
-import { handleRefreshToken, handleTokenVerification } from "../controllers/tokenController";
-import { verifyToken } from "../middlewares/authMiddleware";
+import {
+  handleRefreshToken,
+  handleTokenVerification,
+} from "../controllers/tokenController";
+import { verifyToken } from "../middlewares/verifyToken";
 import { loginLimiter } from "../middlewares/rateLimiters";
 
 const router = express.Router();
