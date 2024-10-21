@@ -1,13 +1,16 @@
 import express from "express";
-import { getQuestionsForLearning, getQuestionsForTesting, updateUserProgress, getUserProgress, clearTestProgress } from "../controllers/userProgressController";
+import {
+  getUserProgress,
+  updateUserProgress,
+  deleteUserTestProgress,
+} from "../controllers/userProgressController";
 
-const router = express.Router();
+const router = express.Router({ mergeParams: true });
 
-router.route("/:subcategoryId/learn").get(getQuestionsForLearning);
-router.route("/:subcategoryId/test").get(getQuestionsForTesting);
-router.route("/:subcategoryId/progress").get(getUserProgress);
-router.route("/user_progress").post(updateUserProgress);
-router.route("/:subcategoryId/clear_test_progress").delete(clearTestProgress);
+router.get("/progress", getUserProgress);
+router.post("/progress", updateUserProgress);
+router.delete("/progress", deleteUserTestProgress);
 
 export default router;
+
 
