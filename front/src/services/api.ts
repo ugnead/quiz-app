@@ -12,7 +12,7 @@ interface CustomAxiosRequestConfig extends AxiosRequestConfig {
 }
 
 const api = axios.create({
-  baseURL: "http://localhost:4000/api/v1/",
+  baseURL: "https://localhost:4000/api/v1/",
 });
 
 let isRefreshing = false;
