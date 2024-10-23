@@ -1,6 +1,8 @@
 import express, { Express, Request, Response, NextFunction } from "express";
 import cors from "cors";
 import categoryRouter from "./routes/categoryRoutes";
+import subcategoryRouter from "./routes/subcategoryRoutes";
+import questionRouter from "./routes/questionRoutes";
 import authRouter from "./routes/authRoutes";
 import { verifyToken } from "./middlewares/verifyToken";
 import { apiLimiter } from "./middlewares/rateLimiters";
@@ -25,5 +27,7 @@ app.use(apiLimiter);
 
 app.use("/api/v1/auth", authRouter);
 app.use("/api/v1/categories", verifyToken, categoryRouter);
+app.use("/api/v1", verifyToken, subcategoryRouter);
+app.use("/api/v1", verifyToken, questionRouter);
 
 export default app;

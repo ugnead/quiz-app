@@ -6,7 +6,7 @@ export const getAllCategories = async (
   res: Response
 ): Promise<void> => {
   try {
-    const categories = await Category.find().populate("subcategories");
+    const categories = await Category.find();
     res.status(200).json({
       status: "success",
       results: categories.length,
@@ -15,9 +15,9 @@ export const getAllCategories = async (
       },
     });
   } catch (error) {
-    res.status(404).json({
-      status: "fail",
-      message: error.message,
+    res.status(500).json({
+      status: "error",
+      message: error.message || "Internal Server Error",
     });
   }
 };
@@ -27,7 +27,10 @@ export const getCategoryById = async (
   res: Response
 ): Promise<void> => {
   try {
-    const category = await Category.findById(req.params.categoryId);
+    const { categoryId } = req.params;
+
+    const category = await Category.findById(categoryId);
+
     if (!category) {
       res.status(404).json({
         status: "fail",
@@ -42,9 +45,9 @@ export const getCategoryById = async (
       },
     });
   } catch (error) {
-    res.status(404).json({
-      status: "fail",
-      message: error.message,
+    res.status(500).json({
+      status: "error",
+      message: error.message || "Internal Server Error",
     });
   }
 };
@@ -128,7 +131,7 @@ export const updateCategory = async (
   } catch (error) {
     res.status(500).json({
       status: "fail",
-      message: error.message || "Server Error",
+      message: error.message || "Internal Server Error",
     });
   }
 };
@@ -157,7 +160,7 @@ export const deleteCategory = async (
   } catch (error) {
     res.status(500).json({
       status: "fail",
-      message: error.message || "Server Error",
+      message: error.message || "Internal Server Error",
     });
   }
 };
