@@ -1,23 +1,20 @@
 import express from "express";
 import {
-  getAllSubcategories,
+  getSubcategoriesByCategoryId,
   getSubcategoryById,
   createSubcategory,
   updateSubcategory,
   deleteSubcategory,
 } from "../controllers/subcategoryController";
-import questionRouter from "./questionRoutes";
 import { isAdmin } from "../middlewares/isAdmin";
 
-const router = express.Router({ mergeParams: true });
+const router = express.Router();
 
-router.get("/", getAllSubcategories);
-router.get("/:subcategoryId", getSubcategoryById);
+router.get("/categories/:categoryId/subcategories", getSubcategoriesByCategoryId);
+router.get("/subcategories/:subcategoryId", getSubcategoryById);
 
-router.post("/", isAdmin, createSubcategory);
-router.put("/:subcategoryId", isAdmin, updateSubcategory);
-router.delete("/:subcategoryId", isAdmin, deleteSubcategory);
-
-router.use("/:subcategoryId/questions", questionRouter);
+router.post("/categories/:categoryId/subcategories", isAdmin, createSubcategory);
+router.put("/subcategories/:subcategoryId", isAdmin, updateSubcategory);
+router.delete("/subcategories/:subcategoryId", isAdmin, deleteSubcategory);
 
 export default router;
