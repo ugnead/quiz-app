@@ -1,5 +1,7 @@
 import { Request, Response } from "express";
 import Category from "../models/categoryModel";
+import Subcategory from "../models/subcategoryModel";
+import Question from "../models/questionModel";
 
 export const getAllCategories = async (
   req: Request,
@@ -17,7 +19,7 @@ export const getAllCategories = async (
   } catch (error) {
     res.status(500).json({
       status: "error",
-      message: error.message || "Internal Server Error",
+      message: error || "Internal Server Error",
     });
   }
 };
@@ -47,7 +49,7 @@ export const getCategoryById = async (
   } catch (error) {
     res.status(500).json({
       status: "error",
-      message: error.message || "Internal Server Error",
+      message: error || "Internal Server Error",
     });
   }
 };
@@ -87,7 +89,7 @@ export const createCategory = async (
   } catch (error) {
     res.status(500).json({
       status: "fail",
-      message: error.message || "Internal Server Error",
+      message: error || "Internal Server Error",
     });
   }
 };
@@ -131,7 +133,7 @@ export const updateCategory = async (
   } catch (error) {
     res.status(500).json({
       status: "fail",
-      message: error.message || "Internal Server Error",
+      message: error || "Internal Server Error",
     });
   }
 };
@@ -153,6 +155,13 @@ export const deleteCategory = async (
       return;
     }
 
+    const subcategories = await Subcategory.find({ category: categoryId });
+    const subcategoryIds = subcategories.map((sub) => sub._id);
+
+    await Subcategory.deleteMany({ category: categoryId });
+
+    await Question.deleteMany({ subcategory: { $in: subcategoryIds } });
+
     res.status(204).json({
       status: "success",
       data: null,
@@ -160,7 +169,7 @@ export const deleteCategory = async (
   } catch (error) {
     res.status(500).json({
       status: "fail",
-      message: error.message || "Internal Server Error",
+      message: error || "Internal Server Error",
     });
   }
 };

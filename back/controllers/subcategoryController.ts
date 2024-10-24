@@ -22,7 +22,7 @@ export const getSubcategoriesByCategoryId = async (
   } catch (error) {
     res.status(500).json({
       status: "error",
-      message: error.message || "Internal Server Error",
+      message: error || "Internal Server Error",
     });
   }
 };
@@ -53,7 +53,7 @@ export const getSubcategoryById = async (
   } catch (error) {
     res.status(500).json({
       status: "error",
-      message: error.message || "Internal Server Error",
+      message: error || "Internal Server Error",
     });
   }
 };
@@ -97,7 +97,7 @@ export const createSubcategory = async (
   } catch (error) {
     res.status(500).json({
       status: "error",
-      message: error.message || "Internal Server Error",
+      message: error || "Internal Server Error",
     });
   }
 };
@@ -141,7 +141,7 @@ export const updateSubcategory = async (
   } catch (error) {
     res.status(500).json({
       status: "error",
-      message: error.message || "Internal Server Error",
+      message: error || "Internal Server Error",
     });
   }
 };
@@ -163,7 +163,7 @@ export const deleteSubcategory = async (
       return;
     }
 
-    await Question.deleteMany({ subcategoryId });
+    await Question.deleteMany({ subcategory: subcategoryId });
 
     res.status(204).json({
       status: "success",
@@ -172,7 +172,7 @@ export const deleteSubcategory = async (
   } catch (error) {
     res.status(500).json({
       status: "error",
-      message: error.message || "Internal Server Error",
+      message: error || "Internal Server Error",
     });
   }
 };

@@ -44,7 +44,7 @@ export const getUserProgress = async (
   } catch (error) {
     res.status(404).json({
       status: "fail",
-      message: error.message,
+      message: error,
     });
   }
 };
@@ -84,7 +84,7 @@ export const updateUserProgress = async (
   } catch (error) {
     res.status(404).json({
       status: "fail",
-      message: error.message,
+      message: error,
     });
   }
 };
@@ -109,7 +109,7 @@ export const deleteUserTestProgress = async (
   } catch (error) {
     res.status(500).json({
       status: "fail",
-      message: error.message,
+      message: error,
     });
   }
 };
