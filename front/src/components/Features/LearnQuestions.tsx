@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import {
   fetchQuestionsForLearning,
   updateUserProgress,
-} from "../../services/questions";
+} from "../../services/quiz";
 import { useParams } from "react-router-dom";
 import OptionsList from "../Common/OptionsList";
 import QuestionExplanation from "../Common/QuestionExplanation";

@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { fetchCategories } from "../../services/questions";
+import { fetchCategories } from "../../services/quiz";
 import { useNavigate } from "react-router-dom";
 import OptionsList from "../Common/OptionsList";
 

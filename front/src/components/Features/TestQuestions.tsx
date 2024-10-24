@@ -4,7 +4,7 @@ import {
   updateUserProgress,
   clearTestProgress,
   fetchSubcategoryById,
-} from "../../services/questions";
+} from "../../services/quiz";
 import { useParams, useNavigate } from "react-router-dom";
 import OptionsList from "../Common/OptionsList";
 import Modal from "../Common/Modal";
@@ -89,7 +89,13 @@ const TestQuestions: React.FC = () => {
     };
 
     updateProgressForCurrentQuestion();
-  }, [currentQuestionIndex, questions, subcategoryId, isTestFinished, isReviewing]);
+  }, [
+    currentQuestionIndex,
+    questions,
+    subcategoryId,
+    isTestFinished,
+    isReviewing,
+  ]);
 
   const handleOptionSelect = (option: string) => {
     setSelectedOption(option);

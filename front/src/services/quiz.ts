@@ -11,7 +11,7 @@ export const fetchCategoryById = async (categoryId: string) => {
 };
 
 export const fetchSubcategories = async (categoryId: string) => {
-  const response = await api.get(`/subcategories/category/${categoryId}`);
+  const response = await api.get(`/categories/${categoryId}/subcategories`);
   return response.data.data.subcategories;
 };
 
