@@ -57,11 +57,11 @@ const SubcategoryList: React.FC = () => {
   }, [categoryId]);
 
   const handleLearnSelect = (subcategoryId: string) => {
-    navigate(`/learn/${subcategoryId}`);
+    navigate(`/subcategories/${subcategoryId}/questions/learn`);
   };
 
   const handleTestSelect = (subcategoryId: string) => {
-    navigate(`/test/${subcategoryId}`);
+    navigate(`/subcategories/${subcategoryId}/questions/test`);
   };
 
   const handleBackToCategories = () => {

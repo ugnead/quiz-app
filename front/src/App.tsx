@@ -25,11 +25,11 @@ const App: React.FC = () => {
           />
           <Route path="/categories" element={<CategoryList />} />
           <Route
-            path="/subcategories/:categoryId"
+            path="/categories/:categoryId/subcategories"
             element={<SubcategoryList />}
           />
-          <Route path="/learn/:subcategoryId" element={<LearnQuestions />} />
-          <Route path="/test/:subcategoryId" element={<TestQuestions />} />
+          <Route path="/subcategories/:subcategoryId/questions/learn" element={<LearnQuestions />} />
+          <Route path="/subcategories/:subcategoryId/questions/test" element={<TestQuestions />} />
         </Routes>
       </div>
     </ErrorBoundary>

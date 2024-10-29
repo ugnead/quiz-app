@@ -20,20 +20,19 @@ export const fetchSubcategoryById = async (subcategoryId: string) => {
   return response.data.data.subcategory;
 };
 
-
-export const fetchUserProgress = async (subcategoryId: string) => {
-  const response = await api.get(`/questions/${subcategoryId}/progress`);
-  return response.data.data;
-};
-
 export const fetchQuestionsForLearning = async (subcategoryId: string) => {
-  const response = await api.get(`/questions/${subcategoryId}/learn`);
+  const response = await api.get(`/subcategories/${subcategoryId}/questions/learn`);
   return response.data.data.questions;
 };
 
 export const fetchQuestionsForTesting = async (subcategoryId: string) => {
-  const response = await api.get(`/questions/${subcategoryId}/test`);
+  const response = await api.get(`/subcategories/${subcategoryId}/questions/test`);
   return response.data.data.questions;
+};
+
+export const fetchUserProgress = async (subcategoryId: string) => {
+  const response = await api.get(`/subcategories/${subcategoryId}/progress`);
+  return response.data.data;
 };
 
 export const updateUserProgress = async (
@@ -42,7 +41,7 @@ export const updateUserProgress = async (
   isCorrect: boolean,
   mode: "learn" | "test"
 ) => {
-  const response = await api.post(`/questions/user_progress`, {
+  const response = await api.post(`/progress`, {
     questionId,
     subcategoryId,
     isCorrect,
@@ -51,7 +50,7 @@ export const updateUserProgress = async (
   return response.data;
 };
 
-export const clearTestProgress = async (subcategoryId: string) => {
-  const response = await api.delete(`/questions/${subcategoryId}/clear_test_progress`);
+export const deleteUserTestProgress = async (subcategoryId: string) => {
+  const response = await api.delete(`/subcategories/${subcategoryId}/progress`);
   return response.data;
 };

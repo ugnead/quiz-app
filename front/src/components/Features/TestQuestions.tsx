@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import {
   fetchQuestionsForTesting,
   updateUserProgress,
-  clearTestProgress,
+  deleteUserTestProgress,
   fetchSubcategoryById,
 } from "../../services/quiz";
 import { useParams, useNavigate } from "react-router-dom";
@@ -63,7 +63,7 @@ const TestQuestions: React.FC = () => {
     const loadQuestions = async () => {
       if (subcategoryId) {
         try {
-          await clearTestProgress(subcategoryId);
+          await deleteUserTestProgress(subcategoryId);
           const data = await fetchQuestionsForTesting(subcategoryId);
           setQuestions(data);
         } catch (error) {
@@ -167,7 +167,7 @@ const TestQuestions: React.FC = () => {
   };
 
   const handleBackToSubcategories = () => {
-    navigate(`/subcategories/${categoryId}`);
+    navigate(`/categories/${categoryId}/subcategories`);
   };
 
   const handleReviewAnswers = () => {

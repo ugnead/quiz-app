@@ -26,7 +26,7 @@ const CategoryList: React.FC = () => {
   }, []);
 
   const handleCategorySelect = (categoryId: string) => {
-    navigate(`/subcategories/${categoryId}`);
+    navigate(`/categories/${categoryId}/subcategories`);
   };
 
   const categoryOptions = categories.map((category) => ({
