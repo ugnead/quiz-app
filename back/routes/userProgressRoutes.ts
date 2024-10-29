@@ -5,11 +5,11 @@ import {
   deleteUserTestProgress,
 } from "../controllers/userProgressController";
 
-const router = express.Router({ mergeParams: true });
+const router = express.Router();
 
-router.get("/progress", getUserProgress);
+router.get("/subcategories/:subcategoryId/progress", getUserProgress);
 router.post("/progress", updateUserProgress);
-router.delete("/progress", deleteUserTestProgress);
+router.delete("/subcategories/:subcategoryId/progress", deleteUserTestProgress);
 
 export default router;
 
