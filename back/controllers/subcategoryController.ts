@@ -10,7 +10,7 @@ export const getSubcategoriesByCategoryId = async (
   try {
     const { categoryId } = req.params;
 
-    const subcategories = await Subcategory.find({ categoryId });
+    const subcategories = await Subcategory.find({ category: categoryId });
 
     res.status(200).json({
       status: "success",
