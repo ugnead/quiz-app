@@ -8,13 +8,13 @@ import {
 } from "../controllers/questionController";
 import { isAdmin } from "../middlewares/isAdmin";
 
-const router = express.Router({ mergeParams: true });
+const router = express.Router();
 
-router.get("/learn", getQuestionsForLearning);
-router.get("/test", getQuestionsForTesting);
+router.get("/subcategories/:subcategoryId/questions/learn", getQuestionsForLearning);
+router.get("/subcategories/:subcategoryId/questions/test", getQuestionsForTesting);
 
-router.post("/", isAdmin, createQuestion);
-router.put("/:questionId", isAdmin, updateQuestion);
-router.delete("/:questionId", isAdmin, deleteQuestion);
+router.post("/subcategories/:subcategoryId/questions", isAdmin, createQuestion);
+router.put("/questions/:questionId", isAdmin, updateQuestion);
+router.delete("/questions/:questionId", isAdmin, deleteQuestion);
 
 export default router;
