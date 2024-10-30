@@ -5,8 +5,10 @@ import subcategoryRouter from "./routes/subcategoryRoutes";
 import questionRouter from "./routes/questionRoutes";
 import userProgressRouter from "./routes/userProgressRoutes";
 import authRouter from "./routes/authRoutes";
+import userRouter from "./routes/userRoutes";
 import { verifyToken } from "./middlewares/verifyToken";
 import { apiLimiter } from "./middlewares/rateLimiters";
+import { isAdmin } from './middlewares/isAdmin';
 
 const app: Express = express();
 
@@ -31,5 +33,6 @@ app.use("/api/v1/categories", verifyToken, categoryRouter);
 app.use("/api/v1", verifyToken, subcategoryRouter);
 app.use("/api/v1", verifyToken, questionRouter);
 app.use("/api/v1", verifyToken, userProgressRouter);
+app.use("/api/v1/users", isAdmin, verifyToken, userRouter);
 
 export default app;
