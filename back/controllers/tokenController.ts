@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
 import jwt from "jsonwebtoken";
-import User from "../models/authModel";
+import User from "../models/userModel";
 
 const generateAccessToken = (userId: string): string => {
   return jwt.sign({ userId }, process.env.JWT_TOKEN!, { expiresIn: "15m" });
