@@ -1,8 +1,6 @@
 import React, { useState, useEffect } from "react";
-import {
-  fetchQuestionsForLearning,
-  updateUserProgress,
-} from "../../services/quiz";
+import { fetchQuestionsForLearning } from "../../services/questionService";
+import { updateUserProgress } from "../../services/userProgressService";
 import { useParams } from "react-router-dom";
 import OptionsList from "../Common/OptionsList";
 import QuestionExplanation from "../Common/QuestionExplanation";

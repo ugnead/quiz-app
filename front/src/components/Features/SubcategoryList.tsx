@@ -1,9 +1,7 @@
 import React, { useEffect, useState } from "react";
-import {
-  fetchCategoryById,
-  fetchSubcategories,
-  fetchUserProgress,
-} from "../../services/quiz";
+import { fetchCategoryById } from "../../services/categoryService";
+import { fetchSubcategories } from "../../services/subcategoryService";
+import { fetchUserProgress } from "../../services/userProgressService";
 import { useParams, useNavigate } from "react-router-dom";
 import { FaCheckCircle, FaTimesCircle, FaArrowLeft } from "react-icons/fa";
 

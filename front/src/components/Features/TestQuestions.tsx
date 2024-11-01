@@ -1,10 +1,8 @@
 import React, { useState, useEffect } from "react";
-import {
-  fetchQuestionsForTesting,
-  updateUserProgress,
-  deleteUserTestProgress,
-  fetchSubcategoryById,
-} from "../../services/quiz";
+import { fetchQuestionsForTesting } from "../../services/questionService";
+import { updateUserProgress } from "../../services/userProgressService";
+import { deleteUserTestProgress } from "../../services/userProgressService";
+import { fetchSubcategoryById } from "../../services/subcategoryService";
 import { useParams, useNavigate } from "react-router-dom";
 import OptionsList from "../Common/OptionsList";
 import Modal from "../Common/Modal";
