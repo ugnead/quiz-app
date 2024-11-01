@@ -1,14 +1,9 @@
-import express from 'express';
-import {
-  getAllUsers,
-  updateUserRole,
-  deactivateUser,
-} from '../controllers/userController';
+import express from "express";
+import { getAllUsers, updateUserRole } from "../controllers/userController";
 
 const router = express.Router();
 
-router.get('/', getAllUsers);
-router.patch('/:userId/role', updateUserRole);
-router.patch('/:userId/deactivate', deactivateUser);
+router.get("/", getAllUsers);
+router.patch("/:userId/role", updateUserRole);
 
 export default router;
