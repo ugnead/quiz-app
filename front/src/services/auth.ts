@@ -3,6 +3,7 @@ import api from "./api";
 interface UserProfile {
   name: string;
   email: string;
+  role: string;
 }
 
 interface AuthResponse {

@@ -18,6 +18,7 @@ interface AuthContextProps {
 interface UserProfile {
   name: string;
   email: string;
+  role: string;
 }
 
 export const AuthContext = createContext<AuthContextProps | undefined>(
@@ -37,6 +38,7 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({
         try {
           const user = await verifyToken();
           setUser(user);
+          console.log("User verified:", user);
         } catch (error) {
           console.error("Failed to verify token or token expired:", error);
           setUser(null);
