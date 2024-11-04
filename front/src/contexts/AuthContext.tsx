@@ -11,6 +11,7 @@ import { useNavigate } from "react-router-dom";
 
 interface AuthContextProps {
   user: UserProfile | null;
+  loading: boolean;
   login: (response: string) => Promise<void>;
   logout: () => Promise<void>;
 }
@@ -29,6 +30,7 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({
   children,
 }) => {
   const [user, setUser] = useState<UserProfile | null>(null);
+  const [loading, setLoading] = useState<boolean>(true);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -43,6 +45,7 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({
           console.error("Failed to verify token or token expired:", error);
           setUser(null);
         }
+        setLoading(false);
       }
     };
     initializeUser();
@@ -75,7 +78,7 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({
   };
 
   return (
-    <AuthContext.Provider value={{ user, login, logout }}>
+    <AuthContext.Provider value={{ user, loading, login, logout }}>
       {children}
     </AuthContext.Provider>
   );
