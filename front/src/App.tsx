@@ -1,6 +1,5 @@
 import React from "react";
-import { Routes, Route, Navigate } from "react-router-dom";
-import Home from "./components/Public/Home";
+import { Routes, Route } from "react-router-dom";
 import CategoryList from "./components/User/CategoryList";
 import SubcategoryList from "./components/User/SubcategoryList";
 import LearnQuestions from "./components/User/LearnQuestions";
@@ -10,19 +9,16 @@ import { useAuth } from "./contexts/AuthContext";
 import PublicLayout from "./components/Layouts/PublicLayout";
 import UserLayout from "./components/Layouts/UserLayout";
 import AdminLayout from "./components/Layouts/AdminLayout";
+import HomeRedirect from "./components/Common/HomeRedirect";
 
 const App: React.FC = () => {
-  const { user, loading } = useAuth();
-
-  if (loading) {
-    return null;
-  }
+  const { user } = useAuth();
 
   return (
     <ErrorBoundary>
       <Routes>
         <Route element={<PublicLayout />}>
-          <Route path="/" element={<Home />} />
+          <Route path="/" element={<HomeRedirect />} />
         </Route>
 
         {user && (
@@ -50,21 +46,6 @@ const App: React.FC = () => {
             <Route path="questions" element={<SubcategoryList />} />
           </Route>
         )}
-
-        <Route
-          path="*"
-          element={
-            user ? (
-              user.role === "admin" ? (
-                <Navigate to="/admin/categories" />
-              ) : (
-                <Navigate to="/categories" />
-              )
-            ) : (
-              <Navigate to="/" />
-            )
-          }
-        />
       </Routes>
     </ErrorBoundary>
   );
