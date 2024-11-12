@@ -40,13 +40,12 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({
         try {
           const user = await verifyToken();
           setUser(user);
-          console.log("User verified:", user);
         } catch (error) {
           console.error("Failed to verify token or token expired:", error);
           setUser(null);
         }
-        setLoading(false);
       }
+      setLoading(false);
     };
     initializeUser();
   }, []);
