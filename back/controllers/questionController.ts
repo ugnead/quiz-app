@@ -104,7 +104,6 @@ export const createQuestion = async (
     const { subcategoryId } = req.params;
     const { question, options, correctAnswer, explanation } = req.body;
 
-    // Input validation
     if (!question || !options || options.length < 2 || !correctAnswer) {
       res.status(400).json({
         status: "fail",
