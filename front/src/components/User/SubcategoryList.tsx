@@ -4,6 +4,7 @@ import { fetchSubcategories } from "../../services/subcategoryService";
 import { fetchUserProgress } from "../../services/userProgressService";
 import { useParams, useNavigate } from "react-router-dom";
 import { FaCheckCircle, FaTimesCircle, FaArrowLeft } from "react-icons/fa";
+import Button from "../Common/Button";
 
 interface Subcategory {
   _id: string;
@@ -103,18 +104,19 @@ const SubcategoryList: React.FC = () => {
                 {subcategory.name}
               </span>
               <div className="flex space-x-4">
-                <button
-                  className="flex items-center justify-center w-2/4 text-nowrap px-2"
+                <Button
+                  className="w-2/4 text-nowrap"
                   onClick={() => handleLearnSelect(subcategory._id)}
+                  variant="secondary"
                 >
                   Learn{" "}
                   {progress
                     ? `${progress.learnedQuestions}/${progress.totalQuestions}`
                     : ""}
                   {progress && getLearnIcon(progress)}
-                </button>
-                <button
-                  className="flex items-center justify-center bg-blue-600 w-2/4 text-nowrap px-2"
+                </Button>
+                <Button
+                  className="w-2/4 text-nowrap"
                   onClick={() => handleTestSelect(subcategory._id)}
                 >
                   Test{" "}
@@ -122,7 +124,7 @@ const SubcategoryList: React.FC = () => {
                     ? `${progress.correctTestAnswers}/${progress.totalQuestions}`
                     : ""}
                   {progress && getTestIcon(progress)}
-                </button>
+                </Button>
               </div>
             </li>
           );

@@ -1,4 +1,5 @@
 import React from "react";
+import Button from "./Button";
 
 interface Option {
   id: string;
@@ -21,23 +22,24 @@ const OptionsList: React.FC<OptionsListProps> = ({
   showExplanation,
 }) => {
   const getOptionClass = (optionId: string) => {
-    if (!showExplanation) return "w-full";
-    if (optionId === correctAnswer) return "w-full bg-green-500 text-white";
-    if (optionId === selectedOption) return "w-full bg-red-500 text-white";
-    return "w-full";
+    if (!showExplanation) return "secondary";
+    if (optionId === correctAnswer) return "success";
+    if (optionId === selectedOption) return "danger";
+    return "secondary";
   };
 
   return (
     <ul className="flex flex-col space-y-4">
       {options.map((option) => (
         <li key={option.id}>
-          <button
-            className={getOptionClass(option.id)}
+          <Button
+            variant={getOptionClass(option.id)}
             onClick={() => onSelectOption && onSelectOption(option.id)}
             disabled={showExplanation}
+            fullWidth
           >
             {option.name}
-          </button>
+          </Button>
         </li>
       ))}
     </ul>
