@@ -87,7 +87,7 @@ const SubcategoryList: React.FC = () => {
       <div className="flex items-center justify-center relative pb-6 sm:pb-12">
         <button
           onClick={handleBackToCategories}
-          className="absolute sm:top-2 top-0 left-0 sm:p-2 p-1.5 rounded-full"
+          className="absolute sm:top-5 top-2 left-0"
         >
           <FaArrowLeft className="text-2xl" />
         </button>
