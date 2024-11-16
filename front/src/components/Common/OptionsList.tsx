@@ -37,6 +37,7 @@ const OptionsList: React.FC<OptionsListProps> = ({
             onClick={() => onSelectOption && onSelectOption(option.id)}
             disabled={showExplanation}
             fullWidth
+            enableFocusRing
           >
             {option.name}
           </Button>
