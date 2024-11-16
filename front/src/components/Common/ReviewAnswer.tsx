@@ -1,4 +1,5 @@
 import React, { useEffect, useRef } from "react";
+import Button from "./Button";
 
 interface ReviewAnswerProps {
   answeredQuestions: {
@@ -14,33 +15,27 @@ const ReviewAnswer: React.FC<ReviewAnswerProps> = ({
   answeredQuestions,
   handleReviewQuestion,
 }) => {
-  const firstButtonRef = useRef<HTMLButtonElement | null>(null);
-
-  useEffect(() => {
-    if (firstButtonRef.current) {
-      firstButtonRef.current.focus();
-    }
-  }, []);
 
   return (
     <div className="mt-4 flex flex-wrap">
       {answeredQuestions.map(({ answerSequence, isCorrect, selectedOption }, index) => {
         const colorClass = isCorrect
-          ? "bg-green-500"
+          ? "success"
           : selectedOption === null
-          ? "bg-yellow-500"
-          : "bg-red-500";
+          ? "warning"
+          : "danger";
 
         return (
-          <button
+          <Button
             key={answerSequence}
-            ref={index === 0 ? firstButtonRef : null}
             onClick={() => handleReviewQuestion(answerSequence)}
-            className={`w-11 mx-1 m-3 px-0 py-2 rounded-full text-white ${colorClass}`}
+            variant={colorClass}
+            className={`w-11 mx-2 my-2 px-0 py-2 text-white`}
             tabIndex={0}
+            enableFocusRing
           >
             {index + 1}
-          </button>
+          </Button>
         );
       })}
     </div>

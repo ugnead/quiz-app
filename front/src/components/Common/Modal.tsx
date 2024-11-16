@@ -1,4 +1,5 @@
 import React from 'react';
+import Button from './Button';
 
 interface ModalProps {
   isOpen: boolean;
@@ -20,18 +21,18 @@ const Modal: React.FC<ModalProps> = ({
       <div className="bg-white p-6 rounded-md m-5">
         <p className="mb-4">{message}</p>
         <div className="flex justify-between space-x-4">
-          <button
-            className="bg-red-500"
+          <Button
             onClick={onCancel}
+            variant="danger"
           >
             Cancel
-          </button>
-          <button
-            className="bg-green-500"
+          </Button>
+          <Button
             onClick={onConfirm}
+            variant="success"
           >
             Confirm
-          </button>
+          </Button>
         </div>
       </div>
     </div>

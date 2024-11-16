@@ -5,6 +5,7 @@ import { useParams } from "react-router-dom";
 import OptionsList from "../Common/OptionsList";
 import QuestionExplanation from "../Common/QuestionExplanation";
 import ReviewAnswer from "../Common/ReviewAnswer";
+import Button from "../Common/Button";
 
 interface Question {
   _id: string;
@@ -130,19 +131,21 @@ const LearnQuestions: React.FC = () => {
       />
       <div className="flex justify-end mt-7">
         {!showExplanation ? (
-          <button
-            className={`cursor-pointer ${
-              !selectedOption ? "opacity-50 cursor-not-allowed" : ""
-            }`}
+          <Button
             onClick={handleSubmit}
             disabled={!selectedOption}
+            variant="secondary"
           >
             Submit
-          </button>
+          </Button>
         ) : (
-          <button onClick={handleNextQuestion} className="cursor-pointer">
+          <Button
+            onClick={handleNextQuestion}
+            className="cursor-pointer"
+            variant="secondary"
+          >
             Next Question
-          </button>
+          </Button>
         )}
       </div>
       <ReviewAnswer

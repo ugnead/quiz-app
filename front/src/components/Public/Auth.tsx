@@ -1,5 +1,6 @@
 import React, { useEffect } from "react";
 import { useAuth } from "../../contexts/AuthContext";
+import Button from "../Common/Button";
 
 declare global {
   interface Window {
@@ -59,7 +60,7 @@ const Auth: React.FC = () => {
     <div>
       {user ? (
         <div>
-          <button onClick={logout}>Logout</button>
+          <Button variant="secondary" onClick={logout}>Logout</Button>
         </div>
       ) : (
         <div id="buttonDiv" key={user ? "logged-in" : "logged-out"}></div>

@@ -10,6 +10,7 @@ import Timer from "../Common/Timer";
 import QuestionExplanation from "../Common/QuestionExplanation";
 import ReviewAnswer from "../Common/ReviewAnswer";
 import { FaArrowLeft } from "react-icons/fa";
+import Button from "../Common/Button";
 
 interface Question {
   _id: string;
@@ -203,17 +204,18 @@ const TestQuestions: React.FC = () => {
           Your score: {score}/{questions.length}
         </p>
         <div>
-          <button className="w-60 bg-blue-600" onClick={handleReviewAnswers}>
+          <Button className="w-60" onClick={handleReviewAnswers}>
             <div>Review Answers</div>
-          </button>
+          </Button>
           <div className="m-2 text-xl">OR</div>
-          <button
-            className="flex items-center mx-auto w-60"
+          <Button
+            className="w-60"
             onClick={handleBackToSubcategories}
+            startIcon={<FaArrowLeft />}
+            variant="secondary"
           >
-            <FaArrowLeft className="me-3" />
             <div>Back to Subcategories</div>
-          </button>
+          </Button>
         </div>
       </div>
     );
@@ -251,9 +253,9 @@ const TestQuestions: React.FC = () => {
           onTimeUp={handleTimeUp}
           label="Time left"
         />
-        <button className="bg-red-500" onClick={handleEndTest}>
+        <Button variant="danger" onClick={handleEndTest}>
           End Test
-        </button>
+        </Button>
       </div>
       <h2 className="mb-3 text-center">{currentQuestion.question}</h2>
       <p className="text-center text-sm mb-4">
@@ -267,15 +269,13 @@ const TestQuestions: React.FC = () => {
       />
       <div className="flex justify-end mt-7">
         {!isTestFinished && (
-          <button
-            className={`cursor-pointer ${
-              !selectedOption ? "opacity-50 cursor-not-allowed" : ""
-            }`}
+          <Button
             onClick={handleSubmit}
             disabled={!selectedOption}
+            variant="secondary"
           >
             Submit
-          </button>
+          </Button>
         )}
       </div>
       <Modal
