@@ -70,13 +70,13 @@ const Sidebar: React.FC<SidebarProps> = ({ items, title }) => {
             ))}
           </ul>
         </nav>
-        <div
-          className={`md:hidden absolute top-14 right-0 translate-x-full text-black p-3 cursor-pointer z-50
+        <button
+          className={`md:hidden absolute top-14 right-0 translate-x-full text-black p-3 z-50
             ${isOpen ? "hidden" : ""}`}
           onClick={toggleSidebar}
         >
           <MdKeyboardDoubleArrowRight size={35} />
-        </div>
+        </button>
       </div>
 
       {isOpen && (
