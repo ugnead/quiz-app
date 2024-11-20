@@ -44,9 +44,9 @@ const Sidebar: React.FC<SidebarProps> = ({ items, title }) => {
         className={`bg-white text-black w-64 h-full z-40 fixed top-0 left-0 md:relative duration-500 ease-in-out 
           ${isOpen ? "translate-x-0" : "-translate-x-full"}`}
       >
-        <nav className="h-full p-4 border-r">
+        <nav className="h-full px-4 py-9 border-r">
           {title && (
-            <div className="text-center mt-2 mb-7">
+            <div className="text-center mb-6">
               <h2 className="text-2xl font-bold">{title}</h2>
             </div>
           )}
@@ -71,7 +71,7 @@ const Sidebar: React.FC<SidebarProps> = ({ items, title }) => {
           </ul>
         </nav>
         <button
-          className={`md:hidden absolute top-14 right-0 translate-x-full text-black p-3 z-50
+          className={`md:hidden absolute top-16 sm:top-20 right-0 translate-x-full text-black p-3 z-50
             ${isOpen ? "hidden" : ""}`}
           onClick={toggleSidebar}
         >
