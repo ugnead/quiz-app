@@ -20,22 +20,27 @@ const DropdownMenu: React.FC<DropdownMenuProps> = ({ onEdit, onDelete }) => {
       }
     };
 
-    document.addEventListener("mousedown", handleClickOutside);
+    if (isOpen) {
+      document.addEventListener("mousedown", handleClickOutside);
+    } else {
+      document.removeEventListener("mousedown", handleClickOutside);
+    }
+
     return () => {
       document.removeEventListener("mousedown", handleClickOutside);
     };
-  }, []);
+  }, [isOpen]);
 
   return (
-    <div className="relative" ref={dropdownRef}>
+    <div className="relative inline-block" ref={dropdownRef}>
       <button
         onClick={() => setIsOpen(!isOpen)}
-        className="text-gray-500 hover:text-gray-700 focus:outline-none pt-2"
+        className="focus:outline-none pt-2"
       >
         <FiMoreVertical size={20} />
       </button>
       {isOpen && (
-        <div className="absolute right-0 w-32 bg-white border border-gray-200 rounded shadow-lg z-50">
+        <div className="absolute bottom-full right-0 mb-0.5 w-32 bg-white border border-gray-200 rounded shadow z-50">
           <button
             onClick={() => {
               setIsOpen(false);
