@@ -12,15 +12,17 @@ const navItems = [
 const Layout: React.FC = () => {
   return (
     <>
+    <div className="flex flex-col min-h-screen h-auto">
       <Navigation />
-      <div className="flex h-screen">
+      <div className="flex flex-1">
         <Sidebar items={navItems} title="Admin Panel" />
 
-        <div className="w-full p-5 sm:p-10 flex justify-center">
-          <div className="w-full max-w-4xl">
+        <div className="flex-1 p-5 pb-10 sm:p-10 min-w-0">
+          <div className="w-full max-w-4xl mx-auto">
             <Outlet />
           </div>
         </div>
+      </div>
       </div>
     </>
   );

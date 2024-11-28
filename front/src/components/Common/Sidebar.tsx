@@ -41,13 +41,13 @@ const Sidebar: React.FC<SidebarProps> = ({ items, title }) => {
   return (
     <>
       <div
-        className={`bg-white text-black w-64 h-full z-40 fixed top-0 left-0 md:relative duration-500 ease-in-out 
+        className={`max-md:h-full bg-white text-black w-60 z-40 fixed top-0 left-0 md:relative duration-500 ease-in-out 
           ${isOpen ? "translate-x-0" : "-translate-x-full"}`}
       >
-        <nav className="h-full px-4 py-9 border-r">
+        <nav className="px-4 py-10 border-r">
           {title && (
-            <div className="text-center mb-6">
-              <h2 className="text-2xl font-bold">{title}</h2>
+            <div className="text-center mb-7">
+              <h3>{title}</h3>
             </div>
           )}
           <ul>
@@ -58,12 +58,12 @@ const Sidebar: React.FC<SidebarProps> = ({ items, title }) => {
                   className={({ isActive }) =>
                     `flex items-center mb-2 py-2 px-4 rounded ${
                       isActive
-                        ? "bg-gray-200 font-semibold"
+                        ? "bg-gray-200"
                         : "hover:bg-gray-100 transition-colors"
                     }`
                   }
                 >
-                  <item.icon className="mr-3 text-black" size={20} />
+                  <item.icon className="mr-3 text-black" size={18} />
                   {item.label}
                 </NavLink>
               </li>
@@ -71,7 +71,7 @@ const Sidebar: React.FC<SidebarProps> = ({ items, title }) => {
           </ul>
         </nav>
         <button
-          className={`md:hidden absolute top-16 sm:top-20 right-0 translate-x-full text-black p-3 z-50
+          className={`md:hidden absolute top-[70px] sm:top-[88px] right-[-15px] sm:right-[-35px] translate-x-full text-black p-2 z-50 bg-gray-100 rounded-full
             ${isOpen ? "hidden" : ""}`}
           onClick={toggleSidebar}
         >
