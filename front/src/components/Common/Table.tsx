@@ -2,7 +2,7 @@ import React from "react";
 
 export interface Column<T> {
   header: string;
-  accessor: keyof T | string;
+  accessor?: keyof T;
   render?: (data: T) => React.ReactNode;
   cellClassName?: string;
 }
@@ -23,24 +23,22 @@ function Table<T extends object>({
   getRowClass,
 }: TableProps<T>) {
   return (
-    <div>
+    <div className="overflow-x-auto">
       {title && (
         <div className="text-center mb-7">
           <h3>{title}</h3>
         </div>
       )}
-      <div className="overflow-x-auto">
-        <table className="w-full bg-white">
-          <thead className="bg-gray-200">
+      <div >
+        <table className="w-full bg-white rounded-lg">
+          <thead className="bg-gray-800">
             <tr>
               {columns.map((column, colIndex) => (
                 <th
-                  key={String(column.accessor)}
-                  className={`py-3 px-3 text-left font-semibold ${
-                    colIndex === 0 ? "first:rounded-tl-lg" : ""
-                  } ${
-                    colIndex === columns.length - 1 ? "last:rounded-tr-lg" : ""
-                  }`}
+                  key={String(column.header || colIndex)}
+                  className={`py-3 px-3 text-left text-white font-semibold ${
+                    colIndex === 0 ? "rounded-tl-lg" : ""
+                  } ${colIndex === columns.length - 1 ? "rounded-tr-lg" : ""}`}
                 >
                   {column.header}
                 </th>
@@ -63,20 +61,20 @@ function Table<T extends object>({
                 >
                   {columns.map((column, colIndex) => (
                     <td
-                      key={String(column.accessor)}
+                      key={String(column.header || colIndex)}
                       className={`py-3 px-3 text-gray-800 ${
                         column.cellClassName || ""
-                      } ${
-                        isLastRow && colIndex === 0 ? "first:rounded-bl-lg" : ""
-                      } ${
+                      } ${isLastRow && colIndex === 0 ? "rounded-bl-lg" : ""} ${
                         isLastRow && colIndex === columns.length - 1
-                          ? "last:rounded-br-lg"
+                          ? "rounded-br-lg"
                           : ""
                       }`}
                     >
                       {column.render
                         ? column.render(row)
-                        : String(row[column.accessor])}
+                        : column.accessor
+                          ? String(row[column.accessor])
+                          : null}
                     </td>
                   ))}
                 </tr>
