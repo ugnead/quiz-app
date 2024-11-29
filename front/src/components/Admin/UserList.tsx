@@ -1,34 +1,37 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Table, { Column } from "../Common/Table";
 import DropdownMenu from "../Common/Dropdown";
 import Pagination from "../Common/Pagination";
+import { fetchUsers } from "../../services/userService";
 
 interface User {
-  id: number;
+  _id: number;
   name: string;
   email: string;
   role: string;
 }
 
-const initialUsers: User[] = [
-  { id: 1, name: "Alice Johnson", email: "alice@example.com", role: "Admin" },
-  { id: 2, name: "Bob Smith", email: "bob@example.com", role: "User" },
-  { id: 3, name: "Charlie Brown", email: "charlie@example.com", role: "User" },
-  { id: 1, name: "Alice Johnson", email: "alice@example.com", role: "Admin" },
-  { id: 2, name: "Bob Smith", email: "bob@example.com", role: "User" },
-  { id: 3, name: "Charlie Brown", email: "charlie@example.com", role: "User" },
-  { id: 1, name: "Alice Johnson", email: "alice@example.com", role: "Admin" },
-  { id: 2, name: "Bob Smith", email: "bob@example.com", role: "User" },
-  { id: 3, name: "Charlie Brown", email: "charlie@example.com", role: "User" },
-  { id: 10, name: "Alice Johnson", email: "alice@example.com", role: "Admin" },
-];
-
 const UserList: React.FC = () => {
-  const [users] = useState<User[]>(initialUsers);
+  const [users, setUsers ] = useState<User[]>([]);
   const [currentPage, setCurrentPage] = useState(1);
   const pageSize = 10;
 
   const totalPages = Math.ceil(users.length / pageSize);
+  const startIndex = (currentPage - 1) * pageSize;
+  const currentPageData = users.slice(startIndex, startIndex + pageSize);
+
+  useEffect(() => {
+    const loadUsers = async () => {
+      try {
+        const data = await fetchUsers();
+        setUsers(data);
+      } catch (error) {
+        console.error("Failed to fetch categories:", error);
+      }
+    };
+
+    loadUsers();
+  }, []);
 
   const handleEdit = (user: User) => {
     console.log("Edit user:", user);
@@ -37,11 +40,15 @@ const UserList: React.FC = () => {
   const handleDelete = (user: User) => {
     console.log("Delete user:", user);
   };
+  
+  const handlePageChange = (page: number) => {
+    setCurrentPage(page);
+  };
 
   const columns: Column<User>[] = [
     {
       header: "ID",
-      accessor: "id",
+      accessor: "_id",
     },
     {
       header: "Name",
@@ -57,7 +64,7 @@ const UserList: React.FC = () => {
       render: (user) => (
         <span
           className={`px-2 py-1 rounded-full text-xs font-medium ${
-            user.role === "Admin"
+            user.role === "admin"
               ? "bg-blue-200 text-blue-800"
               : "bg-green-200 text-green-800"
           }`}
@@ -77,13 +84,6 @@ const UserList: React.FC = () => {
       cellClassName: "text-right",
     },
   ];
-
-  const handlePageChange = (page: number) => {
-    setCurrentPage(page);
-  };
-
-  const startIndex = (currentPage - 1) * pageSize;
-  const currentPageData = users.slice(startIndex, startIndex + pageSize);
 
   return (
     <>
