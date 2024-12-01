@@ -3,9 +3,10 @@ import Table, { Column } from "../Common/Table";
 import DropdownMenu from "../Common/Dropdown";
 import Pagination from "../Common/Pagination";
 import { fetchUsers } from "../../services/userService";
+import Label from "../Common/Label";
 
 interface User {
-  _id: number;
+  _id: string;
   name: string;
   email: string;
   role: string;
@@ -49,6 +50,9 @@ const UserList: React.FC = () => {
     {
       header: "ID",
       accessor: "_id",
+      render: (user) => (
+        <span title={user._id}>{`...${user._id.slice(-4)}`}</span>
+      ),
     },
     {
       header: "Name",
@@ -59,19 +63,12 @@ const UserList: React.FC = () => {
       accessor: "email",
     },
     {
-      header: "Role",
-      accessor: "role",
-      render: (user) => (
-        <span
-          className={`px-2 py-1 rounded-full text-xs font-medium ${
-            user.role === "admin"
-              ? "bg-blue-200 text-blue-800"
-              : "bg-green-200 text-green-800"
-          }`}
-        >
-          {user.role}
-        </span>
-      ),
+      header: 'Role',
+      accessor: 'role',
+      render: (user) => {
+        const variant = user.role === 'admin' ? 'success' : 'primary';
+        return <Label text={user.role} variant={variant} />;
+      },
     },
     {
       header: "",
