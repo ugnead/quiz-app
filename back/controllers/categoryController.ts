@@ -9,6 +9,7 @@ export const getAllCategories = async (
 ): Promise<void> => {
   try {
     const categories = await Category.find();
+
     res.status(200).json({
       status: "success",
       results: categories.length,
@@ -59,9 +60,9 @@ export const createCategory = async (
   res: Response
 ): Promise<void> => {
   try {
-    const { name } = req.body;
+    const { name, status } = req.body;
 
-    if (!name) {
+    if (!name || typeof name !== "string" || !name.trim()) {
       res.status(400).json({
         status: "fail",
         message: "Category name is required",
@@ -69,16 +70,34 @@ export const createCategory = async (
       return;
     }
 
-    const existingCategory = await Category.findOne({ name });
-    if (existingCategory) {
-      res.status(409).json({
+    const allowedStatuses = ["enabled", "disabled"];
+    if (status && !allowedStatuses.includes(status)) {
+      res.status(400).json({
         status: "fail",
-        message: "Category already exists",
+        message: `Invalid category status`,
       });
       return;
     }
 
-    const newCategory = await Category.create({ name });
+    const existingCategory = await Category.findOne({
+      name: { $regex: new RegExp(`^${name}$`, "i") },
+    });
+    if (existingCategory) {
+      res.status(409).json({
+        status: "fail",
+        message: "Category name already exists",
+      });
+      return;
+    }
+
+    const sanitizedName = name.trim();
+
+    const newCategoryData: any = { name: sanitizedName };
+    if (status) {
+      newCategoryData.status = status;
+    }
+
+    const newCategory = await Category.create(newCategoryData);
 
     res.status(201).json({
       status: "success",
@@ -100,19 +119,44 @@ export const updateCategory = async (
 ): Promise<void> => {
   try {
     const { categoryId } = req.params;
-    const { name } = req.body;
+    const { name, status } = req.body;
 
-    if (!name) {
+    if (!name && !status) {
       res.status(400).json({
         status: "fail",
-        message: "Category name is required",
+        message: "At least one field is required to update",
       });
       return;
     }
 
+    if (name) {
+      if (typeof name !== "string" || name.trim() === "") {
+        res.status(400).json({
+          status: "fail",
+          message: "Category name is required",
+        });
+        return;
+      }
+    }
+
+    const allowedStatuses = ["enabled", "disabled"];
+    if (status && !allowedStatuses.includes(status)) {
+      res.status(400).json({
+        status: "fail",
+        message: `Invalid category status`,
+      });
+      return;
+    }
+
+    const sanitizedName = name.trim();
+
+    const updateData: any = {};
+    if (name) updateData.name = sanitizedName;
+    if (status) updateData.status = status;
+
     const updatedCategory = await Category.findByIdAndUpdate(
       categoryId,
-      { name },
+      updateData,
       { new: true, runValidators: true }
     );
 
@@ -173,4 +217,3 @@ export const deleteCategory = async (
     });
   }
 };
-
