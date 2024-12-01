@@ -41,10 +41,10 @@ const Sidebar: React.FC<SidebarProps> = ({ items, title }) => {
   return (
     <>
       <div
-        className={`max-md:h-full bg-white text-black w-60 z-40 fixed top-0 left-0 md:relative duration-500 ease-in-out 
+        className={`max-md:h-full bg-white text-black w-60 z-40 fixed top-0 left-0 md:relative duration-500 ease-in-out border-r
           ${isOpen ? "translate-x-0" : "-translate-x-full"}`}
       >
-        <nav className="px-4 py-10 border-r">
+        <nav className="px-4 py-10">
           {title && (
             <div className="text-center mb-7">
               <h3>{title}</h3>
