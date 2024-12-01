@@ -3,13 +3,15 @@ import Table, { Column } from "../Common/Table";
 import DropdownMenu from "../Common/Dropdown";
 import Pagination from "../Common/Pagination";
 import { fetchCategories } from "../../services/categoryService";
+import Label from "../Common/Label";
 
 interface Category {
     _id: string;
     name: string;
+    status: "enabled" | "disabled";
   }
 
-const UserList: React.FC = () => {
+const CategoryList: React.FC = () => {
   const [categories, setCategories] = useState<Category[]>([]);
   const [currentPage, setCurrentPage] = useState(1);
   const pageSize = 10;
@@ -19,7 +21,7 @@ const UserList: React.FC = () => {
   const currentPageData = categories.slice(startIndex, startIndex + pageSize);
 
   useEffect(() => {
-    const loadUsers = async () => {
+    const loadCategories  = async () => {
       try {
         const data = await fetchCategories();
         setCategories(data);
@@ -28,15 +30,15 @@ const UserList: React.FC = () => {
       }
     };
 
-    loadUsers();
+    loadCategories ();
   }, []);
 
   const handleEdit = (category: Category) => {
-    console.log("Edit user:", category);
+    console.log("Edit category:", category);
   };
 
   const handleDelete = (category: Category) => {
-    console.log("Delete user:", category);
+    console.log("Delete category:", category);
   };
   
   const handlePageChange = (page: number) => {
@@ -47,17 +49,28 @@ const UserList: React.FC = () => {
     {
       header: "ID",
       accessor: "_id",
+      render: (category) => (
+        <span title={category._id}>{`...${category._id.slice(-4)}`}</span>
+      ),
     },
     {
       header: "Name",
       accessor: "name",
     },
     {
+      header: "Status",
+      accessor: "status",
+      render: (category) => {
+        const variant = category.status === 'enabled' ? 'primary' : 'secondary';
+        return <Label text={category.status} variant={variant} />;
+      },
+    },
+    {
       header: "",
-      render: (user) => (
+      render: (category) => (
         <DropdownMenu
-          onEdit={() => handleEdit(user)}
-          onDelete={() => handleDelete(user)}
+          onEdit={() => handleEdit(category)}
+          onDelete={() => handleDelete(category)}
         />
       ),
       cellClassName: "text-right",
@@ -76,4 +89,4 @@ const UserList: React.FC = () => {
   );
 };
 
-export default UserList;
+export default CategoryList;
