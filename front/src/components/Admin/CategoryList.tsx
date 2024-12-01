@@ -4,6 +4,7 @@ import DropdownMenu from "../Common/Dropdown";
 import Pagination from "../Common/Pagination";
 import { fetchCategories } from "../../services/categoryService";
 import Label from "../Common/Label";
+import { FiEdit, FiTrash2 } from "react-icons/fi";
 
 interface Category {
     _id: string;
@@ -69,9 +70,20 @@ const CategoryList: React.FC = () => {
       header: "",
       render: (category) => (
         <DropdownMenu
-          onEdit={() => handleEdit(category)}
-          onDelete={() => handleDelete(category)}
-        />
+        items={[
+          {
+            label: "Edit",
+            onClick: () => handleEdit(category),
+            icon: <FiEdit />,
+          },
+          {
+            label: "Delete",
+            onClick: () => handleDelete(category),
+            icon: <FiTrash2 />,
+            className: "text-red-600",
+          },
+        ]}
+      />
       ),
       cellClassName: "text-right",
     },

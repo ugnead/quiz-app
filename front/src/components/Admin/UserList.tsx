@@ -4,6 +4,7 @@ import DropdownMenu from "../Common/Dropdown";
 import Pagination from "../Common/Pagination";
 import { fetchUsers } from "../../services/userService";
 import Label from "../Common/Label";
+import { FiEdit } from "react-icons/fi";
 
 interface User {
   _id: string;
@@ -13,7 +14,7 @@ interface User {
 }
 
 const UserList: React.FC = () => {
-  const [users, setUsers ] = useState<User[]>([]);
+  const [users, setUsers] = useState<User[]>([]);
   const [currentPage, setCurrentPage] = useState(1);
   const pageSize = 10;
 
@@ -38,10 +39,6 @@ const UserList: React.FC = () => {
     console.log("Edit user:", user);
   };
 
-  const handleDelete = (user: User) => {
-    console.log("Delete user:", user);
-  };
-  
   const handlePageChange = (page: number) => {
     setCurrentPage(page);
   };
@@ -63,10 +60,10 @@ const UserList: React.FC = () => {
       accessor: "email",
     },
     {
-      header: 'Role',
-      accessor: 'role',
+      header: "Role",
+      accessor: "role",
       render: (user) => {
-        const variant = user.role === 'admin' ? 'success' : 'primary';
+        const variant = user.role === "admin" ? "success" : "primary";
         return <Label text={user.role} variant={variant} />;
       },
     },
@@ -74,8 +71,13 @@ const UserList: React.FC = () => {
       header: "",
       render: (user) => (
         <DropdownMenu
-          onEdit={() => handleEdit(user)}
-          onDelete={() => handleDelete(user)}
+          items={[
+            {
+              label: "Edit",
+              onClick: () => handleEdit(user),
+              icon: <FiEdit />,
+            },
+          ]}
         />
       ),
       cellClassName: "text-right",
@@ -84,7 +86,7 @@ const UserList: React.FC = () => {
 
   return (
     <>
-      <Table title="Users List" data={currentPageData } columns={columns} />
+      <Table title="Users List" data={currentPageData} columns={columns} />
       <Pagination
         currentPage={currentPage}
         totalPages={totalPages}
