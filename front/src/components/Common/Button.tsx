@@ -1,7 +1,7 @@
 import React from 'react';
 
 interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
-  variant?: 'primary' | 'secondary' | 'danger' | 'success' | 'warning' | 'info';
+  variant?: 'primary' | 'secondary' | 'danger' | 'success' | 'warning' | 'info' | 'lightGray';
   size?: 'small' | 'medium' | 'large';
   fullWidth?: boolean;
   disabled?: boolean;
@@ -34,6 +34,7 @@ const Button: React.FC<ButtonProps> = ({
     success: 'text-white bg-green-600 hover:bg-green-700',
     warning: 'text-white bg-yellow-500 hover:bg-yellow-600',
     info: 'text-white bg-teal-500 hover:bg-teal-600',
+    lightGray: 'bg-gray-200 hover:bg-gray-300',
   };
 
   const focusRingBaseClasses = 'focus:outline-none focus:ring-2 focus:ring-offset-2';
@@ -45,6 +46,7 @@ const Button: React.FC<ButtonProps> = ({
     success: 'focus:ring-green-600',
     warning: 'focus:ring-yellow-500',
     info: 'focus:ring-teal-500',
+    lightGray: 'focus:ring-gray-200',
   };
 
   const sizeClasses = {
