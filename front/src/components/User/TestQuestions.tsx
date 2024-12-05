@@ -280,10 +280,23 @@ const TestQuestions: React.FC = () => {
       </div>
       <Modal
         isOpen={isModalOpen}
-        onConfirm={handleConfirmEndTest}
-        onCancel={handleCancelEndTest}
-        message="Are you sure you want to end the test?"
-      />
+        onClose={handleCancelEndTest}
+        title="End Test"
+        actions={[
+          {
+            label: "Cancel",
+            onClick: handleCancelEndTest,
+            variant: "secondary",
+          },
+          {
+            label: "Confirm",
+            onClick: handleConfirmEndTest,
+            variant: "danger",
+          },
+        ]}
+      >
+        <p>Are you sure you want to end the test?</p>
+      </Modal>
     </div>
   );
 };
