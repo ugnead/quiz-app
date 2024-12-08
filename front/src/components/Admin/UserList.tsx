@@ -2,9 +2,12 @@ import React, { useEffect, useState } from "react";
 import Table, { Column } from "../Common/Table";
 import DropdownMenu from "../Common/Dropdown";
 import Pagination from "../Common/Pagination";
-import { fetchUsers } from "../../services/userService";
+import { fetchUsers, updateUserRole } from "../../services/userService";
 import Label from "../Common/Label";
 import { FiEdit } from "react-icons/fi";
+import Modal from "../Common/Modal";
+import DynamicForm from "../Common/Form/DynamicForm";
+import { userFormSchema } from "../../schemas/formSchemas";
 
 interface User {
   _id: string;
@@ -15,9 +18,11 @@ interface User {
 
 const UserList: React.FC = () => {
   const [users, setUsers] = useState<User[]>([]);
+  const [selectedUser, setSelectedUser] = useState<User | null>(null);
+  const [isModalOpen, setModalOpen] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
-  const pageSize = 10;
 
+  const pageSize = 10;
   const totalPages = Math.ceil(users.length / pageSize);
   const startIndex = (currentPage - 1) * pageSize;
   const currentPageData = users.slice(startIndex, startIndex + pageSize);
@@ -28,7 +33,7 @@ const UserList: React.FC = () => {
         const data = await fetchUsers();
         setUsers(data);
       } catch (error) {
-        console.error("Failed to fetch categories:", error);
+        console.error("Failed to fetch users:", error);
       }
     };
 
@@ -36,7 +41,31 @@ const UserList: React.FC = () => {
   }, []);
 
   const handleEdit = (user: User) => {
-    console.log("Edit user:", user);
+    setSelectedUser(user);
+    setModalOpen(true);
+  };
+
+  const handleModalClose = () => {
+    setModalOpen(false);
+    setSelectedUser(null);
+  };
+
+  const handleSubmit = async (values: Record<string, string>) => {
+    if (!selectedUser) return;
+
+    try {
+      const updatedUser = await updateUserRole(selectedUser._id, values.role);
+      setUsers((prevUsers) =>
+        prevUsers.map((user) =>
+          user._id === updatedUser._id ? updatedUser : user
+        )
+      );
+      console.log("User role updated successfully:", updatedUser);
+    } catch (error) {
+      console.error("Failed to update user role:");
+    }
+
+    handleModalClose();
   };
 
   const handlePageChange = (page: number) => {
@@ -92,6 +121,24 @@ const UserList: React.FC = () => {
         totalPages={totalPages}
         onPageChange={handlePageChange}
       />
+      {isModalOpen && selectedUser && (
+        <Modal
+          isOpen={isModalOpen}
+          onClose={handleModalClose}
+          title={"Update User"}
+        >
+          <DynamicForm
+            schema={userFormSchema}
+            initialValues={{
+              name: selectedUser.name,
+              email: selectedUser.email,
+              role: selectedUser.role,
+            }}
+            onSubmit={handleSubmit}
+            formMode="update"
+          />
+        </Modal>
+      )}
     </>
   );
 };
