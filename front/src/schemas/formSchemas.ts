@@ -1,4 +1,4 @@
-import { FieldSchema } from '../components/Common/Form/DynamicForm';
+import { FieldSchema } from "../components/Common/Form/DynamicForm";
 
 export const categoryFormSchema: FieldSchema[] = [
   {
@@ -28,16 +28,6 @@ export const userFormSchema: FieldSchema[] = [
   {
     name: "name",
     label: "Name",
-    type: "text",
-    readOnly: true,
-    validation: {
-      required: true,
-      minLength: 1,
-    },
-  },
-  {
-    name: "surname",
-    label: "Surname",
     type: "text",
     readOnly: true,
     validation: {
