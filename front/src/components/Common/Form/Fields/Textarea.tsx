@@ -27,7 +27,7 @@ const Textarea: React.FC<TextareaProps> = ({
       {label && (
         <label
           htmlFor={textareaId}
-          className="block text-sm font-medium text-gray-700 mb-1"
+          className="block text-sm font-medium mb-1 pointer-events-none"
         >
           {label}
         </label>
@@ -35,9 +35,9 @@ const Textarea: React.FC<TextareaProps> = ({
       <textarea
         id={textareaId}
         readOnly={readOnly}
-        className={`block w-full border rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 ${
-          error ? "border-red-500" : "border-gray-300"
-        } ${readOnly ? "bg-gray-100" : ""} ${className}`}
+        className={`block w-full border rounded-md px-3 py-2
+          ${error ? "border-red-500" : "border-gray-300"}
+          ${readOnly ? "bg-gray-200 text-gray-500 pointer-events-none" : "focus:outline-none focus:ring-2 focus:ring-blue-500"} ${className}`}
         {...props}
       />
       {helperText && !error && (
