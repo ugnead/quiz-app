@@ -34,7 +34,7 @@ const Input: React.FC<InputProps> = ({
         type={type}
         id={inputId}
         readOnly={readOnly}
-        className={`block w-full border rounded-md px-3 py-2
+        className={`block w-full border rounded-md px-3 py-2 cursor-pointer
           ${error ? "border-red-500" : "border-gray-300"} 
           ${readOnly ? "bg-gray-200 text-gray-500 pointer-events-none" : "bg-white focus:outline-none focus:ring-2 focus:ring-blue-500"} ${className}`}
         {...props}

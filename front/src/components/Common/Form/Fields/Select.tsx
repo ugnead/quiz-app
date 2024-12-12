@@ -57,7 +57,7 @@ const Select: React.FC<SelectProps> = ({
       <div className="relative">
         <select
           id={selectId}
-          className={`block w-full border rounded-md px-3 py-2 bg-white appearance-none focus:outline-none focus:ring-2 focus:ring-blue-500
+          className={`block w-full border rounded-md px-3 py-2 bg-white appearance-none focus:outline-none focus:ring-2 focus:ring-blue-500 cursor-pointer
             ${error ? "border-red-500" : "border-gray-300"} ${className}`}
           {...props}
         >
