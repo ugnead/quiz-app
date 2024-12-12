@@ -14,6 +14,7 @@ export interface FieldSchema {
   validation?: {
     required?: boolean;
     minLength?: number;
+    maxLength?: number;
     pattern?: RegExp;
   };
   readOnly?: boolean | ((formMode: "create" | "update") => boolean);
@@ -45,6 +46,12 @@ const DynamicForm: React.FC<DynamicFormProps> = ({
           validator = validator.min(
             field.validation.minLength,
             `Minimum ${field.validation.minLength} characters`
+          );
+        }
+        if (field.validation.maxLength) {
+          validator = validator.max(
+            field.validation.maxLength,
+            `Maximum ${field.validation.maxLength} characters`
           );
         }
         if (field.validation.pattern) {
@@ -111,7 +118,7 @@ const DynamicForm: React.FC<DynamicFormProps> = ({
         }
       })}
       <div className="flex justify-end mt-4">
-        <Button type="submit" variant="primary">
+        <Button type="submit" variant="primary" disabled={!formik.isValid || !formik.dirty}>
           Submit
         </Button>
       </div>
