@@ -70,6 +70,14 @@ export const createCategory = async (
       return;
     }
 
+    if (name && (name.trim().length < 3 || name.trim().length > 50)) {
+      res.status(400).json({
+        status: "fail",
+        message: "Category name must be between 3 and 50 characters",
+      });
+      return;
+    }
+
     const allowedStatuses = ["enabled", "disabled"];
     if (status && !allowedStatuses.includes(status)) {
       res.status(400).json({
@@ -129,14 +137,20 @@ export const updateCategory = async (
       return;
     }
 
-    if (name) {
-      if (typeof name !== "string" || name.trim() === "") {
-        res.status(400).json({
-          status: "fail",
-          message: "Category name is required",
-        });
-        return;
-      }
+    if (name && (typeof name !== "string" || !name.trim())) {
+      res.status(400).json({
+        status: "fail",
+        message: "Category name is required",
+      });
+      return;
+    }
+
+    if (name && (name.trim().length < 3 || name.trim().length > 50)) {
+      res.status(400).json({
+        status: "fail",
+        message: "Category name must be between 3 and 50 characters",
+      });
+      return;
     }
 
     const allowedStatuses = ["enabled", "disabled"];
@@ -148,19 +162,20 @@ export const updateCategory = async (
       return;
     }
 
-    const sanitizedName = name.trim();
+    const updateCategoryData: any = {};
+    if (name) {
+      const sanitizedName = name.trim();
+      updateCategoryData.name = sanitizedName;
+    }
+    if (status) updateCategoryData.status = status;
 
-    const updateData: any = {};
-    if (name) updateData.name = sanitizedName;
-    if (status) updateData.status = status;
-
-    const updatedCategory = await Category.findByIdAndUpdate(
+    const updateCategory = await Category.findByIdAndUpdate(
       categoryId,
-      updateData,
+      updateCategoryData,
       { new: true, runValidators: true }
     );
 
-    if (!updatedCategory) {
+    if (!updateCategory) {
       res.status(404).json({
         status: "fail",
         message: "Category not found",
@@ -171,7 +186,7 @@ export const updateCategory = async (
     res.status(200).json({
       status: "success",
       data: {
-        category: updatedCategory,
+        category: updateCategory,
       },
     });
   } catch (error) {
