@@ -10,19 +10,16 @@ export const fetchCategoryById = async (categoryId: string) => {
   return response.data.data.category;
 };
 
-export const createCategory = async (categoryName: string) => {
-  const response = await api.post("/categories", categoryName);
+export const createCategory = async (categoryData: Record<string, string>) => {
+  const response = await api.post("/categories", categoryData);
   return response.data.data.category;
 };
 
 export const updateCategory = async (
   categoryId: string,
-  categoryName: string
+  categoryData: Record<string, string>
 ) => {
-  const response = await api.put(
-    `/categories/${categoryId}`,
-    categoryName
-  );
+  const response = await api.patch(`/categories/${categoryId}`, categoryData);
   return response.data.data.category;
 };
 
