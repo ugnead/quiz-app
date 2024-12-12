@@ -2,7 +2,11 @@ import React, { useEffect, useState } from "react";
 import Table, { Column } from "../Common/Table";
 import DropdownMenu from "../Common/Dropdown";
 import Pagination from "../Common/Pagination";
-import { fetchCategories } from "../../services/categoryService";
+import {
+  fetchCategories,
+  createCategory,
+  updateCategory,
+} from "../../services/categoryService";
 import Label from "../Common/Label";
 import { FiEdit, FiTrash2 } from "react-icons/fi";
 import Modal from "../Common/Modal";
@@ -13,16 +17,19 @@ import Button from "../Common/Button";
 interface Category {
   _id: string;
   name: string;
-  status: "enabled" | "disabled";
+  status: string;
 }
 
 const CategoryList: React.FC = () => {
   const [categories, setCategories] = useState<Category[]>([]);
-  const [currentPage, setCurrentPage] = useState(1);
-  const [isModalOpen, setModalOpen] = useState(false);
   const [selectedCategory, setSelectedCategory] = useState<Category | null>(
     null
   );
+  const [isModalOpen, setModalOpen] = useState(false);
+  const [initialFormValues, setInitialFormValues] = useState<
+    Record<string, string>
+  >({});
+  const [currentPage, setCurrentPage] = useState(1);
 
   const pageSize = 10;
   const totalPages = Math.ceil(categories.length / pageSize);
@@ -44,11 +51,17 @@ const CategoryList: React.FC = () => {
 
   const handleCreate = () => {
     setSelectedCategory(null);
+    setInitialFormValues({ name: "", status: "enabled" });
     setModalOpen(true);
   };
 
   const handleEdit = (category: Category) => {
     setSelectedCategory(category);
+    setInitialFormValues({
+      id: category._id,
+      name: category.name,
+      status: category.status,
+    });
     setModalOpen(true);
   };
 
@@ -62,13 +75,34 @@ const CategoryList: React.FC = () => {
     setSelectedCategory(null);
   };
 
-  const handleCategorySubmit = (values: Record<string, string>) => {
-    const category: Category = {
-      _id: values._id || "",
-      name: values.name,
-      status: values.status as "enabled" | "disabled",
-    };
-    console.log("Submitted values:", category);
+  const handleSubmit = async (values: Record<string, string>) => {
+    const changedFields: Record<string, string> = {};
+
+    for (const key in values) {
+      if (values[key] !== initialFormValues[key]) {
+        changedFields[key] = values[key];
+      }
+    }
+
+    try {
+      if (!selectedCategory) {
+        const newCategory = await createCategory(changedFields);
+        setCategories((prev) => [newCategory, ...prev]);
+      } else {
+        const updatedCategory = await updateCategory(
+          selectedCategory._id,
+          changedFields
+        );
+        setCategories((prev) =>
+          prev.map((cat) =>
+            cat._id === updatedCategory._id ? updatedCategory : cat
+          )
+        );
+      }
+    } catch (error) {
+      console.error("Failed to create/update category:", error);
+    }
+
     handleModalClose();
   };
 
@@ -142,18 +176,8 @@ const CategoryList: React.FC = () => {
         >
           <DynamicForm
             schema={categoryFormSchema}
-            initialValues={
-              selectedCategory
-                ? {
-                    name: selectedCategory.name,
-                    status: selectedCategory.status,
-                  }
-                : {
-                    name: "",
-                    status: "enabled",
-                  }
-            }
-            onSubmit={handleCategorySubmit}
+            initialValues={initialFormValues}
+            onSubmit={handleSubmit}
             formMode={selectedCategory ? "update" : "create"}
           />
         </Modal>
