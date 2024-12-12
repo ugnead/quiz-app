@@ -2,12 +2,22 @@ import { FieldSchema } from "../components/Common/Form/DynamicForm";
 
 export const categoryFormSchema: FieldSchema[] = [
   {
+    name: "id",
+    label: "ID",
+    type: "text",
+    readOnly: true,
+    validation: {
+      required: true,
+    },
+  },
+  {
     name: "name",
     label: "Category Name",
     type: "text",
     validation: {
       required: true,
       minLength: 1,
+      maxLength: 50,
     },
   },
   {
@@ -26,6 +36,15 @@ export const categoryFormSchema: FieldSchema[] = [
 
 export const userFormSchema: FieldSchema[] = [
   {
+    name: "id",
+    label: "ID",
+    type: "text",
+    readOnly: true,
+    validation: {
+      required: true,
+    },
+  },
+  {
     name: "name",
     label: "Name",
     type: "text",
@@ -33,6 +52,7 @@ export const userFormSchema: FieldSchema[] = [
     validation: {
       required: true,
       minLength: 1,
+      maxLength: 50,
     },
   },
   {
