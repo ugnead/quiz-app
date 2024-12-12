@@ -7,7 +7,12 @@ interface ICategory extends Document {
 }
 
 let categorySchema = new Schema<ICategory>({
-  name: { type: String, required: true },
+  name: {
+    type: String,
+    required: true,
+    minlength: [1, "Name must be at least 1 character(s) long"],
+    maxlength: [50, "Name cannot exceed 50 character(s)"],
+  },
   subcategories: [
     {
       type: Schema.Types.ObjectId,
@@ -16,6 +21,7 @@ let categorySchema = new Schema<ICategory>({
   ],
   status: {
     type: String,
+    required: true,
     enum: ["enabled", "disabled"],
     default: "enabled",
   },
