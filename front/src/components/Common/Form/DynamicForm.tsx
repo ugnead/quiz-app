@@ -33,7 +33,6 @@ const DynamicForm: React.FC<DynamicFormProps> = ({
   onSubmit,
   formMode = "create",
 }) => {
-
   const validationSchema = schema.reduce(
     (acc, field) => {
       let validator = Yup.string();
@@ -83,6 +82,10 @@ const DynamicForm: React.FC<DynamicFormProps> = ({
   return (
     <form onSubmit={formik.handleSubmit}>
       {schema.map((field) => {
+        if (field.name === "id" && formMode === "create") {
+          return null;
+        }
+
         const error =
           typeof formik.errors[field.name] === "string"
             ? formik.errors[field.name]
@@ -118,7 +121,11 @@ const DynamicForm: React.FC<DynamicFormProps> = ({
         }
       })}
       <div className="flex justify-end mt-4">
-        <Button type="submit" variant="primary" disabled={!formik.isValid || !formik.dirty}>
+        <Button
+          type="submit"
+          variant="primary"
+          disabled={!formik.isValid || !formik.dirty}
+        >
           Submit
         </Button>
       </div>
