@@ -20,6 +20,9 @@ const UserList: React.FC = () => {
   const [users, setUsers] = useState<User[]>([]);
   const [selectedUser, setSelectedUser] = useState<User | null>(null);
   const [isModalOpen, setModalOpen] = useState(false);
+  const [initialFormValues, setInitialFormValues] = useState<
+    Record<string, string>
+  >({});
   const [currentPage, setCurrentPage] = useState(1);
 
   const pageSize = 10;
@@ -42,6 +45,12 @@ const UserList: React.FC = () => {
 
   const handleEdit = (user: User) => {
     setSelectedUser(user);
+    setInitialFormValues({
+      id: user._id,
+      name: user.name,
+      email: user.email,
+      role: user.role,
+    });
     setModalOpen(true);
   };
 
@@ -55,12 +64,9 @@ const UserList: React.FC = () => {
 
     try {
       const updatedUser = await updateUserRole(selectedUser._id, values.role);
-      setUsers((prevUsers) =>
-        prevUsers.map((user) =>
-          user._id === updatedUser._id ? updatedUser : user
-        )
+      setUsers((prev) =>
+        prev.map((user) => (user._id === updatedUser._id ? updatedUser : user))
       );
-      console.log("User role updated successfully:", updatedUser);
     } catch (error) {
       console.error("Failed to update user role:");
     }
@@ -129,11 +135,7 @@ const UserList: React.FC = () => {
         >
           <DynamicForm
             schema={userFormSchema}
-            initialValues={{
-              name: selectedUser.name,
-              email: selectedUser.email,
-              role: selectedUser.role,
-            }}
+            initialValues={initialFormValues}
             onSubmit={handleSubmit}
             formMode="update"
           />
