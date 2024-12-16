@@ -4,6 +4,7 @@ interface ICategory extends Document {
   name: string;
   subcategories: Schema.Types.ObjectId[];
   status: "enabled" | "disabled";
+  createdAt: Date;
 }
 
 let categorySchema = new Schema<ICategory>({
@@ -25,6 +26,7 @@ let categorySchema = new Schema<ICategory>({
     enum: ["enabled", "disabled"],
     default: "enabled",
   },
+  createdAt: { type: Date, default: Date.now },
 });
 
 const Category = model<ICategory>("Category", categorySchema);
