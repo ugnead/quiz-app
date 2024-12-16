@@ -8,7 +8,7 @@ export const getAllCategories = async (
   res: Response
 ): Promise<void> => {
   try {
-    const categories = await Category.find();
+    const categories = await Category.find().sort({ createdAt: -1 });
 
     res.status(200).json({
       status: "success",
@@ -70,10 +70,10 @@ export const createCategory = async (
       return;
     }
 
-    if (name && (name.trim().length < 3 || name.trim().length > 50)) {
+    if (name && (name.trim().length < 1 || name.trim().length > 50)) {
       res.status(400).json({
         status: "fail",
-        message: "Category name must be between 3 and 50 characters",
+        message: "Category name must be between 1 and 50 characters",
       });
       return;
     }
@@ -145,10 +145,10 @@ export const updateCategory = async (
       return;
     }
 
-    if (name && (name.trim().length < 3 || name.trim().length > 50)) {
+    if (name && (name.trim().length < 1 || name.trim().length > 50)) {
       res.status(400).json({
         status: "fail",
-        message: "Category name must be between 3 and 50 characters",
+        message: "Category name must be between 1 and 50 characters",
       });
       return;
     }
