@@ -6,6 +6,7 @@ import {
   fetchCategories,
   createCategory,
   updateCategory,
+  deleteCategory,
 } from "../../services/categoryService";
 import Label from "../Common/Label";
 import { FiEdit, FiTrash2 } from "react-icons/fi";
@@ -26,6 +27,7 @@ const CategoryList: React.FC = () => {
     null
   );
   const [isModalOpen, setModalOpen] = useState(false);
+  const [isDeleteMode, setIsDeleteMode] = useState(false);
   const [initialFormValues, setInitialFormValues] = useState<
     Record<string, string>
   >({});
@@ -51,12 +53,14 @@ const CategoryList: React.FC = () => {
 
   const handleCreate = () => {
     setSelectedCategory(null);
+    setIsDeleteMode(false);
     setInitialFormValues({ name: "", status: "enabled" });
     setModalOpen(true);
   };
 
   const handleEdit = (category: Category) => {
     setSelectedCategory(category);
+    setIsDeleteMode(false);
     setInitialFormValues({
       id: category._id,
       name: category.name,
@@ -67,12 +71,14 @@ const CategoryList: React.FC = () => {
 
   const handleDelete = (category: Category) => {
     setSelectedCategory(category);
+    setIsDeleteMode(true);
     setModalOpen(true);
   };
 
   const handleModalClose = () => {
     setModalOpen(false);
     setSelectedCategory(null);
+    setIsDeleteMode(false);
   };
 
   const handleSubmit = async (values: Record<string, string>) => {
@@ -101,6 +107,21 @@ const CategoryList: React.FC = () => {
       }
     } catch (error) {
       console.error("Failed to create/update category:", error);
+    }
+
+    handleModalClose();
+  };
+
+  const handleDeleteConfirm = async () => {
+    if (!selectedCategory) return;
+
+    try {
+      await deleteCategory(selectedCategory._id);
+      setCategories((prev) =>
+        prev.filter((cat) => cat._id !== selectedCategory._id)
+      );
+    } catch (error) {
+      console.error("Failed to delete category:", error);
     }
 
     handleModalClose();
@@ -172,14 +193,40 @@ const CategoryList: React.FC = () => {
         <Modal
           isOpen={isModalOpen}
           onClose={handleModalClose}
-          title={selectedCategory ? "Update Category" : "Create Category"}
+          title={
+            isDeleteMode
+              ? "Delete Category"
+              : selectedCategory
+                ? "Update Category"
+                : "Create Category"
+          }
+          actions={
+            isDeleteMode
+              ? [
+                  {
+                    label: "Cancel",
+                    onClick: handleModalClose,
+                    variant: "secondary",
+                  },
+                  {
+                    label: "Confirm",
+                    onClick: handleDeleteConfirm,
+                    variant: "danger",
+                  },
+                ]
+              : []
+          }
         >
-          <DynamicForm
-            schema={categoryFormSchema}
-            initialValues={initialFormValues}
-            onSubmit={handleSubmit}
-            formMode={selectedCategory ? "update" : "create"}
-          />
+          {isDeleteMode ? (
+            <p>Are you sure you want to delete this category?</p>
+          ) : (
+            <DynamicForm
+              schema={categoryFormSchema}
+              initialValues={initialFormValues}
+              onSubmit={handleSubmit}
+              formMode={selectedCategory ? "update" : "create"}
+            />
+          )}
         </Modal>
       )}
     </>
