@@ -26,7 +26,6 @@ const Modal: React.FC<ModalProps> = ({
   actions = [],
   className = "",
 }) => {
-
   useEffect(() => {
     const handleEscape = (event: KeyboardEvent) => {
       if (event.key === "Escape") {
@@ -82,7 +81,11 @@ const Modal: React.FC<ModalProps> = ({
         )}
         <div>{children}</div>
         {actions.length > 0 && (
-          <div className="flex justify-between space-x-2 mt-4">
+          <div
+            className={`flex space-x-2 mt-4 ${
+              actions.length === 1 ? "justify-end" : "justify-between"
+            }`}
+          >
             {actions.map((action, index) => (
               <Button
                 key={index}
