@@ -64,7 +64,7 @@ export const createSubcategory = async (
 ): Promise<void> => {
   try {
     const { categoryId } = req.params;
-    const { name } = req.body;
+    const { name, status } = req.body;
 
     if (!name) {
       res.status(400).json({
@@ -83,10 +83,23 @@ export const createSubcategory = async (
       return;
     }
 
-    const newSubcategory = await Subcategory.create({
-      name,
-      category: categoryId,
-    });
+    const allowedStatuses = ["enabled", "disabled"];
+    if (status && !allowedStatuses.includes(status)) {
+      res.status(400).json({
+        status: "fail",
+        message: `Invalid subcategory status`,
+      });
+      return;
+    }
+
+    const sanitizedName = name.trim();
+
+    const newSubcategoryData: any = { name: sanitizedName };
+    if (status) {
+      newSubcategoryData.status = status;
+    }
+
+    const newSubcategory = await Subcategory.create(newSubcategoryData);
 
     res.status(201).json({
       status: "success",
@@ -108,7 +121,7 @@ export const updateSubcategory = async (
 ): Promise<void> => {
   try {
     const { subcategoryId } = req.params;
-    const { name } = req.body;
+    const { name, status } = req.body;
 
     if (!name) {
       res.status(400).json({
@@ -118,13 +131,29 @@ export const updateSubcategory = async (
       return;
     }
 
-    const updatedSubcategory = await Subcategory.findByIdAndUpdate(
+    const allowedStatuses = ["enabled", "disabled"];
+    if (status && !allowedStatuses.includes(status)) {
+      res.status(400).json({
+        status: "fail",
+        message: `Invalid subcategory status`,
+      });
+      return;
+    }
+
+    const updateSubategoryData: any = {};
+    if (name) {
+      const sanitizedName = name.trim();
+      updateSubategoryData.name = sanitizedName;
+    }
+    if (status) updateSubategoryData.status = status;
+
+    const updateSubcategory = await Subcategory.findByIdAndUpdate(
       subcategoryId,
-      { name },
+      updateSubategoryData,
       { new: true, runValidators: true }
     );
 
-    if (!updatedSubcategory) {
+    if (!updateSubcategory) {
       res.status(404).json({
         status: "fail",
         message: "Subcategory not found",
@@ -135,7 +164,7 @@ export const updateSubcategory = async (
     res.status(200).json({
       status: "success",
       data: {
-        subcategory: updatedSubcategory,
+        subcategory: updateSubcategory,
       },
     });
   } catch (error) {
@@ -153,7 +182,9 @@ export const deleteSubcategory = async (
   try {
     const { subcategoryId } = req.params;
 
-    const deletedSubcategory = await Subcategory.findByIdAndDelete(subcategoryId);
+    const deletedSubcategory = await Subcategory.findByIdAndDelete(
+      subcategoryId
+    );
 
     if (!deletedSubcategory) {
       res.status(404).json({
