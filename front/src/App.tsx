@@ -12,6 +12,7 @@ import AdminLayout from "./components/Layouts/AdminLayout";
 import HomeRedirect from "./components/Common/HomeRedirect";
 import UserList from "./components/Admin/UserList";
 import AdminCategoryList from "./components/Admin/CategoryList";
+import AdminSubcategoryList from "./components/Admin/SubcategoryList";
 
 const App: React.FC = () => {
   const { user } = useAuth();
@@ -45,7 +46,7 @@ const App: React.FC = () => {
           <Route path="/admin/*" element={<AdminLayout />}>
             <Route path="users" element={<UserList />} />
             <Route path="categories" element={<AdminCategoryList />} />
-            <Route path="subcategories" element={<SubcategoryList />} />
+            <Route path="categories/:categoryId/subcategories" element={<AdminSubcategoryList />} />
             <Route path="questions" element={<SubcategoryList />} />
           </Route>
         )}
