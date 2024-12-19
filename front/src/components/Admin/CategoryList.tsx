@@ -14,6 +14,7 @@ import Modal from "../Common/Modal";
 import DynamicForm from "../Common/Form/DynamicForm";
 import { categoryFormSchema } from "../../schemas/formSchemas";
 import Button from "../Common/Button";
+import { useNavigate } from "react-router-dom";
 
 interface Category {
   _id: string;
@@ -37,6 +38,8 @@ const CategoryList: React.FC = () => {
   const totalPages = Math.ceil(categories.length / pageSize);
   const startIndex = (currentPage - 1) * pageSize;
   const currentPageData = categories.slice(startIndex, startIndex + pageSize);
+
+  const navigate = useNavigate();
 
   useEffect(() => {
     const loadCategories = async () => {
@@ -131,6 +134,10 @@ const CategoryList: React.FC = () => {
     setCurrentPage(page);
   };
 
+  const handleRowClick = (category: Category) => {
+    navigate(`/admin/categories/${category._id}/subcategories`, { state: { category } });
+  };
+
   const columns: Column<Category>[] = [
     {
       header: "ID",
@@ -176,7 +183,12 @@ const CategoryList: React.FC = () => {
 
   return (
     <>
-      <Table title="Category List" data={currentPageData} columns={columns} />
+      <Table
+        title="Category List"
+        data={currentPageData}
+        columns={columns}
+        onRowClick={handleRowClick}
+      />
       <Button
         variant="lightGray"
         onClick={handleCreate}

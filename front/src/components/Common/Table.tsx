@@ -48,9 +48,11 @@ function Table<T extends object>({
           <tbody>
             {data.map((row, rowIndex) => {
               const isLastRow = rowIndex === data.length - 1;
+              const clickableClass = onRowClick ? "cursor-pointer" : "";
               const rowClasses = `${
                 rowIndex % 2 === 0 ? "bg-white" : "bg-gray-50"
               } hover:bg-blue-50 transition-colors duration-200
+              ${clickableClass}
               ${getRowClass ? getRowClass(row, rowIndex) : ""}`;
 
               return (
