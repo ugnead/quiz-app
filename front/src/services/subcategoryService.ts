@@ -12,22 +12,22 @@ export const fetchSubcategoryById = async (subcategoryId: string) => {
 
 export const createSubcategory = async (
   categoryId: string,
-  subcategoryName: string
+  subcategoryData: Record<string, string>
 ) => {
   const response = await api.post(
     `/categories/${categoryId}/subcategories`,
-    subcategoryName
+    subcategoryData
   );
   return response.data.data.subcategory;
 };
 
 export const updateSubcategory = async (
   subcategoryId: string,
-  subcategoryName: string
+  subcategoryData: Record<string, string>
 ) => {
-  const response = await api.put(
+  const response = await api.patch(
     `/subcategories/${subcategoryId}`,
-    subcategoryName
+    subcategoryData
   );
   return response.data.data.subcategory;
 };
