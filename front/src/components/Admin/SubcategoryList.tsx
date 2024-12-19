@@ -1,7 +1,9 @@
 import React, { useEffect, useState } from "react";
+import { useParams, useLocation } from "react-router-dom";
 import Table, { Column } from "../Common/Table";
 import DropdownMenu from "../Common/Dropdown";
 import Pagination from "../Common/Pagination";
+import { fetchCategoryById } from "../../services/categoryService";
 import {
   fetchSubcategories,
   createSubcategory,
@@ -12,7 +14,7 @@ import Label from "../Common/Label";
 import { FiEdit, FiTrash2 } from "react-icons/fi";
 import Modal from "../Common/Modal";
 import DynamicForm from "../Common/Form/DynamicForm";
-import { categoryFormSchema } from "../../schemas/formSchemas";
+import { subcategoryFormSchema } from "../../schemas/formSchemas";
 import Button from "../Common/Button";
 
 interface Subcategory {
@@ -21,11 +23,20 @@ interface Subcategory {
   status: string;
 }
 
+interface Category {
+  _id: string;
+  name: string;
+}
+
 const SubcategoryList: React.FC = () => {
-  const [subcategories, setSubcategories] = useState<Subcategory[]>([]);
-  const [selectedSubcategory, setSelectedSubcategory] = useState<Subcategory | null>(
+  const { categoryId } = useParams<{ categoryId: string }>();
+  const location = useLocation() as { state?: { category?: Category } };
+  const [selectedCategory, setSelectedCategory] = useState<Category | null>(
     null
   );
+  const [subcategories, setSubcategories] = useState<Subcategory[]>([]);
+  const [selectedSubcategory, setSelectedSubcategory] =
+    useState<Subcategory | null>(null);
   const [isModalOpen, setModalOpen] = useState(false);
   const [isDeleteMode, setIsDeleteMode] = useState(false);
   const [initialFormValues, setInitialFormValues] = useState<
@@ -36,25 +47,48 @@ const SubcategoryList: React.FC = () => {
   const pageSize = 10;
   const totalPages = Math.ceil(subcategories.length / pageSize);
   const startIndex = (currentPage - 1) * pageSize;
-  const currentPageData = subcategories.slice(startIndex, startIndex + pageSize);
+  const currentPageData = subcategories.slice(
+    startIndex,
+    startIndex + pageSize
+  );
 
   useEffect(() => {
-    const loadSubcategories = async () => {
-      try {
-        const data = await fetchSubcategories();
-        setSubcategories(data);
-      } catch (error) {
-        console.error("Failed to fetch subcategories:", error);
+    const loadCategory = async () => {
+      if (location.state?.category) {
+        setSelectedCategory(location.state.category);
+      } else if (categoryId) {
+        try {
+          const data = await fetchCategoryById(categoryId);
+          setSelectedCategory(data);
+        } catch (error) {
+          console.error("Failed to fetch category:", error);
+        }
       }
     };
 
+    const loadSubcategories = async () => {
+      if (categoryId) {
+        try {
+          const data = await fetchSubcategories(categoryId);
+          setSubcategories(data);
+        } catch (error) {
+          console.error("Failed to fetch subcategories:", error);
+        }
+      }
+    };
+
+    loadCategory();
     loadSubcategories();
-  }, []);
+  }, [categoryId, location.state?.category]);
 
   const handleCreate = () => {
     setSelectedSubcategory(null);
     setIsDeleteMode(false);
-    setInitialFormValues({ name: "", status: "enabled" });
+    setInitialFormValues({
+      parentName: selectedCategory?.name || "",
+      name: "",
+      status: "enabled",
+    });
     setModalOpen(true);
   };
 
@@ -63,6 +97,7 @@ const SubcategoryList: React.FC = () => {
     setIsDeleteMode(false);
     setInitialFormValues({
       id: subcategory._id,
+      parentName: selectedCategory?.name || "",
       name: subcategory.name,
       status: subcategory.status,
     });
@@ -92,7 +127,13 @@ const SubcategoryList: React.FC = () => {
 
     try {
       if (!selectedSubcategory) {
-        const newSubcategory = await createSubcategory(changedFields);
+        if (!categoryId) {
+          throw new Error("No categoryId specified for creation.");
+        }
+        const newSubcategory = await createSubcategory(
+          categoryId,
+          changedFields
+        );
         setSubcategories((prev) => [newSubcategory, ...prev]);
       } else {
         const updatedSubcategory = await updateSubcategory(
@@ -147,7 +188,8 @@ const SubcategoryList: React.FC = () => {
       header: "Status",
       accessor: "status",
       render: (subcategory) => {
-        const variant = subcategory.status === "enabled" ? "primary" : "secondary";
+        const variant =
+          subcategory.status === "enabled" ? "primary" : "secondary";
         return <Label text={subcategory.status} variant={variant} />;
       },
     },
@@ -176,7 +218,15 @@ const SubcategoryList: React.FC = () => {
 
   return (
     <>
-      <Table title="Subcategory List" data={currentPageData} columns={columns} />
+      <Table
+        title={
+          selectedCategory
+            ? `Subcategory List of ${selectedCategory.name}`
+            : "Subcategory List"
+        }
+        data={currentPageData}
+        columns={columns}
+      />
       <Button
         variant="lightGray"
         onClick={handleCreate}
@@ -221,7 +271,7 @@ const SubcategoryList: React.FC = () => {
             <p>Are you sure you want to delete this subcategory?</p>
           ) : (
             <DynamicForm
-              schema={categoryFormSchema}
+              schema={subcategoryFormSchema}
               initialValues={initialFormValues}
               onSubmit={handleSubmit}
               formMode={selectedSubcategory ? "update" : "create"}
