@@ -78,15 +78,6 @@ export const createCategory = async (
       return;
     }
 
-    const allowedStatuses = ["enabled", "disabled"];
-    if (status && !allowedStatuses.includes(status)) {
-      res.status(400).json({
-        status: "fail",
-        message: `Invalid category status`,
-      });
-      return;
-    }
-
     const existingCategory = await Category.findOne({
       name: { $regex: new RegExp(`^${name}$`, "i") },
     });
@@ -94,6 +85,15 @@ export const createCategory = async (
       res.status(409).json({
         status: "fail",
         message: "Category name already exists",
+      });
+      return;
+    }
+
+    const allowedStatuses = ["enabled", "disabled"];
+    if (status && !allowedStatuses.includes(status)) {
+      res.status(400).json({
+        status: "fail",
+        message: `Invalid category status`,
       });
       return;
     }
