@@ -94,7 +94,7 @@ export const createSubcategory = async (
 
     const sanitizedName = name.trim();
 
-    const newSubcategoryData: any = { name: sanitizedName };
+    const newSubcategoryData: any = { name: sanitizedName, category: categoryId };
     if (status) {
       newSubcategoryData.status = status;
     }
