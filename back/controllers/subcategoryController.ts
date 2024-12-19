@@ -66,7 +66,16 @@ export const createSubcategory = async (
     const { categoryId } = req.params;
     const { name, status } = req.body;
 
-    if (!name) {
+    const category = await Category.findById(categoryId);
+    if (!category) {
+      res.status(404).json({
+        status: "fail",
+        message: "Category not found",
+      });
+      return;
+    }
+
+    if (!name || typeof name !== "string" || !name.trim()) {
       res.status(400).json({
         status: "fail",
         message: "Subcategory name is required",
@@ -74,11 +83,21 @@ export const createSubcategory = async (
       return;
     }
 
-    const category = await Category.findById(categoryId);
-    if (!category) {
-      res.status(404).json({
+    if (name && (name.trim().length < 1 || name.trim().length > 50)) {
+      res.status(400).json({
         status: "fail",
-        message: "Category not found",
+        message: "Subcategory name must be between 1 and 50 characters",
+      });
+      return;
+    }
+
+    const existingSubcategory = await Subcategory.findOne({
+      name: { $regex: new RegExp(`^${name}$`, "i") },
+    });
+    if (existingSubcategory) {
+      res.status(409).json({
+        status: "fail",
+        message: "Subcategory name already exists",
       });
       return;
     }
@@ -123,10 +142,26 @@ export const updateSubcategory = async (
     const { subcategoryId } = req.params;
     const { name, status } = req.body;
 
-    if (!name) {
+    if (!name && !status) {
+      res.status(400).json({
+        status: "fail",
+        message: "At least one field is required to update",
+      });
+      return;
+    }
+
+    if (name && (typeof name !== "string" || !name.trim())) {
       res.status(400).json({
         status: "fail",
         message: "Subcategory name is required",
+      });
+      return;
+    }
+
+    if (name && (name.trim().length < 1 || name.trim().length > 50)) {
+      res.status(400).json({
+        status: "fail",
+        message: "Subcategory name must be between 1 and 50 characters",
       });
       return;
     }
