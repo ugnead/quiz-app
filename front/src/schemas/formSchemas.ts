@@ -39,6 +39,12 @@ export const subcategoryFormSchema: FieldSchema[] = [
     readOnly: true,
   },
   {
+    name: "parentName",
+    label: "Parent Category",
+    type: "text",
+    readOnly: true,
+  },
+  {
     name: "name",
     label: "Subcategory Name",
     type: "text",
