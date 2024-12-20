@@ -44,7 +44,7 @@ const Dropdown: React.FC<DropdownProps> = ({ items }) => {
           e.stopPropagation();
           setIsOpen((prev) => !prev);
         }}
-        className="focus:outline-none pt-2"
+        className="focus:outline-none pt-2 transform transition-transform duration-200 hover:scale-105 text-gray-500 hover:text-gray-900"
       >
         <FiMoreVertical size={20} />
       </button>
