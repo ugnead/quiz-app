@@ -9,6 +9,7 @@ export interface Column<T> {
 
 interface TableProps<T> {
   title?: string;
+  subtitle?: React.ReactNode;
   data: T[];
   columns: Column<T>[];
   onRowClick?: (row: T) => void;
@@ -17,6 +18,7 @@ interface TableProps<T> {
 
 function Table<T extends object>({
   title,
+  subtitle,
   data,
   columns,
   onRowClick,
@@ -27,6 +29,11 @@ function Table<T extends object>({
       {title && (
         <div className="text-center mb-7">
           <h3>{title}</h3>
+          {subtitle && (
+            <div className="mt-6">
+              {subtitle}
+            </div>
+          )}
         </div>
       )}
       <div >
