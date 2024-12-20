@@ -219,21 +219,26 @@ const SubcategoryList: React.FC = () => {
 
   return (
     <>
-    {currentPageData.length > 0 ? (
-      <Table
-        title="Subcategory List"
-        subtitle={
-          <Label
-            text={selectedCategory ? `Category: ${selectedCategory.name}` : ""}
-            variant="warning"
-          />
-        }
-        data={currentPageData}
-        columns={columns}
-      />
-    ) : (
-      <Message message="No subcategories found in selected category" variant="info" />
-    )}
+      {currentPageData.length > 0 ? (
+        <Table
+          title="Subcategory List"
+          subtitle={
+            <Label
+              text={
+                selectedCategory ? `Category: ${selectedCategory.name}` : ""
+              }
+              variant="warning"
+            />
+          }
+          data={currentPageData}
+          columns={columns}
+        />
+      ) : (
+        <Message
+          message="No subcategories found in selected category"
+          variant="info"
+        />
+      )}
       <Button
         variant="lightGray"
         onClick={handleCreate}

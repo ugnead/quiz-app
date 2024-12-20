@@ -15,6 +15,7 @@ import DynamicForm from "../Common/Form/DynamicForm";
 import { categoryFormSchema } from "../../schemas/formSchemas";
 import Button from "../Common/Button";
 import { useNavigate } from "react-router-dom";
+import Message from "../Common/Message";
 
 interface Category {
   _id: string;
@@ -135,7 +136,9 @@ const CategoryList: React.FC = () => {
   };
 
   const handleRowClick = (category: Category) => {
-    navigate(`/admin/categories/${category._id}/subcategories`, { state: { category } });
+    navigate(`/admin/categories/${category._id}/subcategories`, {
+      state: { category },
+    });
   };
 
   const columns: Column<Category>[] = [
@@ -183,12 +186,16 @@ const CategoryList: React.FC = () => {
 
   return (
     <>
-      <Table
-        title="Category List"
-        data={currentPageData}
-        columns={columns}
-        onRowClick={handleRowClick}
-      />
+      {currentPageData.length > 0 ? (
+        <Table
+          title="Category List"
+          data={currentPageData}
+          columns={columns}
+          onRowClick={handleRowClick}
+        />
+      ) : (
+        <Message message="No categories found" variant="info" />
+      )}
       <Button
         variant="lightGray"
         onClick={handleCreate}
@@ -196,11 +203,13 @@ const CategoryList: React.FC = () => {
       >
         + Add Category
       </Button>
-      <Pagination
-        currentPage={currentPage}
-        totalPages={totalPages}
-        onPageChange={handlePageChange}
-      />
+      {currentPageData.length > 0 && (
+        <Pagination
+          currentPage={currentPage}
+          totalPages={totalPages}
+          onPageChange={handlePageChange}
+        />
+      )}
       {isModalOpen && (
         <Modal
           isOpen={isModalOpen}
