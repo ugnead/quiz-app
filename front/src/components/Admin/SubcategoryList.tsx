@@ -219,10 +219,12 @@ const SubcategoryList: React.FC = () => {
   return (
     <>
       <Table
-        title={
-          selectedCategory
-            ? `Subcategory List of ${selectedCategory.name}`
-            : "Subcategory List"
+        title="Subcategory List"
+        subtitle={
+          <Label
+            text={selectedCategory ? `Category: ${selectedCategory.name}` : ""}
+            variant="warning"
+          />
         }
         data={currentPageData}
         columns={columns}
