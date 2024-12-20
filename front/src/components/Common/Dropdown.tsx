@@ -40,7 +40,10 @@ const Dropdown: React.FC<DropdownProps> = ({ items }) => {
   return (
     <div className="relative inline-block" ref={dropdownRef}>
       <button
-        onClick={() => setIsOpen(!isOpen)}
+        onClick={(e) => {
+          e.stopPropagation();
+          setIsOpen((prev) => !prev);
+        }}
         className="focus:outline-none pt-2"
       >
         <FiMoreVertical size={20} />
@@ -54,7 +57,9 @@ const Dropdown: React.FC<DropdownProps> = ({ items }) => {
                 setIsOpen(false);
                 item.onClick();
               }}
-              className={`flex items-center w-full text-left px-4 py-2 text-sm hover:bg-gray-100 ${item.className || ""}`}
+              className={`flex items-center w-full text-left px-4 py-2 text-sm hover:bg-gray-100 ${
+                item.className || ""
+              }`}
             >
               {item.icon && <span className="mr-2">{item.icon}</span>}
               {item.label}
