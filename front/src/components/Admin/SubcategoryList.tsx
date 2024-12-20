@@ -16,6 +16,7 @@ import Modal from "../Common/Modal";
 import DynamicForm from "../Common/Form/DynamicForm";
 import { subcategoryFormSchema } from "../../schemas/formSchemas";
 import Button from "../Common/Button";
+import Message from "../Common/Message";
 
 interface Subcategory {
   _id: string;
@@ -218,6 +219,7 @@ const SubcategoryList: React.FC = () => {
 
   return (
     <>
+    {currentPageData.length > 0 ? (
       <Table
         title="Subcategory List"
         subtitle={
@@ -229,6 +231,9 @@ const SubcategoryList: React.FC = () => {
         data={currentPageData}
         columns={columns}
       />
+    ) : (
+      <Message message="No subcategories found in selected category" variant="info" />
+    )}
       <Button
         variant="lightGray"
         onClick={handleCreate}
@@ -236,11 +241,13 @@ const SubcategoryList: React.FC = () => {
       >
         + Add Subcategory
       </Button>
-      <Pagination
-        currentPage={currentPage}
-        totalPages={totalPages}
-        onPageChange={handlePageChange}
-      />
+      {currentPageData.length > 0 && (
+        <Pagination
+          currentPage={currentPage}
+          totalPages={totalPages}
+          onPageChange={handlePageChange}
+        />
+      )}
       {isModalOpen && (
         <Modal
           isOpen={isModalOpen}
