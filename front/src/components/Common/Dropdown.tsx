@@ -53,9 +53,10 @@ const Dropdown: React.FC<DropdownProps> = ({ items }) => {
           {items.map((item, index) => (
             <button
               key={index}
-              onClick={() => {
+              onClick={(e) => {
                 setIsOpen(false);
                 item.onClick();
+                e.stopPropagation();
               }}
               className={`flex items-center w-full text-left px-4 py-2 text-sm hover:bg-gray-100 ${
                 item.className || ""
