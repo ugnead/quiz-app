@@ -22,8 +22,8 @@ export const categoryFormSchema: FieldSchema[] = [
     label: "Status",
     type: "select",
     options: [
-      { value: "enabled", label: "Enabled" },
-      { value: "disabled", label: "Disabled" },
+      { value: "enabled", label: "enabled" },
+      { value: "disabled", label: "disabled" },
     ],
     validation: {
       required: true,
@@ -59,8 +59,8 @@ export const subcategoryFormSchema: FieldSchema[] = [
     label: "Status",
     type: "select",
     options: [
-      { value: "enabled", label: "Enabled" },
-      { value: "disabled", label: "Disabled" },
+      { value: "enabled", label: "enabled" },
+      { value: "disabled", label: "disabled" },
     ],
     validation: {
       required: true,
