@@ -13,12 +13,24 @@ import HomeRedirect from "./components/Common/HomeRedirect";
 import UserList from "./components/Admin/UserList";
 import AdminCategoryList from "./components/Admin/CategoryList";
 import AdminSubcategoryList from "./components/Admin/SubcategoryList";
+import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 const App: React.FC = () => {
   const { user } = useAuth();
 
   return (
     <ErrorBoundary>
+      <ToastContainer 
+        position="top-right"
+        autoClose={3000}
+        hideProgressBar
+        newestOnTop
+        closeOnClick
+        pauseOnHover
+        draggable
+        theme="colored"
+      />
       <Routes>
         <Route element={<PublicLayout />}>
           <Route path="/" element={<HomeRedirect />} />

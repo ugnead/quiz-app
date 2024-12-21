@@ -16,6 +16,7 @@ import { categoryFormSchema } from "../../schemas/formSchemas";
 import Button from "../Common/Button";
 import { useNavigate } from "react-router-dom";
 import Message from "../Common/Message";
+import { toast } from "react-toastify";
 
 interface Category {
   _id: string;
@@ -98,6 +99,7 @@ const CategoryList: React.FC = () => {
       if (!selectedCategory) {
         const newCategory = await createCategory(changedFields);
         setCategories((prev) => [newCategory, ...prev]);
+        toast.success("Category created successfully!");
       } else {
         const updatedCategory = await updateCategory(
           selectedCategory._id,
@@ -109,8 +111,12 @@ const CategoryList: React.FC = () => {
           )
         );
       }
-    } catch (error) {
-      console.error("Failed to create/update category:", error);
+    } catch (error: any) {
+      if (error.response?.data?.message) {
+        toast.error(error.response.data.message);
+      } else {
+        toast.error("An unexpected error occurred.");
+      }
     }
 
     handleModalClose();
