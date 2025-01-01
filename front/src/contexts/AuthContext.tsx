@@ -7,11 +7,10 @@ import React, {
   ReactNode,
 } from "react";
 import { verifyToken, loginUser, logoutUser } from "../services/auth";
-import { useNavigate } from "react-router-dom";
+import { useLoading } from "./LoadingContext";
 
 interface AuthContextProps {
   user: UserProfile | null;
-  loading: boolean;
   login: (response: string) => Promise<void>;
   logout: () => Promise<void>;
 }
@@ -29,39 +28,45 @@ export const AuthContext = createContext<AuthContextProps | undefined>(
 export const AuthProvider: React.FC<{ children: ReactNode }> = ({
   children,
 }) => {
+  const { setLoading } = useLoading();
   const [user, setUser] = useState<UserProfile | null>(null);
-  const [loading, setLoading] = useState<boolean>(true);
-  const navigate = useNavigate();
 
   useEffect(() => {
     const initializeUser = async () => {
       const token = localStorage.getItem("jwtToken");
-      if (token) {
-        try {
-          const user = await verifyToken();
-          setUser(user);
-        } catch (error) {
-          console.error("Failed to verify token or token expired:", error);
-          setUser(null);
-        }
+      if (!token) {
+        setUser(null);
+        setLoading(false);
+        return;
       }
-      setLoading(false);
+      setLoading(true);
+      try {
+        const user = await verifyToken();
+        setUser(user);
+      } catch (err) {
+        setUser(null);
+      } finally {
+        setLoading(false);
+      }
     };
     initializeUser();
-  }, []);
+  }, [setLoading]);
 
   const login = useCallback(
     async (response: string) => {
+      setLoading(true);
       try {
         const user = await loginUser(response);
         setUser(user);
-        navigate("/categories");
       } catch (error) {
+        setUser(null);
         console.error("Login failed:", error);
         throw error;
+      } finally {
+        setLoading(false);
       }
     },
-    [navigate]
+    [setLoading]
   );
 
   const logout = async () => {
@@ -69,7 +74,6 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({
       if (user) {
         logoutUser();
         setUser(null);
-        navigate("/");
       }
     } catch (error) {
       console.error("Logout failed:", error);
@@ -77,7 +81,7 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({
   };
 
   return (
-    <AuthContext.Provider value={{ user, loading, login, logout }}>
+    <AuthContext.Provider value={{ user, login, logout }}>
       {children}
     </AuthContext.Provider>
   );
