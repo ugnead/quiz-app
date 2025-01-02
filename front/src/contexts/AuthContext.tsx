@@ -43,7 +43,7 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({
       try {
         const user = await verifyToken();
         setUser(user);
-      } catch (err) {
+      } catch (error) {
         setUser(null);
       } finally {
         setLoading(false);
