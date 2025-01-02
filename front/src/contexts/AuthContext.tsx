@@ -8,6 +8,7 @@ import React, {
 } from "react";
 import { verifyToken, loginUser, logoutUser } from "../services/auth";
 import { useLoading } from "./LoadingContext";
+import { toast } from "react-toastify";
 
 interface AuthContextProps {
   user: UserProfile | null;
@@ -45,6 +46,7 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({
         setUser(user);
       } catch (error) {
         setUser(null);
+        toast.error("Your session expired. Please log in again.");
       } finally {
         setLoading(false);
       }
@@ -61,7 +63,7 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({
       } catch (error) {
         setUser(null);
         console.error("Login failed:", error);
-        throw error;
+        toast.error("Login failed");
       } finally {
         setLoading(false);
       }
