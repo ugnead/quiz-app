@@ -3,7 +3,7 @@ import jwt from "jsonwebtoken";
 import User from "../models/userModel";
 
 const generateAccessToken = (userId: string): string => {
-  return jwt.sign({ userId }, process.env.JWT_TOKEN!, { expiresIn: "15m" });
+  return jwt.sign({ userId }, process.env.JWT_TOKEN!, { expiresIn: "5s" });
 };
 
 export const handleRefreshToken = async (
@@ -11,37 +11,44 @@ export const handleRefreshToken = async (
   res: Response
 ): Promise<void> => {
   const { refreshToken } = req.body;
+
   if (!refreshToken) {
+    res.status(403).json({
+      message: "No refresh token provided",
+    });
     console.log("No refresh token provided");
-    res.sendStatus(401);
     return;
   }
 
   try {
     const user = await User.findOne({ refreshToken });
     if (!user) {
-      console.log("No user found with this refresh token");
-      res.sendStatus(401);
+      res.status(403).json({
+        message: "Invalid refresh token",
+      });
+      console.log("Invalid refresh token:", refreshToken);
       return;
     }
 
     jwt.verify(
       refreshToken,
       process.env.REFRESH_TOKEN!,
-      (err: Error | null) => {
+      (err: jwt.VerifyErrors | null) => {
         if (err) {
-          console.log("Refresh token verification failed", err);
-          res.sendStatus(403);
+          return res.status(403).json({
+            message: "Refresh token expired or tampered with",
+          });
         } else {
-          console.log("Refresh token valid, generating new access token");
           const accessToken = generateAccessToken(user._id.toString());
-          res.json({ accessToken });
+          return res.status(200).json({ accessToken });
         }
       }
     );
   } catch (err) {
     console.error("Server error during the refresh token process:", err);
-    res.sendStatus(500);
+    res.status(500).json({
+      message: "Server error, please try again later",
+    });
   }
 };
 
