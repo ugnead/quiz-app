@@ -1,6 +1,5 @@
 import axios, { AxiosError, AxiosRequestConfig, AxiosResponse } from "axios";
 import { refreshAccessToken } from "./refreshToken";
-import { logoutUser } from "./auth";
 
 interface FailedRequest {
   resolve: (value: AxiosResponse) => void;
