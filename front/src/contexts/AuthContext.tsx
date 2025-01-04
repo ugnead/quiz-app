@@ -13,7 +13,7 @@ import { toast } from "react-toastify";
 interface AuthContextProps {
   user: UserProfile | null;
   login: (response: string) => Promise<void>;
-  logout: () => Promise<void>;
+  logout: () => void;
 }
 
 interface UserProfile {
@@ -32,6 +32,26 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({
   const { setLoading } = useLoading();
   const [user, setUser] = useState<UserProfile | null>(null);
 
+  const logout = useCallback(() => {
+    logoutUser();
+    setUser(null);
+  }, []);
+
+  useEffect(() => {
+    setLoading(true);
+    const handleLogoutEvent = async () => {
+      logout();
+      toast.error("Your session has expired. Please log in again.");
+    };
+
+    window.addEventListener("logout", handleLogoutEvent);
+
+    return () => {
+      window.removeEventListener("logout", handleLogoutEvent);
+      setLoading(false);
+    };
+  }, [logout, setLoading]);
+
   useEffect(() => {
     const initializeUser = async () => {
       const token = localStorage.getItem("jwtToken");
@@ -46,7 +66,6 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({
         setUser(user);
       } catch (error) {
         setUser(null);
-        toast.error("Your session expired. Please log in again.");
       } finally {
         setLoading(false);
       }
@@ -62,25 +81,13 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({
         setUser(user);
       } catch (error) {
         setUser(null);
-        console.error("Login failed:", error);
         toast.error("Login failed");
       } finally {
         setLoading(false);
       }
     },
     [setLoading]
-  );
-
-  const logout = async () => {
-    try {
-      if (user) {
-        logoutUser();
-        setUser(null);
-      }
-    } catch (error) {
-      console.error("Logout failed:", error);
-    }
-  };
+  )
 
   return (
     <AuthContext.Provider value={{ user, login, logout }}>
