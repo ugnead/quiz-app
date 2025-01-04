@@ -1,7 +1,7 @@
 import { Request, Response } from "express";
 import User from "../models/userModel";
+import { generateTokens } from "../utils/generateTokens";
 import { OAuth2Client } from "google-auth-library";
-import jwt from "jsonwebtoken";
 
 const client = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
 
@@ -28,17 +28,12 @@ export const googleAuth = async (req: Request, res: Response) => {
 
     await user.save();
 
-    const accessToken = jwt.sign(
-      { userId: user._id, name: user.name, email: user.email, role: user.role },
-      process.env.JWT_TOKEN!,
-      { expiresIn: "15m" }
-    );
-
-    const refreshToken = jwt.sign(
-      { userId: user._id },
-      process.env.REFRESH_TOKEN!,
-      { expiresIn: "7d" }
-    );
+    const { accessToken, refreshToken } = generateTokens({
+      userId: user._id.toString(),
+      name: user.name,
+      email: user.email,
+      role: user.role,
+    });
 
     user.refreshToken = refreshToken;
     await user.save();

@@ -1,10 +1,7 @@
 import { Request, Response } from "express";
 import jwt from "jsonwebtoken";
 import User from "../models/userModel";
-
-const generateAccessToken = (userId: string): string => {
-  return jwt.sign({ userId }, process.env.JWT_TOKEN!, { expiresIn: "5s" });
-};
+import { generateTokens } from "../utils/generateTokens";
 
 export const handleRefreshToken = async (
   req: Request,
@@ -39,7 +36,13 @@ export const handleRefreshToken = async (
             message: "Refresh token expired or tampered with",
           });
         } else {
-          const accessToken = generateAccessToken(user._id.toString());
+          const { accessToken } = generateTokens({
+            userId: user._id.toString(),
+            name: user.name,
+            email: user.email,
+            role: user.role,
+          });
+  
           return res.status(200).json({ accessToken });
         }
       }
