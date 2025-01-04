@@ -32,7 +32,7 @@ api.interceptors.request.use(
 );
 
 api.interceptors.response.use(
-  async (response) => response,
+  (response) => response,
   async (error: AxiosError) => {
     const originalRequest = error.config as CustomAxiosRequestConfig;
 
@@ -60,9 +60,7 @@ api.interceptors.response.use(
           failedRequestsQueue.forEach(({ reject }) =>
             reject(refreshError as AxiosError)
           );
-
-          logoutUser();
-          window.location.href = "/";
+          window.dispatchEvent(new Event("logout"));
 
           return Promise.reject(refreshError);
         } finally {
