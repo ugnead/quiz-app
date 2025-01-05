@@ -9,7 +9,12 @@ interface ISubcategory extends Document {
 }
 
 let subcategorySchema = new Schema<ISubcategory>({
-  name: { type: String, required: true },
+  name: {
+    type: String,
+    required: true,
+    minlength: [1, "Name must be at least 1 character(s) long"],
+    maxlength: [50, "Name cannot exceed 50 character(s)"],
+  },
   category: { type: Schema.Types.ObjectId, ref: "Category", required: true },
   questions: [{ type: Schema.Types.ObjectId, ref: "Question" }],
   status: {
