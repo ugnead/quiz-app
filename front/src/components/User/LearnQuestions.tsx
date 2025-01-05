@@ -9,7 +9,7 @@ import Button from "../Common/Button";
 
 interface Question {
   _id: string;
-  question: string;
+  name: string;
   options: string[];
   correctAnswer: string;
   explanation: string;
@@ -121,7 +121,7 @@ const LearnQuestions: React.FC = () => {
 
   return (
     <div className="w-[30rem]">
-      <h2 className="pb-6 text-center">{currentQuestion.question}</h2>
+      <h2 className="pb-6 text-center">{currentQuestion.name}</h2>
       <OptionsList
         options={optionList}
         selectedOption={selectedOption}

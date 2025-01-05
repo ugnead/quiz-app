@@ -14,7 +14,7 @@ import Button from "../Common/Button";
 
 interface Question {
   _id: string;
-  question: string;
+  name: string;
   options: string[];
   correctAnswer: string;
   explanation: string;
@@ -224,7 +224,7 @@ const TestQuestions: React.FC = () => {
   if (isTestFinished && isReviewing) {
     return (
       <div className="w-[30rem]">
-        <h2 className="mb-6 text-center">{currentQuestion.question}</h2>
+        <h2 className="mb-6 text-center">{currentQuestion.name}</h2>
         <OptionsList
           options={optionList}
           selectedOption={selectedOption}
@@ -257,7 +257,7 @@ const TestQuestions: React.FC = () => {
           End Test
         </Button>
       </div>
-      <h2 className="mb-3 text-center">{currentQuestion.question}</h2>
+      <h2 className="mb-3 text-center">{currentQuestion.name}</h2>
       <p className="text-center text-sm mb-4">
         Question {currentQuestionIndex + 1} / {questions.length}
       </p>

@@ -102,9 +102,9 @@ export const createQuestion = async (
 ): Promise<void> => {
   try {
     const { subcategoryId } = req.params;
-    const { question, options, correctAnswer, explanation } = req.body;
+    const { name, options, correctAnswer, explanation } = req.body;
 
-    if (!question || !options || options.length < 2 || !correctAnswer) {
+    if (!name || !options || options.length < 2 || !correctAnswer) {
       res.status(400).json({
         status: "fail",
         message:
@@ -123,7 +123,7 @@ export const createQuestion = async (
     }
 
     const newQuestion = await Question.create({
-      question,
+      name,
       options,
       correctAnswer,
       explanation,
@@ -150,9 +150,9 @@ export const updateQuestion = async (
 ): Promise<void> => {
   try {
     const { questionId } = req.params;
-    const { question, options, correctAnswer, explanation } = req.body;
+    const { name, options, correctAnswer, explanation } = req.body;
 
-    if (!question && !options && !correctAnswer && !explanation) {
+    if (!name && !options && !correctAnswer && !explanation) {
       res.status(400).json({
         status: "fail",
         message: "At least one field is required to update",
@@ -162,7 +162,7 @@ export const updateQuestion = async (
 
     const updateFields: any = {};
 
-    if (question) updateFields.question = question;
+    if (name) updateFields.question = name;
     if (options) {
       if (options.length < 2) {
         res.status(400).json({
