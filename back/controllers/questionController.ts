@@ -24,7 +24,7 @@ export const getQuestionsBySubcategoryId = async (
   } catch (error) {
     res.status(404).json({
       status: "fail",
-      message: error,
+      message: error || "Internal Server Error",
     });
   }
 };
@@ -93,7 +93,7 @@ export const getQuestionsByUserProgress = async (
   } catch (error) {
     res.status(404).json({
       status: "fail",
-      message: error,
+      message: error || "Internal Server Error",
     });
   }
 };
