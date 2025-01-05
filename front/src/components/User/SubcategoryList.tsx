@@ -56,15 +56,15 @@ const SubcategoryList: React.FC = () => {
   }, [categoryId]);
 
   const handleLearnSelect = (subcategoryId: string) => {
-    navigate(`/subcategories/${subcategoryId}/questions/learn`);
+    navigate(`/quiz/subcategories/${subcategoryId}/questions/learn`);
   };
 
   const handleTestSelect = (subcategoryId: string) => {
-    navigate(`/subcategories/${subcategoryId}/questions/test`);
+    navigate(`/quiz/subcategories/${subcategoryId}/questions/test`);
   };
 
   const handleBackToCategories = () => {
-    navigate("/categories");
+    navigate("/quiz/categories");
   };
 
   const getLearnIcon = (progress: SubcategoryProgress) => {
