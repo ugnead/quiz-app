@@ -37,7 +37,9 @@ export const getQuestionsByUserProgress = async (
   const { subcategoryId } = req.params;
 
   try {
-    const allQuestions = await Question.find({ subcategory: subcategoryId });
+    const questions = await Question.find({ subcategory: subcategoryId }).sort({
+      createdAt: -1,
+    });
 
     const userProgress = await UserProgress.find({
       user: userId,
@@ -45,17 +47,17 @@ export const getQuestionsByUserProgress = async (
       mode: "learn",
     });
 
-    const unansweredQuestions = allQuestions.filter(
+    const unansweredQuestions = questions.filter(
       (question) =>
         !userProgress.some(
-          (progress) => progress.question.toString() === question._id.toString()
+          (progress) => question._id.toString() === progress.question.toString()
         )
     );
 
     const incorrectlyAnsweredQuestions = userProgress
       .filter((progress) => progress.correctAnswersCount === 0)
       .map((progress) =>
-        allQuestions.find(
+        questions.find(
           (question) => question._id.toString() === progress.question.toString()
         )
       );
@@ -63,7 +65,7 @@ export const getQuestionsByUserProgress = async (
     const answeredOnceQuestions = userProgress
       .filter((progress) => progress.correctAnswersCount === 1)
       .map((progress) =>
-        allQuestions.find(
+        questions.find(
           (question) => question._id.toString() === progress.question.toString()
         )
       );
@@ -71,7 +73,7 @@ export const getQuestionsByUserProgress = async (
     const answeredTwiceOrMoreQuestions = userProgress
       .filter((progress) => progress.correctAnswersCount >= 2)
       .map((progress) =>
-        allQuestions.find(
+        questions.find(
           (question) => question._id.toString() === progress.question.toString()
         )
       );
