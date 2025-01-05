@@ -67,6 +67,7 @@ export const createSubcategory = async (
     const { name, status } = req.body;
 
     const category = await Category.findById(categoryId);
+    
     if (!category) {
       res.status(404).json({
         status: "fail",
