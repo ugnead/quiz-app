@@ -5,6 +5,7 @@ import { fetchUserProgress } from "../../services/userProgressService";
 import { useParams, useNavigate } from "react-router-dom";
 import { FaCheckCircle, FaTimesCircle, FaArrowLeft } from "react-icons/fa";
 import Button from "../Common/Button";
+import Message from "../Common/Message";
 
 interface Subcategory {
   _id: string;
@@ -94,7 +95,8 @@ const SubcategoryList: React.FC = () => {
         <h1>{category?.name}</h1>
       </div>
       <ul className="flex flex-col space-y-4">
-        {subcategories.map((subcategory) => {
+      {subcategories.length > 0 ? (
+        subcategories.map((subcategory) => {
           const progress = progressData.find(
             (progress) => progress.subcategoryId === subcategory._id
           );
@@ -128,7 +130,10 @@ const SubcategoryList: React.FC = () => {
               </div>
             </li>
           );
-        })}
+        })
+      ) : (
+        <Message message="No subcategories found in selected category" variant="info" />
+      )}
       </ul>
     </div>
   );
