@@ -6,6 +6,8 @@ interface IQuestion extends Document {
   correctAnswer: string;
   explanation?: string;
   subcategory: Schema.Types.ObjectId;
+  status: "enabled" | "disabled";
+  createdAt: Date;
 }
 
 let questionSchema = new Schema<IQuestion>({
