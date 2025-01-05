@@ -15,7 +15,18 @@ let questionSchema = new Schema<IQuestion>({
   options: [{ type: String, required: true }],
   correctAnswer: { type: String, required: true },
   explanation: { type: String, required: false },
-  subcategory: { type: Schema.Types.ObjectId, ref: "Subcategory", required: true },
+  subcategory: {
+    type: Schema.Types.ObjectId,
+    ref: "Subcategory",
+    required: true,
+  },
+  status: {
+    type: String,
+    required: true,
+    enum: ["enabled", "disabled"],
+    default: "enabled",
+  },
+  createdAt: { type: Date, default: Date.now },
 });
 
 const Question = model<IQuestion>("Question", questionSchema);
