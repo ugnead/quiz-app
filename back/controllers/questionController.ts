@@ -3,7 +3,31 @@ import Subcategory from "../models/subcategoryModel";
 import Question from "../models/questionModel";
 import UserProgress from "../models/userProgressModel";
 
-export const getQuestionsForLearning = async (
+export const getQuestionsBySubcategoryId = async (
+  req: Request,
+  res: Response
+): Promise<void> => {
+  const { subcategoryId } = req.params;
+
+  try {
+    const questions = await Question.find({ subcategory: subcategoryId });
+
+    res.status(200).json({
+      status: "success",
+      results: questions.length,
+      data: {
+        questions,
+      },
+    });
+  } catch (error) {
+    res.status(404).json({
+      status: "fail",
+      message: error,
+    });
+  }
+};
+
+export const getQuestionsByUserProgress = async (
   req: Request,
   res: Response
 ): Promise<void> => {
@@ -62,30 +86,6 @@ export const getQuestionsForLearning = async (
       results: combinedQuestions.length,
       data: {
         questions: combinedQuestions,
-      },
-    });
-  } catch (error) {
-    res.status(404).json({
-      status: "fail",
-      message: error,
-    });
-  }
-};
-
-export const getQuestionsForTesting = async (
-  req: Request,
-  res: Response
-): Promise<void> => {
-  const { subcategoryId } = req.params;
-
-  try {
-    const questions = await Question.find({ subcategory: subcategoryId });
-
-    res.status(200).json({
-      status: "success",
-      results: questions.length,
-      data: {
-        questions,
       },
     });
   } catch (error) {

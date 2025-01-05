@@ -1,7 +1,7 @@
 import express from "express";
 import {
-  getQuestionsForLearning,
-  getQuestionsForTesting,
+  getQuestionsByUserProgress,
+  getQuestionsBySubcategoryId,
   createQuestion,
   updateQuestion,
   deleteQuestion,
@@ -10,8 +10,8 @@ import { isAdmin } from "../middlewares/isAdmin";
 
 const router = express.Router();
 
-router.get("/subcategories/:subcategoryId/questions/learn", getQuestionsForLearning);
-router.get("/subcategories/:subcategoryId/questions/test", getQuestionsForTesting);
+router.get("/subcategories/:subcategoryId/questions/learn", getQuestionsByUserProgress);
+router.get("/subcategories/:subcategoryId/questions/test", getQuestionsBySubcategoryId);
 
 router.post("/subcategories/:subcategoryId/questions", isAdmin, createQuestion);
 router.put("/questions/:questionId", isAdmin, updateQuestion);

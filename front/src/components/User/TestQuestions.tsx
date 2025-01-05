@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { fetchQuestionsForTesting } from "../../services/questionService";
+import { getQuestionsBySubcategoryId } from "../../services/questionService";
 import { updateUserProgress } from "../../services/userProgressService";
 import { deleteUserTestProgress } from "../../services/userProgressService";
 import { fetchSubcategoryById } from "../../services/subcategoryService";
@@ -63,7 +63,7 @@ const TestQuestions: React.FC = () => {
       if (subcategoryId) {
         try {
           await deleteUserTestProgress(subcategoryId);
-          const data = await fetchQuestionsForTesting(subcategoryId);
+          const data = await getQuestionsBySubcategoryId(subcategoryId);
           setQuestions(data);
         } catch (error) {
           console.error("Failed to fetch questions:", error);
@@ -166,7 +166,7 @@ const TestQuestions: React.FC = () => {
   };
 
   const handleBackToSubcategories = () => {
-    navigate(`/categories/${categoryId}/subcategories`);
+    navigate(`/categories/${categoryId}/subcategories`, { replace: true });
   };
 
   const handleReviewAnswers = () => {

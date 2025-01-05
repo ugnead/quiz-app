@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { fetchQuestionsForLearning } from "../../services/questionService";
+import { fetchQuestionsByUserProgress } from "../../services/questionService";
 import { updateUserProgress } from "../../services/userProgressService";
 import { useParams } from "react-router-dom";
 import OptionsList from "../Common/OptionsList";
@@ -38,7 +38,7 @@ const LearnQuestions: React.FC = () => {
     const loadQuestions = async () => {
       if (subcategoryId) {
         try {
-          const data = await fetchQuestionsForLearning(subcategoryId);
+          const data = await fetchQuestionsByUserProgress(subcategoryId);
           setQuestions(data);
         } catch (error) {
           console.error("Failed to fetch questions:", error);
@@ -84,7 +84,7 @@ const LearnQuestions: React.FC = () => {
 
     if (submissionCount >= 5) {
       try {
-        const data = await fetchQuestionsForLearning(subcategoryId!);
+        const data = await fetchQuestionsByUserProgress(subcategoryId!);
         setQuestions(data);
         setCurrentQuestionIndex(0);
         setSubmissionCount(0);
