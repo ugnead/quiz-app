@@ -192,7 +192,7 @@ const CategoryList: React.FC = () => {
 
   return (
     <>
-      {currentPageData.length > 0 ? (
+      {categories.length > 0 ? (
         <Table
           title="Category List"
           data={currentPageData}
@@ -209,7 +209,7 @@ const CategoryList: React.FC = () => {
       >
         + Add Category
       </Button>
-      {currentPageData.length > 0 && (
+      {categories.length > 0 && (
         <Pagination
           currentPage={currentPage}
           totalPages={totalPages}
