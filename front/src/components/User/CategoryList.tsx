@@ -51,7 +51,8 @@ const CategoryList: React.FC = () => {
 
   return (
     <div className="w-[30rem]">
-
+      {categories.length > 0 ? (
+        <>
           <h1 className="pb-6 sm:pb-12 text-center">Categories</h1>
           <OptionsList
             options={categoryOptions}
@@ -64,7 +65,10 @@ const CategoryList: React.FC = () => {
               onPageChange={handlePageChange}
             />
           )}
-
+        </>
+      ) : (
+        <Message message="No categories found" variant="info" />
+      )}
     </div>
   );
 };
