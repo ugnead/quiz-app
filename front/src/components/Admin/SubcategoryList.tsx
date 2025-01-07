@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { useParams, useLocation } from "react-router-dom";
+import { useNavigate, useParams, useLocation } from "react-router-dom";
 
 import { fetchCategoryById } from "../../services/categoryService";
 import {
@@ -32,8 +32,10 @@ interface Category {
 }
 
 const SubcategoryList: React.FC = () => {
+    const navigate = useNavigate();
   const { categoryId } = useParams<{ categoryId: string }>();
   const location = useLocation() as { state?: { category?: Category } };
+
   const [selectedCategory, setSelectedCategory] = useState<Category | null>(
     null
   );
@@ -175,6 +177,12 @@ const SubcategoryList: React.FC = () => {
     setCurrentPage(page);
   };
 
+  const handleRowClick = (subcategory: Subcategory) => {
+    navigate(`/admin/subcategories/${subcategory._id}/questions`, {
+      state: { subcategory },
+    });
+  };
+
   const columns: Column<Subcategory>[] = [
     {
       header: "ID",
@@ -234,6 +242,7 @@ const SubcategoryList: React.FC = () => {
           }
           data={currentPageData}
           columns={columns}
+          onRowClick={handleRowClick}
         />
       ) : (
         <Message
