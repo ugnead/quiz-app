@@ -1,11 +1,13 @@
 import React, { useEffect, useState } from "react";
+import { useParams, useNavigate } from "react-router-dom";
+
 import { fetchCategoryById } from "../../services/categoryService";
 import { fetchSubcategories } from "../../services/subcategoryService";
 import { fetchUserProgress } from "../../services/userProgressService";
-import { useParams, useNavigate } from "react-router-dom";
+
 import { FaCheckCircle, FaTimesCircle, FaArrowLeft } from "react-icons/fa";
 import Button from "../Common/Button";
-import Message from "../Common/Message";
+import Pagination from "../Common/Pagination";
 
 interface Subcategory {
   _id: string;
@@ -25,11 +27,21 @@ interface SubcategoryProgress {
 }
 
 const SubcategoryList: React.FC = () => {
-  const { categoryId } = useParams<{ categoryId: string }>();
-  const [subcategories, setSubcategories] = useState<Subcategory[]>([]);
-  const [category, setCategory] = useState<Category | null>(null);
-  const [progressData, setProgressData] = useState<SubcategoryProgress[]>([]);
   const navigate = useNavigate();
+  const { categoryId } = useParams<{ categoryId: string }>();
+
+  const [category, setCategory] = useState<Category | null>(null);
+  const [subcategories, setSubcategories] = useState<Subcategory[]>([]);
+  const [progressData, setProgressData] = useState<SubcategoryProgress[]>([]);
+  const [currentPage, setCurrentPage] = useState(1);
+
+  const pageSize = 6;
+  const totalPages = Math.ceil(subcategories.length / pageSize);
+  const startIndex = (currentPage - 1) * pageSize;
+  const currentPageData = subcategories.slice(
+    startIndex,
+    startIndex + pageSize
+  );
 
   useEffect(() => {
     const loadSubcategories = async () => {
@@ -68,6 +80,10 @@ const SubcategoryList: React.FC = () => {
     navigate("/quiz/categories");
   };
 
+  const handlePageChange = (page: number) => {
+    setCurrentPage(page);
+  };
+
   const getLearnIcon = (progress: SubcategoryProgress) => {
     if (progress.learnedQuestions === progress.totalQuestions) {
       return <FaCheckCircle className="text-green-500 ml-2 mt-0.5" />;
@@ -95,11 +111,11 @@ const SubcategoryList: React.FC = () => {
         <h1>{category?.name}</h1>
       </div>
       <ul className="flex flex-col space-y-4">
-      {subcategories.length > 0 ? (
-        subcategories.map((subcategory) => {
+        {currentPageData.map((subcategory) => {
           const progress = progressData.find(
-            (progress) => progress.subcategoryId === subcategory._id
+            (p) => p.subcategoryId === subcategory._id
           );
+
           return (
             <li key={subcategory._id} className="flex flex-col justify-between">
               <span className="pb-1 pe-5 font-bold text-lg">
@@ -108,8 +124,8 @@ const SubcategoryList: React.FC = () => {
               <div className="flex space-x-4">
                 <Button
                   className="w-2/4 text-nowrap"
-                  onClick={() => handleLearnSelect(subcategory._id)}
                   variant="secondary"
+                  onClick={() => handleLearnSelect(subcategory._id)}
                 >
                   Learn{" "}
                   {progress
@@ -130,11 +146,15 @@ const SubcategoryList: React.FC = () => {
               </div>
             </li>
           );
-        })
-      ) : (
-        <Message message="No subcategories found in selected category" variant="info" />
-      )}
+        })}
       </ul>
+      {totalPages > 1 && (
+        <Pagination
+          currentPage={currentPage}
+          totalPages={totalPages}
+          onPageChange={handlePageChange}
+        />
+      )}
     </div>
   );
 };
