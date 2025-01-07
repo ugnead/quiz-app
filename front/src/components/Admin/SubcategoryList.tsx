@@ -246,7 +246,7 @@ const SubcategoryList: React.FC = () => {
       >
         + Add Subcategory
       </Button>
-      {subcategories.length > 0 && (
+      {totalPages > 1 && (
         <Pagination
           currentPage={currentPage}
           totalPages={totalPages}
