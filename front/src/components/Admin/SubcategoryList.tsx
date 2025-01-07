@@ -142,8 +142,8 @@ const SubcategoryList: React.FC = () => {
           changedFields
         );
         setSubcategories((prev) =>
-          prev.map((cat) =>
-            cat._id === updatedSubcategory._id ? updatedSubcategory : cat
+          prev.map((subcat) =>
+            subcat._id === updatedSubcategory._id ? updatedSubcategory : subcat
           )
         );
       }
@@ -160,7 +160,7 @@ const SubcategoryList: React.FC = () => {
     try {
       await deleteSubcategory(selectedSubcategory._id);
       setSubcategories((prev) =>
-        prev.filter((cat) => cat._id !== selectedSubcategory._id)
+        prev.filter((subcat) => subcat._id !== selectedSubcategory._id)
       );
     } catch (error) {
       console.error("Failed to delete subcategory:", error);
