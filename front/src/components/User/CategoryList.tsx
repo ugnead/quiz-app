@@ -1,7 +1,11 @@
 import React, { useEffect, useState } from "react";
-import { fetchCategories } from "../../services/categoryService";
 import { useNavigate } from "react-router-dom";
+
+import { fetchCategories } from "../../services/categoryService";
+
 import OptionsList from "../Common/OptionsList";
+import Pagination from "../Common/Pagination";
+import Message from "../Common/Message";
 
 interface Category {
   _id: string;
@@ -9,8 +13,15 @@ interface Category {
 }
 
 const CategoryList: React.FC = () => {
-  const [categories, setCategories] = useState<Category[]>([]);
   const navigate = useNavigate();
+
+  const [categories, setCategories] = useState<Category[]>([]);
+  const [currentPage, setCurrentPage] = useState(1);
+
+  const pageSize = 10;
+  const totalPages = Math.ceil(categories.length / pageSize);
+  const startIndex = (currentPage - 1) * pageSize;
+  const currentPageData = categories.slice(startIndex, startIndex + pageSize);
 
   useEffect(() => {
     const loadCategories = async () => {
@@ -29,18 +40,31 @@ const CategoryList: React.FC = () => {
     navigate(`/quiz/categories/${categoryId}/subcategories`);
   };
 
-  const categoryOptions = categories.map((category) => ({
+  const handlePageChange = (page: number) => {
+    setCurrentPage(page);
+  };
+
+  const categoryOptions = currentPageData.map((category) => ({
     id: category._id,
     name: category.name,
   }));
 
   return (
     <div className="w-[30rem]">
-      <h1 className="pb-6 sm:pb-12 text-center">Categories</h1>
-      <OptionsList
-        options={categoryOptions}
-        onSelectOption={handleCategorySelect}
-      />
+
+          <h1 className="pb-6 sm:pb-12 text-center">Categories</h1>
+          <OptionsList
+            options={categoryOptions}
+            onSelectOption={handleCategorySelect}
+          />
+          {totalPages > 1 && (
+            <Pagination
+              currentPage={currentPage}
+              totalPages={totalPages}
+              onPageChange={handlePageChange}
+            />
+          )}
+
     </div>
   );
 };
