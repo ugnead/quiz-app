@@ -209,7 +209,7 @@ const CategoryList: React.FC = () => {
       >
         + Add Category
       </Button>
-      {categories.length > 0 && (
+      {totalPages > 1 && (
         <Pagination
           currentPage={currentPage}
           totalPages={totalPages}
