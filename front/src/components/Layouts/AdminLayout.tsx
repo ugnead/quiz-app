@@ -1,12 +1,15 @@
 import React from "react";
 import { Routes, Route, Navigate, useNavigate } from "react-router-dom";
-import Navigation from "../Common/Navigation";
-import Sidebar from "../Common/Sidebar";
-import { FaQuestionCircle, FaUser } from "react-icons/fa";
+
 import AdminCategoryList from "../Admin/CategoryList";
 import AdminSubcategoryList from "../Admin/SubcategoryList";
 import UserList from "../Admin/UserList";
+
+import Navigation from "../Common/Navigation";
+import Sidebar from "../Common/Sidebar";
 import Button from "../Common/Button";
+
+import { FaQuestionCircle, FaUser } from "react-icons/fa";
 
 const navItems = [
   { label: "Quiz", path: "/admin/categories", icon: FaQuestionCircle },

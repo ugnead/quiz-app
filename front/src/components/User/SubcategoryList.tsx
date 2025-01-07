@@ -5,9 +5,10 @@ import { fetchCategoryById } from "../../services/categoryService";
 import { fetchSubcategories } from "../../services/subcategoryService";
 import { fetchUserProgress } from "../../services/userProgressService";
 
-import { FaCheckCircle, FaTimesCircle, FaArrowLeft } from "react-icons/fa";
 import Button from "../Common/Button";
 import Pagination from "../Common/Pagination";
+
+import { FaCheckCircle, FaTimesCircle, FaArrowLeft } from "react-icons/fa";
 
 interface Subcategory {
   _id: string;

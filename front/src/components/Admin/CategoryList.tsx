@@ -1,22 +1,26 @@
 import React, { useEffect, useState } from "react";
-import Table, { Column } from "../Common/Table";
-import DropdownMenu from "../Common/Dropdown";
-import Pagination from "../Common/Pagination";
+import { useNavigate } from "react-router-dom";
+
 import {
   fetchCategories,
   createCategory,
   updateCategory,
   deleteCategory,
 } from "../../services/categoryService";
+
+import DropdownMenu from "../Common/Dropdown";
+import Pagination from "../Common/Pagination";
 import Label from "../Common/Label";
-import { FiEdit, FiTrash2 } from "react-icons/fi";
 import Modal from "../Common/Modal";
 import DynamicForm from "../Common/Form/DynamicForm";
 import { categoryFormSchema } from "../../schemas/formSchemas";
+import Table, { Column } from "../Common/Table";
 import Button from "../Common/Button";
-import { useNavigate } from "react-router-dom";
 import Message from "../Common/Message";
+
 import { toast } from "react-toastify";
+import { useQuery } from "@tanstack/react-query";
+import { FiEdit, FiTrash2 } from "react-icons/fi";
 
 interface Category {
   _id: string;

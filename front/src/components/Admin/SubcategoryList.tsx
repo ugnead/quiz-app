@@ -1,8 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useParams, useLocation } from "react-router-dom";
-import Table, { Column } from "../Common/Table";
-import DropdownMenu from "../Common/Dropdown";
-import Pagination from "../Common/Pagination";
+
 import { fetchCategoryById } from "../../services/categoryService";
 import {
   fetchSubcategories,
@@ -10,13 +8,17 @@ import {
   updateSubcategory,
   deleteSubcategory,
 } from "../../services/subcategoryService";
+import Table, { Column } from "../Common/Table";
+import DropdownMenu from "../Common/Dropdown";
+import Pagination from "../Common/Pagination";
 import Label from "../Common/Label";
-import { FiEdit, FiTrash2 } from "react-icons/fi";
 import Modal from "../Common/Modal";
 import DynamicForm from "../Common/Form/DynamicForm";
 import { subcategoryFormSchema } from "../../schemas/formSchemas";
 import Button from "../Common/Button";
 import Message from "../Common/Message";
+
+import { FiEdit, FiTrash2 } from "react-icons/fi";
 
 interface Subcategory {
   _id: string;
