@@ -74,7 +74,7 @@ const SubcategoryList: React.FC = () => {
   };
 
   const handleTestSelect = (subcategoryId: string) => {
-    navigate(`/quiz/subcategories/${subcategoryId}/questions/test`);
+    navigate(`/quiz/subcategories/${subcategoryId}/questions`);
   };
 
   const handleBackToCategories = () => {

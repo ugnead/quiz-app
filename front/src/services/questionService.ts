@@ -16,7 +16,7 @@ export const fetchQuestionsByUserProgress = async (subcategoryId: string) => {
 
 export const getQuestionsBySubcategoryId = async (subcategoryId: string) => {
   const response = await api.get(
-    `/subcategories/${subcategoryId}/questions/test`
+    `/subcategories/${subcategoryId}/questions`
   );
   return response.data.data.questions;
 };

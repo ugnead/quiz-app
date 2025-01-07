@@ -25,7 +25,7 @@ const UserLayout: React.FC = () => {
             element={<LearnQuestions />}
           />
           <Route
-            path="subcategories/:subcategoryId/questions/test"
+            path="subcategories/:subcategoryId/questions"
             element={<TestQuestions />}
           />
 
