@@ -3,6 +3,7 @@ import { Routes, Route, Navigate, useNavigate } from "react-router-dom";
 
 import AdminCategoryList from "../Admin/CategoryList";
 import AdminSubcategoryList from "../Admin/SubcategoryList";
+import AdminQuestionList from "../Admin/QuestionList";
 import UserList from "../Admin/UserList";
 
 import Navigation from "../Common/Navigation";
@@ -18,6 +19,7 @@ const navItems = [
 
 const Layout: React.FC = () => {
   const navigate = useNavigate();
+  
   return (
     <>
       <div className="flex flex-col min-h-screen h-auto">
@@ -33,6 +35,10 @@ const Layout: React.FC = () => {
                 <Route
                   path="categories/:categoryId/subcategories"
                   element={<AdminSubcategoryList />}
+                />
+                <Route
+                  path="subcategories/:subcategoryId/questions"
+                  element={<AdminQuestionList />}
                 />
                 <Route path="users" element={<UserList />} />
 
