@@ -7,10 +7,12 @@ export const getSubcategoriesByCategoryId = async (
   req: Request,
   res: Response
 ): Promise<void> => {
-  try {
-    const { categoryId } = req.params;
+  const { categoryId } = req.params;
 
-    const subcategories = await Subcategory.find({ category: categoryId }).sort({ createdAt: -1 });
+  try {
+    const subcategories = await Subcategory.find({ category: categoryId }).sort(
+      { createdAt: -1 }
+    );
 
     res.status(200).json({
       status: "success",
@@ -67,7 +69,7 @@ export const createSubcategory = async (
     const { name, status } = req.body;
 
     const category = await Category.findById(categoryId);
-    
+
     if (!category) {
       res.status(404).json({
         status: "fail",
@@ -114,7 +116,10 @@ export const createSubcategory = async (
 
     const sanitizedName = name.trim();
 
-    const newSubcategoryData: any = { name: sanitizedName, category: categoryId };
+    const newSubcategoryData: any = {
+      name: sanitizedName,
+      category: categoryId,
+    };
     if (status) {
       newSubcategoryData.status = status;
     }
