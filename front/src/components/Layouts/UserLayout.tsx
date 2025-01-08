@@ -5,6 +5,7 @@ import CategoryList from "../User/CategoryList";
 import SubcategoryList from "../User/SubcategoryList";
 import LearnQuestions from "../User/LearnQuestions";
 import TestQuestions from "../User/TestQuestions";
+import { useAuth } from "../../contexts/AuthContext";
 
 import Navigation from "../Common/Navigation";
 import Sidebar from "../Common/Sidebar";
@@ -16,12 +17,16 @@ const navItems = [
 ];
 
 const UserLayout: React.FC = () => {
+  const { user } = useAuth();
+
+  const firstName = user?.name.split(" ")[0];
+
   return (
     <>
       <div className="flex flex-col min-h-screen h-auto">
         <Navigation />
         <div className="flex flex-1">
-          <Sidebar items={navItems} title="User Panel" />
+          <Sidebar items={navItems} title={user ? `Hello, ${firstName}!` : "User Panel"} />
           <div className="flex justify-center mx-5 my-5 sm:my-10">
             <div className="w-full max-w-4xl mx-auto">
               <Routes>
