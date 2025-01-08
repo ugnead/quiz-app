@@ -7,30 +7,47 @@ import LearnQuestions from "../User/LearnQuestions";
 import TestQuestions from "../User/TestQuestions";
 
 import Navigation from "../Common/Navigation";
+import Sidebar from "../Common/Sidebar";
+
+import { FaQuestionCircle } from "react-icons/fa";
+
+const navItems = [
+  { label: "Quiz", path: "/quiz/categories", icon: FaQuestionCircle },
+];
 
 const UserLayout: React.FC = () => {
   return (
     <>
-      <Navigation />
-      <div className="flex justify-center mx-5 my-5 sm:my-10">
-        <Routes>
-          <Route index element={<Navigate to="categories" replace />} />
-          <Route path="categories" element={<CategoryList />} />
-          <Route
-            path="categories/:categoryId/subcategories"
-            element={<SubcategoryList />}
-          />
-          <Route
-            path="subcategories/:subcategoryId/questions/learn"
-            element={<LearnQuestions />}
-          />
-          <Route
-            path="subcategories/:subcategoryId/questions"
-            element={<TestQuestions />}
-          />
+      <div className="flex flex-col min-h-screen h-auto">
+        <Navigation />
+        <div className="flex flex-1">
+          <Sidebar items={navItems} title="User Panel" />
+          <div className="flex justify-center mx-5 my-5 sm:my-10">
+            <div className="w-full max-w-4xl mx-auto">
+              <Routes>
+                <Route index element={<Navigate to="categories" replace />} />
+                <Route path="categories" element={<CategoryList />} />
+                <Route
+                  path="categories/:categoryId/subcategories"
+                  element={<SubcategoryList />}
+                />
+                <Route
+                  path="subcategories/:subcategoryId/questions/learn"
+                  element={<LearnQuestions />}
+                />
+                <Route
+                  path="subcategories/:subcategoryId/questions"
+                  element={<TestQuestions />}
+                />
 
-          <Route path="*" element={<Navigate to="categories" replace />} />
-        </Routes>
+                <Route
+                  path="*"
+                  element={<Navigate to="categories" replace />}
+                />
+              </Routes>
+            </div>
+          </div>
+        </div>
       </div>
     </>
   );
