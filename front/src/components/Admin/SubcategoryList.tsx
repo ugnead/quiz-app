@@ -20,19 +20,19 @@ import Message from "../Common/Message";
 
 import { FiEdit, FiTrash2 } from "react-icons/fi";
 
+interface Category {
+  _id: string;
+  name: string;
+}
+
 interface Subcategory {
   _id: string;
   name: string;
   status: string;
 }
 
-interface Category {
-  _id: string;
-  name: string;
-}
-
 const SubcategoryList: React.FC = () => {
-    const navigate = useNavigate();
+  const navigate = useNavigate();
   const { categoryId } = useParams<{ categoryId: string }>();
   const location = useLocation() as { state?: { category?: Category } };
 
@@ -179,7 +179,7 @@ const SubcategoryList: React.FC = () => {
 
   const handleRowClick = (subcategory: Subcategory) => {
     navigate(`/admin/subcategories/${subcategory._id}/questions`, {
-      state: { subcategory },
+      state: { category: selectedCategory, subcategory },
     });
   };
 

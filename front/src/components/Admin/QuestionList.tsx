@@ -21,10 +21,9 @@ import Message from "../Common/Message";
 
 import { FiEdit, FiTrash2 } from "react-icons/fi";
 
-interface Question {
+interface Category {
   _id: string;
   name: string;
-  status: string;
 }
 
 interface Subcategory {
@@ -32,9 +31,20 @@ interface Subcategory {
   name: string;
 }
 
+interface Question {
+  _id: string;
+  name: string;
+  status: string;
+}
+
 const QuestionList: React.FC = () => {
   const { subcategoryId } = useParams<{ subcategoryId: string }>();
-  const location = useLocation() as { state?: { subcategory?: Subcategory } };
+  const location = useLocation() as {
+    state?: { category?: Category; subcategory?: Subcategory };
+  };
+  const [selectedCategory, setSelectedCategory] = useState<Category | null>(
+    null
+  );
   const [selectedSubcategory, setSelectedSubcategory] =
     useState<Subcategory | null>(null);
   const [questions, setQuestions] = useState<Question[]>([]);
@@ -54,6 +64,10 @@ const QuestionList: React.FC = () => {
   const currentPageData = questions.slice(startIndex, startIndex + pageSize);
 
   useEffect(() => {
+    if (location.state?.category) {
+      setSelectedCategory(location.state.category);
+    }
+
     const loadSubcategory = async () => {
       if (location.state?.subcategory) {
         setSelectedSubcategory(location.state.subcategory);
@@ -80,7 +94,7 @@ const QuestionList: React.FC = () => {
 
     loadSubcategory();
     loadQuestions();
-  }, [subcategoryId, location.state?.subcategory]);
+  }, [subcategoryId, location.state]);
 
   const handleCreate = () => {
     setSelectedQuestion(null);
@@ -219,14 +233,21 @@ const QuestionList: React.FC = () => {
         <Table
           title="Question List"
           subtitle={
-            <Label
-              text={
-                selectedSubcategory
-                  ? `Subcategory: ${selectedSubcategory.name}`
-                  : ""
-              }
-              variant="warning"
-            />
+            <>
+              <Label
+                text={selectedCategory ? `Category: ${selectedCategory.name}` : ""}
+                variant="secondary"
+                className="mr-2"
+              />
+              <Label
+                text={
+                  selectedSubcategory
+                    ? `Subcategory: ${selectedSubcategory.name}`
+                    : ""
+                }
+                variant="warning"
+              />
+            </>
           }
           data={currentPageData}
           columns={columns}
