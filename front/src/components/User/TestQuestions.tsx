@@ -201,18 +201,18 @@ const TestQuestions: React.FC = () => {
 
   if (isTestFinished && !isReviewing) {
     return (
-      <div className="w-[30rem] text-center">
+      <div className="text-center">
         <h2 className="mb-5">Test Finished</h2>
         <p className="mb-5 text-xl">
           Your score: {score}/{questions.length}
         </p>
         <div>
-          <Button className="w-60" onClick={handleReviewAnswers}>
+          <Button className="w-80" onClick={handleReviewAnswers}>
             <div>Review Answers</div>
           </Button>
           <div className="m-2 text-xl">OR</div>
           <Button
-            className="w-60"
+            className="w-80"
             onClick={handleBackToSubcategories}
             startIcon={<FaArrowLeft />}
             variant="secondary"
@@ -226,7 +226,7 @@ const TestQuestions: React.FC = () => {
 
   if (isTestFinished && isReviewing) {
     return (
-      <div className="w-[30rem]">
+      <div>
         <h2 className="mb-6 text-center">{currentQuestion.name}</h2>
         <OptionsList
           options={optionList}
@@ -249,7 +249,7 @@ const TestQuestions: React.FC = () => {
   }
 
   return (
-    <div className="w-[30rem]">
+    <div>
       <div className="flex justify-between mb-5">
         <Timer
           duration={questions.length * 60}

@@ -101,7 +101,7 @@ const SubcategoryList: React.FC = () => {
   };
 
   return (
-    <div className="w-[30rem]">
+    <div>
       <div className="flex items-center justify-center relative pb-6 sm:pb-12">
         <button
           onClick={handleBackToCategories}

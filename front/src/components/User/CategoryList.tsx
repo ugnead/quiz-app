@@ -50,7 +50,7 @@ const CategoryList: React.FC = () => {
   }));
 
   return (
-    <div className="w-[30rem]">
+    <div>
       {categories.length > 0 ? (
         <>
           <h1 className="pb-6 sm:pb-12 text-center">Categories</h1>
