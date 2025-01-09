@@ -27,8 +27,8 @@ const UserLayout: React.FC = () => {
         <Navigation />
         <div className="flex flex-1">
           <Sidebar items={navItems} title={user ? `Hello, ${firstName}!` : "User Panel"} />
-          <div className="flex justify-center mx-5 my-5 sm:my-10">
-            <div className="w-full max-w-4xl mx-auto">
+          <div className="flex-1 p-5 pb-10 sm:p-10 min-w-0">
+            <div className="w-full max-w-lg mx-auto">
               <Routes>
                 <Route index element={<Navigate to="categories" replace />} />
                 <Route path="categories" element={<CategoryList />} />
