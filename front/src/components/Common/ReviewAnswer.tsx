@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from "react";
+import React from "react";
 import Button from "./Button";
 
 interface ReviewAnswerProps {
@@ -30,7 +30,7 @@ const ReviewAnswer: React.FC<ReviewAnswerProps> = ({
             key={answerSequence}
             onClick={() => handleReviewQuestion(answerSequence)}
             variant={colorClass}
-            className={`w-11 mx-2 my-2 px-0 py-2 text-white`}
+            className={`w-11 mx-[3.6px] my-[3.6px] px-0 py-2 text-white`}
             tabIndex={0}
             enableFocusRing
           >
