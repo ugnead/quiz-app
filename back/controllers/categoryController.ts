@@ -2,6 +2,8 @@ import { Request, Response } from "express";
 import Category from "../models/categoryModel";
 import Subcategory from "../models/subcategoryModel";
 import Question from "../models/questionModel";
+import { createCategorySchema } from "../validators/categorySchemas";
+import { updateCategorySchema } from "../validators/categorySchemas";
 
 export const getAllCategories = async (
   req: Request,
@@ -60,23 +62,18 @@ export const createCategory = async (
   res: Response
 ): Promise<void> => {
   try {
-    const { name, status } = req.body;
-
-    if (!name || typeof name !== "string" || !name.trim()) {
+    const { error, value } = createCategorySchema.validate(req.body, {
+      abortEarly: false,
+    });
+    if (error) {
       res.status(400).json({
         status: "fail",
-        message: "Category name is required",
+        message: error.details.map((d) => d.message).join("; "),
       });
       return;
     }
 
-    if (name && (name.trim().length < 1 || name.trim().length > 50)) {
-      res.status(400).json({
-        status: "fail",
-        message: "Category name must be between 1 and 50 characters",
-      });
-      return;
-    }
+    const { name, status } = value;
 
     const existingCategory = await Category.findOne({
       name: { $regex: new RegExp(`^${name}$`, "i") },
@@ -89,23 +86,12 @@ export const createCategory = async (
       return;
     }
 
-    const allowedStatuses = ["enabled", "disabled"];
-    if (status && !allowedStatuses.includes(status)) {
-      res.status(400).json({
-        status: "fail",
-        message: `Invalid category status`,
-      });
-      return;
-    }
-
-    const sanitizedName = name.trim();
-
-    const newCategoryData: any = { name: sanitizedName };
+    const data: any = { name };
     if (status) {
-      newCategoryData.status = status;
+      data.status = status;
     }
 
-    const newCategory = await Category.create(newCategoryData);
+    const newCategory = await Category.create(data);
 
     res.status(201).json({
       status: "success",
@@ -126,8 +112,19 @@ export const updateCategory = async (
   res: Response
 ): Promise<void> => {
   try {
+    const { error, value } = updateCategorySchema.validate(req.body, {
+      abortEarly: false,
+    });
+    if (error) {
+      res.status(400).json({
+        status: "fail",
+        message: error.details.map((d) => d.message).join("; "),
+      });
+      return;
+    }
+
     const { categoryId } = req.params;
-    const { name, status } = req.body;
+    const { name, status } = value;
 
     if (!name && !status) {
       res.status(400).json({
@@ -137,43 +134,29 @@ export const updateCategory = async (
       return;
     }
 
-    if (name && (typeof name !== "string" || !name.trim())) {
-      res.status(400).json({
-        status: "fail",
-        message: "Category name is required",
-      });
-      return;
-    }
-
-    if (name && (name.trim().length < 1 || name.trim().length > 50)) {
-      res.status(400).json({
-        status: "fail",
-        message: "Category name must be between 1 and 50 characters",
-      });
-      return;
-    }
-
-    const allowedStatuses = ["enabled", "disabled"];
-    if (status && !allowedStatuses.includes(status)) {
-      res.status(400).json({
-        status: "fail",
-        message: `Invalid category status`,
-      });
-      return;
-    }
-
-    const updateCategoryData: any = {};
     if (name) {
-      const sanitizedName = name.trim();
-      updateCategoryData.name = sanitizedName;
+      const existingCategory = await Category.findOne({
+        name: { $regex: new RegExp(`^${name}$`, "i") },
+      });
+      if (existingCategory) {
+        res.status(409).json({
+          status: "fail",
+          message: "Category name already exists",
+        });
+        return;
+      }
     }
-    if (status) updateCategoryData.status = status;
 
-    const updateCategory = await Category.findByIdAndUpdate(
-      categoryId,
-      updateCategoryData,
-      { new: true, runValidators: true }
-    );
+    const data: any = {};
+    if (name) {
+      data.name = name;
+    }
+    if (status) data.status = status;
+
+    const updateCategory = await Category.findByIdAndUpdate(categoryId, data, {
+      new: true,
+      runValidators: true,
+    });
 
     if (!updateCategory) {
       res.status(404).json({
@@ -204,9 +187,9 @@ export const deleteCategory = async (
   try {
     const { categoryId } = req.params;
 
-    const deletedCategory = await Category.findByIdAndDelete(categoryId);
+    const deleteCategory = await Category.findByIdAndDelete(categoryId);
 
-    if (!deletedCategory) {
+    if (!deleteCategory) {
       res.status(404).json({
         status: "fail",
         message: "Category not found",
