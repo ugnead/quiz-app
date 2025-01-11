@@ -2,6 +2,10 @@ import { Request, Response } from "express";
 import Category from "../models/categoryModel";
 import Subcategory from "../models/subcategoryModel";
 import Question from "../models/questionModel";
+import {
+  createSubcategorySchema,
+  updateSubcategorySchema,
+} from "../validators/subcategorySchemas";
 
 export const getSubcategoriesByCategoryId = async (
   req: Request,
@@ -66,7 +70,6 @@ export const createSubcategory = async (
 ): Promise<void> => {
   try {
     const { categoryId } = req.params;
-    const { name, status } = req.body;
 
     const category = await Category.findById(categoryId);
 
@@ -78,21 +81,18 @@ export const createSubcategory = async (
       return;
     }
 
-    if (!name || typeof name !== "string" || !name.trim()) {
+    const { error, value } = createSubcategorySchema.validate(req.body, {
+      abortEarly: false,
+    });
+    if (error) {
       res.status(400).json({
         status: "fail",
-        message: "Subcategory name is required",
+        message: error.details.map((d) => d.message).join("; "),
       });
       return;
     }
 
-    if (name && (name.trim().length < 1 || name.trim().length > 50)) {
-      res.status(400).json({
-        status: "fail",
-        message: "Subcategory name must be between 1 and 50 characters",
-      });
-      return;
-    }
+    const { name, status } = value;
 
     const existingSubcategory = await Subcategory.findOne({
       name: { $regex: new RegExp(`^${name}$`, "i") },
@@ -105,26 +105,15 @@ export const createSubcategory = async (
       return;
     }
 
-    const allowedStatuses = ["enabled", "disabled"];
-    if (status && !allowedStatuses.includes(status)) {
-      res.status(400).json({
-        status: "fail",
-        message: `Invalid subcategory status`,
-      });
-      return;
-    }
-
-    const sanitizedName = name.trim();
-
-    const newSubcategoryData: any = {
-      name: sanitizedName,
+    const data: any = {
       category: categoryId,
+      name,
     };
     if (status) {
-      newSubcategoryData.status = status;
+      data.status = status;
     }
 
-    const newSubcategory = await Subcategory.create(newSubcategoryData);
+    const newSubcategory = await Subcategory.create(data);
 
     res.status(201).json({
       status: "success",
@@ -145,8 +134,19 @@ export const updateSubcategory = async (
   res: Response
 ): Promise<void> => {
   try {
+    const { error, value } = updateSubcategorySchema.validate(req.body, {
+      abortEarly: false,
+    });
+    if (error) {
+      res.status(400).json({
+        status: "fail",
+        message: error.details.map((d) => d.message).join("; "),
+      });
+      return;
+    }
+
     const { subcategoryId } = req.params;
-    const { name, status } = req.body;
+    const { name, status } = value;
 
     if (!name && !status) {
       res.status(400).json({
@@ -156,41 +156,28 @@ export const updateSubcategory = async (
       return;
     }
 
-    if (name && (typeof name !== "string" || !name.trim())) {
-      res.status(400).json({
-        status: "fail",
-        message: "Subcategory name is required",
-      });
-      return;
-    }
-
-    if (name && (name.trim().length < 1 || name.trim().length > 50)) {
-      res.status(400).json({
-        status: "fail",
-        message: "Subcategory name must be between 1 and 50 characters",
-      });
-      return;
-    }
-
-    const allowedStatuses = ["enabled", "disabled"];
-    if (status && !allowedStatuses.includes(status)) {
-      res.status(400).json({
-        status: "fail",
-        message: `Invalid subcategory status`,
-      });
-      return;
-    }
-
-    const updateSubategoryData: any = {};
     if (name) {
-      const sanitizedName = name.trim();
-      updateSubategoryData.name = sanitizedName;
+      const existingSubcategory = await Subcategory.findOne({
+        name: { $regex: new RegExp(`^${name}$`, "i") },
+      });
+      if (existingSubcategory) {
+        res.status(409).json({
+          status: "fail",
+          message: "Subcategory name already exists",
+        });
+        return;
+      }
     }
-    if (status) updateSubategoryData.status = status;
+
+    const data: any = {};
+    if (name) {
+      data.name = name;
+    }
+    if (status) data.status = status;
 
     const updateSubcategory = await Subcategory.findByIdAndUpdate(
       subcategoryId,
-      updateSubategoryData,
+      data,
       { new: true, runValidators: true }
     );
 
@@ -223,11 +210,11 @@ export const deleteSubcategory = async (
   try {
     const { subcategoryId } = req.params;
 
-    const deletedSubcategory = await Subcategory.findByIdAndDelete(
+    const deleteSubcategory = await Subcategory.findByIdAndDelete(
       subcategoryId
     );
 
-    if (!deletedSubcategory) {
+    if (!deleteSubcategory) {
       res.status(404).json({
         status: "fail",
         message: "Subcategory not found",

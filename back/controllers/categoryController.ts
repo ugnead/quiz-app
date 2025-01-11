@@ -2,8 +2,10 @@ import { Request, Response } from "express";
 import Category from "../models/categoryModel";
 import Subcategory from "../models/subcategoryModel";
 import Question from "../models/questionModel";
-import { createCategorySchema } from "../validators/categorySchemas";
-import { updateCategorySchema } from "../validators/categorySchemas";
+import {
+  createCategorySchema,
+  updateCategorySchema,
+} from "../validators/categorySchemas";
 
 export const getAllCategories = async (
   req: Request,
