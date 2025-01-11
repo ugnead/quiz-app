@@ -18,7 +18,7 @@ const Label: React.FC<LabelProps> = ({
     secondary: 'bg-gray-200 text-gray-800',
     danger: 'bg-red-200 text-red-800',
     success: 'bg-green-200 text-green-800',
-    warning: 'bg-yellow-200 text-yellow-800',
+    warning: 'bg-yellow-200 text-yellow-800 border border-yellow-300',
     info: 'bg-teal-200 text-teal-800',
   };
 
