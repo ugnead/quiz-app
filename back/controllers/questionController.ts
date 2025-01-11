@@ -2,6 +2,10 @@ import { Request, Response } from "express";
 import Subcategory from "../models/subcategoryModel";
 import Question from "../models/questionModel";
 import UserProgress from "../models/userProgressModel";
+import {
+  createQuestionSchema,
+  updateQuestionSchema,
+} from "../validators/questionSchemas";
 
 export const getQuestionsBySubcategoryId = async (
   req: Request,
@@ -106,18 +110,9 @@ export const createQuestion = async (
 ): Promise<void> => {
   try {
     const { subcategoryId } = req.params;
-    const { name, options, correctAnswer, explanation } = req.body;
-
-    if (!name || !options || options.length < 2 || !correctAnswer) {
-      res.status(400).json({
-        status: "fail",
-        message:
-          "Question text, at least two options, and correct answer are required",
-      });
-      return;
-    }
 
     const subcategory = await Subcategory.findById(subcategoryId);
+
     if (!subcategory) {
       res.status(404).json({
         status: "fail",
@@ -126,13 +121,29 @@ export const createQuestion = async (
       return;
     }
 
-    const newQuestion = await Question.create({
-      name,
-      options,
-      correctAnswer,
-      explanation,
-      subcategory: subcategoryId,
+    const { error, value } = createQuestionSchema.validate(req.body, {
+      abortEarly: false,
     });
+    if (error) {
+      res.status(400).json({
+        status: "fail",
+        message: error.details.map((d) => d.message).join("; "),
+      });
+      return;
+    }
+
+    const { name, answerOptions, correctAnswer, explanation, status } = value;
+
+    const data: any = {
+      subcategory: subcategoryId,
+      name,
+      answerOptions,
+      correctAnswer,
+    };
+    if (explanation) data.explanation = explanation;
+    if (status) data.status = status;
+
+    const newQuestion = await Question.create(data);
 
     res.status(201).json({
       status: "success",
@@ -153,10 +164,21 @@ export const updateQuestion = async (
   res: Response
 ): Promise<void> => {
   try {
-    const { questionId } = req.params;
-    const { name, options, correctAnswer, explanation } = req.body;
+    const { error, value } = updateQuestionSchema.validate(req.body, {
+      abortEarly: false,
+    });
+    if (error) {
+      res.status(400).json({
+        status: "fail",
+        message: error.details.map((d) => d.message).join("; "),
+      });
+      return;
+    }
 
-    if (!name && !options && !correctAnswer && !explanation) {
+    const { questionId } = req.params;
+    const { name, answerOptions, correctAnswer, explanation, status } = value;
+
+    if (!name && !answerOptions && !correctAnswer && !explanation && !status) {
       res.status(400).json({
         status: "fail",
         message: "At least one field is required to update",
@@ -164,29 +186,19 @@ export const updateQuestion = async (
       return;
     }
 
-    const updateFields: any = {};
+    const data: any = {};
+    if (name) data.question = name;
+    if (answerOptions) data.answerOptions = answerOptions;
+    if (correctAnswer) data.correctAnswer = correctAnswer;
+    if (explanation) data.explanation = explanation;
+    if (status) data.status = status;
 
-    if (name) updateFields.question = name;
-    if (options) {
-      if (options.length < 2) {
-        res.status(400).json({
-          status: "fail",
-          message: "At least two options are required",
-        });
-        return;
-      }
-      updateFields.options = options;
-    }
-    if (correctAnswer) updateFields.correctAnswer = correctAnswer;
-    if (explanation !== undefined) updateFields.explanation = explanation;
+    const updateQuestion = await Question.findByIdAndUpdate(questionId, data, {
+      new: true,
+      runValidators: true,
+    });
 
-    const updatedQuestion = await Question.findByIdAndUpdate(
-      questionId,
-      updateFields,
-      { new: true, runValidators: true }
-    );
-
-    if (!updatedQuestion) {
+    if (!updateQuestion) {
       res.status(404).json({
         status: "fail",
         message: "Question not found",
@@ -197,7 +209,7 @@ export const updateQuestion = async (
     res.status(200).json({
       status: "success",
       data: {
-        question: updatedQuestion,
+        question: updateQuestion,
       },
     });
   } catch (error) {
@@ -215,9 +227,9 @@ export const deleteQuestion = async (
   try {
     const { questionId } = req.params;
 
-    const deletedQuestion = await Question.findByIdAndDelete(questionId);
+    const deleteQuestion = await Question.findByIdAndDelete(questionId);
 
-    if (!deletedQuestion) {
+    if (!deleteQuestion) {
       res.status(404).json({
         status: "fail",
         message: "Question not found",
