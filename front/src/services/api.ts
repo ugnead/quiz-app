@@ -59,7 +59,10 @@ api.interceptors.response.use(
           failedRequestsQueue.forEach(({ reject }) =>
             reject(refreshError as AxiosError)
           );
-          window.dispatchEvent(new Event("logout"));
+
+          if ((refreshError as AxiosError).response?.status === 401) {
+            window.dispatchEvent(new Event("logout"));
+          }
 
           return Promise.reject(refreshError);
         } finally {
