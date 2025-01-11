@@ -89,9 +89,7 @@ export const createCategory = async (
     }
 
     const data: any = { name };
-    if (status) {
-      data.status = status;
-    }
+    if (status) data.status = status;
 
     const newCategory = await Category.create(data);
 
@@ -150,9 +148,7 @@ export const updateCategory = async (
     }
 
     const data: any = {};
-    if (name) {
-      data.name = name;
-    }
+    if (name) data.name = name;
     if (status) data.status = status;
 
     const updateCategory = await Category.findByIdAndUpdate(categoryId, data, {
