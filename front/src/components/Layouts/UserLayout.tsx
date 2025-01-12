@@ -1,5 +1,5 @@
 import React from "react";
-import { Routes, Route, Navigate } from "react-router-dom";
+import { Routes, Route, Navigate, useNavigate } from "react-router-dom";
 
 import CategoryList from "../User/CategoryList";
 import SubcategoryList from "../User/SubcategoryList";
@@ -9,6 +9,7 @@ import { useAuth } from "../../contexts/AuthContext";
 
 import Navigation from "../Common/Navigation";
 import Sidebar from "../Common/Sidebar";
+import Button from "../Common/Button";
 
 import { FaQuestionCircle } from "react-icons/fa";
 
@@ -17,6 +18,7 @@ const navItems = [
 ];
 
 const UserLayout: React.FC = () => {
+  const navigate = useNavigate();
   const { user } = useAuth();
 
   const firstName = user?.name.split(" ")[0];
@@ -26,7 +28,20 @@ const UserLayout: React.FC = () => {
       <div className="flex flex-col min-h-screen h-auto">
         <Navigation />
         <div className="flex flex-1">
-          <Sidebar items={navItems} title={user ? `Hello, ${firstName}!` : "User Panel"} />
+          <Sidebar
+            items={navItems}
+            title={user ? `Hello, ${firstName}!` : "User Panel"}
+            footer={
+              <Button
+                onClick={() => navigate("/admin/categories")}
+                fullWidth
+                variant="secondary"
+               
+              >
+                Switch to Admin Panel
+              </Button>
+            }
+          />
           <div className="flex-1 p-5 pb-10 sm:p-10 min-w-0">
             <div className="w-full max-w-lg mx-auto">
               <Routes>
