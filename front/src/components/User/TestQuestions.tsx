@@ -169,7 +169,7 @@ const TestQuestions: React.FC = () => {
   };
 
   const handleBackToSubcategories = () => {
-    navigate(`/categories/${categoryId}/subcategories`, { replace: true });
+    navigate(`/quiz/categories/${categoryId}/subcategories`, { replace: true });
   };
 
   const handleReviewAnswers = () => {
