@@ -1,13 +1,16 @@
 import React, { useEffect, useState } from "react";
+
+import { fetchUsers, updateUserRole } from "../../services/userService";
+
 import Table, { Column } from "../Common/Table";
 import DropdownMenu from "../Common/Dropdown";
 import Pagination from "../Common/Pagination";
-import { fetchUsers, updateUserRole } from "../../services/userService";
 import Label from "../Common/Label";
-import { FiEdit } from "react-icons/fi";
 import Modal from "../Common/Modal";
 import DynamicForm from "../Common/Form/DynamicForm";
 import { userFormSchema } from "../../schemas/formSchemas";
+
+import { FiEdit } from "react-icons/fi";
 
 interface User {
   _id: string;
@@ -122,11 +125,13 @@ const UserList: React.FC = () => {
   return (
     <>
       <Table title="Users List" data={currentPageData} columns={columns} />
-      <Pagination
-        currentPage={currentPage}
-        totalPages={totalPages}
-        onPageChange={handlePageChange}
-      />
+      {totalPages > 1 && (
+        <Pagination
+          currentPage={currentPage}
+          totalPages={totalPages}
+          onPageChange={handlePageChange}
+        />
+      )}
       {isModalOpen && selectedUser && (
         <Modal
           isOpen={isModalOpen}
