@@ -67,14 +67,21 @@ const DynamicForm: React.FC<DynamicFormProps> = ({
     {} as Record<string, Yup.StringSchema>
   );
 
+  const filteredSchema =
+    formMode === "create"
+      ? schema.filter((field) => field.name !== "id")
+      : schema;
+
+  const formikInitialValues = filteredSchema.reduce(
+    (acc, field) => {
+      acc[field.name] = initialValues[field.name] || "";
+      return acc;
+    },
+    {} as Record<string, string>
+  );
+
   const formik = useFormik({
-    initialValues: schema.reduce(
-      (acc, field) => {
-        acc[field.name] = initialValues[field.name] || "";
-        return acc;
-      },
-      {} as Record<string, string>
-    ),
+    initialValues: formikInitialValues,
     validationSchema: Yup.object(validationSchema),
     onSubmit,
   });
