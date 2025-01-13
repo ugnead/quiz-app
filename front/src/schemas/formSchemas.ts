@@ -33,14 +33,14 @@ export const categoryFormSchema: FieldSchema[] = [
 
 export const subcategoryFormSchema: FieldSchema[] = [
   {
-    name: "id",
-    label: "ID",
+    name: "parentName",
+    label: "Parent Category",
     type: "text",
     readOnly: true,
   },
   {
-    name: "parentName",
-    label: "Parent Category",
+    name: "id",
+    label: "ID",
     type: "text",
     readOnly: true,
   },
@@ -52,6 +52,71 @@ export const subcategoryFormSchema: FieldSchema[] = [
       required: true,
       minLength: 1,
       maxLength: 50,
+    },
+  },
+  {
+    name: "status",
+    label: "Status",
+    type: "select",
+    options: [
+      { value: "enabled", label: "enabled" },
+      { value: "disabled", label: "disabled" },
+    ],
+    validation: {
+      required: true,
+    },
+  },
+];
+
+export const questionFormSchema: FieldSchema[] = [
+  {
+    name: "parentName",
+    label: "Parent Subcategory",
+    type: "text",
+    readOnly: true,
+  },
+  {
+    name: "id",
+    label: "ID",
+    type: "text",
+    readOnly: true,
+  },
+  {
+    name: "name",
+    label: "Question",
+    type: "text",
+    validation: {
+      required: true,
+      minLength: 3,
+      maxLength: 255,
+    },
+  },
+  {
+    name: "answerOptions",
+    label: "Answer Options",
+    type: "dynamicArray",
+    validation: {
+      required: true,
+      minItems: 2,
+    },
+  },
+  {
+    name: "answer",
+    label: "Correct Answer",
+    type: "select",
+    validation: {
+      required: true,
+      minLength: 1,
+      maxLength: 50,
+    },
+  },
+  {
+    name: "explanation",
+    label: "Explanation",
+    type: "textarea",
+    validation: {
+      minLength: 3,
+      maxLength: 255,
     },
   },
   {
