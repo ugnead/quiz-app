@@ -5,6 +5,7 @@ interface InputProps extends React.InputHTMLAttributes<HTMLInputElement> {
   error?: string;
   helperText?: string;
   containerClassName?: string;
+  readOnly?: boolean;
 }
 
 const Input: React.FC<InputProps> = ({
