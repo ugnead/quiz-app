@@ -34,6 +34,9 @@ interface Subcategory {
 interface Question {
   _id: string;
   name: string;
+  answerOptions: string[];
+  correctAnswer: string;
+  explanation: string;
   status: string;
 }
 
@@ -54,7 +57,7 @@ const QuestionList: React.FC = () => {
   const [isModalOpen, setModalOpen] = useState(false);
   const [isDeleteMode, setIsDeleteMode] = useState(false);
   const [initialFormValues, setInitialFormValues] = useState<
-    Record<string, string>
+    Record<string, string | string[]>
   >({});
   const [currentPage, setCurrentPage] = useState(1);
 
@@ -102,6 +105,9 @@ const QuestionList: React.FC = () => {
     setInitialFormValues({
       parentName: selectedSubcategory?.name || "",
       name: "",
+      answerOptions: ["", ""],
+      correctAnswer: "",
+      explanation: "",
       status: "enabled",
     });
     setModalOpen(true);
@@ -114,6 +120,9 @@ const QuestionList: React.FC = () => {
       id: question._id,
       parentName: selectedSubcategory?.name || "",
       name: question.name,
+      answerOptions: question.answerOptions,
+      correctAnswer: question.correctAnswer,
+      explanation: question.explanation,
       status: question.status,
     });
     setModalOpen(true);
@@ -131,10 +140,18 @@ const QuestionList: React.FC = () => {
     setIsDeleteMode(false);
   };
 
-  const handleSubmit = async (values: Record<string, string>) => {
-    const changedFields: Record<string, string> = {};
+  const handleSubmit = async (values: Record<string, string | string[]>) => {
+    const changedFields: Record<string, string | string[]> = {};
 
     for (const key in values) {
+      if (Array.isArray(values[key]) && Array.isArray(initialFormValues[key])) {
+        if (JSON.stringify(values[key]) !== JSON.stringify(initialFormValues[key])) {
+          changedFields[key] = values[key];
+        }
+      } else if (values[key] !== initialFormValues[key]) {
+        changedFields[key] = values[key];
+      }
+      
       if (values[key] !== initialFormValues[key]) {
         changedFields[key] = values[key];
       }
@@ -235,7 +252,9 @@ const QuestionList: React.FC = () => {
           subtitle={
             <>
               <Label
-                text={selectedCategory ? `Category: ${selectedCategory.name}` : ""}
+                text={
+                  selectedCategory ? `Category: ${selectedCategory.name}` : ""
+                }
                 variant="success"
                 className="mr-2"
               />
