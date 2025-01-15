@@ -18,10 +18,12 @@ const DynamicArrayField: React.FC<DynamicArrayFieldProps> = ({
   minItems = 2,
   readOnly = false,
 }) => {
-  const { values, errors, touched, handleChange, handleBlur } =
+  const { values, errors, touched } =
     useFormikContext<Record<string, string | string[]>>();
 
-  const arrayValues = Array.isArray(values[name]) ? (values[name] as string[]) : [];
+  const arrayValues = Array.isArray(values[name])
+    ? (values[name] as string[])
+    : [];
 
   const fieldError = errors[name];
   const fieldTouched = touched[name];
@@ -32,6 +34,7 @@ const DynamicArrayField: React.FC<DynamicArrayFieldProps> = ({
 
       <FieldArray
         name={name}
+        validateOnChange={true}
         render={({ push, remove }) => (
           <>
             {arrayValues.map((val: string, index: number) => {
@@ -42,34 +45,24 @@ const DynamicArrayField: React.FC<DynamicArrayFieldProps> = ({
                   <Input
                     name={fieldName}
                     value={val}
-                    onChange={handleChange}
-                    onBlur={handleBlur}
                     readOnly={readOnly}
-                    error={
-                      typeof fieldError === "object" && fieldError !== null
-                        ? (fieldError as string[])[index]
-                        : undefined
-                    }
                   />
 
                   {!readOnly && arrayValues.length > minItems && (
                     <button
-                    type="button"
-                    onClick={() => remove(index)}
-                    className="absolute left-0 top-3 transform -translate-x-7"
-                    title="Remove Option"
-                  >
-                    <FiMinusCircle className="text-gray-500 h-5 w-5" />
-                  </button>
+                      type="button"
+                      onClick={() => remove(index)}
+                      className="absolute left-0 top-3 transform -translate-x-7"
+                      title="Remove Option"
+                    >
+                      <FiMinusCircle className="text-gray-500 h-5 w-5" />
+                    </button>
                   )}
                 </div>
               );
             })}
             {!readOnly && (
-              <Button
-                onClick={() => push("")}
-                fullWidth
-              >
+              <Button onClick={() => push("")} fullWidth>
                 + Add Option
               </Button>
             )}
