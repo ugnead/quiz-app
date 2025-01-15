@@ -1,16 +1,14 @@
 import React from "react";
+import { useField } from "formik";
 
 interface InputProps extends React.InputHTMLAttributes<HTMLInputElement> {
   label?: string;
-  error?: string;
   helperText?: string;
   containerClassName?: string;
-  readOnly?: boolean;
 }
 
-const Input: React.FC<InputProps> = ({
+const Input: React.FC<InputProps & { name: string }> = ({
   label,
-  error,
   helperText,
   containerClassName = "",
   className = "",
@@ -19,6 +17,7 @@ const Input: React.FC<InputProps> = ({
   readOnly = false,
   ...props
 }) => {
+  const [field, meta] = useField(props.name);
   const inputId = id || `input-${label?.replace(/\s+/g, "-").toLowerCase()}`;
 
   return (
@@ -32,22 +31,23 @@ const Input: React.FC<InputProps> = ({
         </label>
       )}
       <input
+        {...field}
         type={type}
         id={inputId}
         readOnly={readOnly}
         className={`block w-full border rounded-md px-3 py-2 cursor-pointer
-          ${error ? "border-red-500" : "border-gray-300"} 
+          ${meta.touched && meta.error ? "border-red-500" : "border-gray-300"} 
           ${readOnly ? "bg-gray-200 text-gray-500 pointer-events-none" : "bg-white focus:outline-none focus:ring-2 focus:ring-blue-500"} ${className}`}
         {...props}
       />
-      {helperText && !error && (
+      {helperText && !meta.error && (
         <p className="text-sm text-gray-500 mt-1">{helperText}</p>
       )}
-      {error && <p className="text-sm text-red-600 mt-1">{error}</p>}
+      {meta.touched && meta.error && (
+        <p className="text-sm text-red-600 mt-1">{meta.error}</p>
+      )}
     </div>
   );
 };
 
 export default Input;
-
-

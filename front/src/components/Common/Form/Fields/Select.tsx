@@ -1,4 +1,5 @@
 import React from "react";
+import { useField } from "formik";
 
 interface Option {
   value: string | number;
@@ -7,16 +8,14 @@ interface Option {
 
 interface SelectProps extends React.SelectHTMLAttributes<HTMLSelectElement> {
   label?: string;
-  error?: string;
   helperText?: string;
   options: Option[];
   containerClassName?: string;
   readOnly?: boolean;
 }
 
-const Select: React.FC<SelectProps> = ({
+const Select: React.FC<SelectProps & { name: string }> = ({
   label,
-  error,
   helperText,
   options,
   containerClassName = "",
@@ -25,6 +24,7 @@ const Select: React.FC<SelectProps> = ({
   readOnly = false,
   ...props
 }) => {
+  const [field, meta] = useField(props.name);
   const selectId = id || `select-${label?.replace(/\s+/g, "-").toLowerCase()}`;
 
   if (readOnly) {
@@ -34,7 +34,9 @@ const Select: React.FC<SelectProps> = ({
     return (
       <div className={`mb-4 ${containerClassName}`}>
         {label && (
-          <label className="block text-sm font-medium mb-1 pointer-events-none">{label}</label>
+          <label className="block text-sm font-medium mb-1 pointer-events-none">
+            {label}
+          </label>
         )}
         <div className="px-3 py-2 bg-gray-200 text-gray-500 border border-gray-300 rounded-md pointer-events-none">
           {selectedOption ? selectedOption.label : ""}
@@ -47,18 +49,16 @@ const Select: React.FC<SelectProps> = ({
   return (
     <div className={`mb-4 relative ${containerClassName}`}>
       {label && (
-        <label
-          htmlFor={selectId}
-          className="block text-sm font-medium mb-1"
-        >
+        <label htmlFor={selectId} className="block text-sm font-medium mb-1">
           {label}
         </label>
       )}
       <div className="relative">
         <select
+          {...field}
           id={selectId}
           className={`block w-full border rounded-md px-3 py-2 bg-white appearance-none focus:outline-none focus:ring-2 focus:ring-blue-500 cursor-pointer
-            ${error ? "border-red-500" : "border-gray-300"} ${className}`}
+            ${meta.touched && meta.error ? "border-red-500" : "border-gray-300"} ${className}`}
           {...props}
         >
           {options.map((option) => (
@@ -82,10 +82,12 @@ const Select: React.FC<SelectProps> = ({
           </svg>
         </div>
       </div>
-      {helperText && !error && (
+      {helperText && !meta.error && (
         <p className="text-sm text-gray-500 mt-1">{helperText}</p>
       )}
-      {error && <p className="text-sm text-red-600 mt-1">{error}</p>}
+      {meta.touched && meta.error && (
+        <p className="text-sm text-red-600 mt-1">{meta.error}</p>
+      )}
     </div>
   );
 };

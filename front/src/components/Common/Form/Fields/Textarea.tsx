@@ -1,17 +1,16 @@
 import React from "react";
+import { useField } from "formik";
 
 interface TextareaProps
   extends React.TextareaHTMLAttributes<HTMLTextAreaElement> {
   label?: string;
-  error?: string;
   helperText?: string;
   containerClassName?: string;
   readOnly?: boolean;
 }
 
-const Textarea: React.FC<TextareaProps> = ({
+const Textarea: React.FC<TextareaProps & { name: string }> = ({
   label,
-  error,
   helperText,
   containerClassName = "",
   className = "",
@@ -19,6 +18,7 @@ const Textarea: React.FC<TextareaProps> = ({
   readOnly = false,
   ...props
 }) => {
+    const [field, meta] = useField(props.name);
   const textareaId =
     id || `textarea-${label?.replace(/\s+/g, "-").toLowerCase()}`;
 
@@ -33,17 +33,18 @@ const Textarea: React.FC<TextareaProps> = ({
         </label>
       )}
       <textarea
+      {...field}
         id={textareaId}
         readOnly={readOnly}
         className={`block w-full border rounded-md px-3 py-2 cursor-pointer
-          ${error ? "border-red-500" : "border-gray-300"}
-          ${readOnly ? "bg-gray-200 text-gray-500 pointer-events-none" : "focus:outline-none focus:ring-2 focus:ring-blue-500"} ${className}`}
+          ${meta.error ? "border-red-500" : "border-gray-300"}
+          ${readOnly ? "bg-gray-200 text-gray-500 pointer-events-none" : "bg-white focus:outline-none focus:ring-2 focus:ring-blue-500"} ${className}`}
         {...props}
       />
-      {helperText && !error && (
+      {helperText && !meta.error && (
         <p className="text-sm text-gray-500 mt-1">{helperText}</p>
       )}
-      {error && <p className="text-sm text-red-600 mt-1">{error}</p>}
+      {meta.error && <p className="text-sm text-red-600 mt-1">{meta.error}</p>}
     </div>
   );
 };
