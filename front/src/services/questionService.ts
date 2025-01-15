@@ -1,12 +1,5 @@
 import api from "./api";
 
-export interface QuestionData {
-    question: string;
-    options: string[];
-    correctAnswer: string;
-    explanation?: string;
-  }
-
 export const fetchQuestionsByUserProgress = async (subcategoryId: string) => {
   const response = await api.get(
     `/subcategories/${subcategoryId}/questions/learn`
@@ -21,12 +14,12 @@ export const getQuestionsBySubcategoryId = async (subcategoryId: string) => {
   return response.data.data.questions;
 };
 
-export const createQuestion = async (subcategoryId: string, questionData: QuestionData) => {
+export const createQuestion = async (subcategoryId: string, questionData: Record<string, string | string[]>) => {
     const response = await api.post(`/subcategories/${subcategoryId}/questions`, questionData);
     return response.data.data.question;
   };
   
-  export const updateQuestion = async (questionId: string, questionData: QuestionData) => {
+  export const updateQuestion = async (questionId: string, questionData: Record<string, string | string[]>) => {
     const response = await api.put(`/questions/${questionId}`, questionData);
     return response.data.data.question;
   };
