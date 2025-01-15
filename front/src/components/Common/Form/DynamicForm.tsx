@@ -1,29 +1,37 @@
 import React from "react";
-import { useFormik } from "formik";
+import { Formik } from "formik";
 import * as Yup from "yup";
 import Input from "./Fields/Input";
 import Select from "./Fields/Select";
 import Textarea from "./Fields/Textarea";
+import DynamicArrayField from "./Fields/DynamicArray";
 import Button from "../Button";
 
 export interface FieldSchema {
   name: string;
   label: string;
-  type: "text" | "select" | "email" | "password" | "textarea";
+  type:
+    | "text"
+    | "select"
+    | "email"
+    | "password"
+    | "textarea"
+    | "dynamicArray";
   options?: { value: string; label: string }[];
   validation?: {
     required?: boolean;
     minLength?: number;
     maxLength?: number;
     pattern?: RegExp;
+    minItems?: number;
   };
   readOnly?: boolean | ((formMode: "create" | "update") => boolean);
 }
 
 interface DynamicFormProps {
   schema: FieldSchema[];
-  initialValues?: Record<string, string>;
-  onSubmit: (values: Record<string, string>) => void;
+  initialValues?: Record<string, string | string[]>;
+  onSubmit: (values: Record<string, string | string[]>) => void;
   formMode?: "create" | "update";
 }
 
@@ -33,10 +41,20 @@ const DynamicForm: React.FC<DynamicFormProps> = ({
   onSubmit,
   formMode = "create",
 }) => {
-  const validationSchema = schema.reduce(
-    (acc, field) => {
+  const validationSchema = schema.reduce((acc, field) => {
+    if (field.type === "dynamicArray") {
+      let arrayValidator = Yup.array()
+        .of(Yup.string().required("Option cannot be empty"))
+        .min(
+          field.validation?.minItems || 2,
+          `At least ${field.validation?.minItems || 2} options required`
+        );
+      if (field.validation?.required) {
+        arrayValidator = arrayValidator.required("This field is required");
+      }
+      acc[field.name] = arrayValidator;
+    } else {
       let validator = Yup.string();
-
       if (field.validation) {
         if (field.validation.required) {
           validator = validator.required("This field is required");
@@ -60,12 +78,10 @@ const DynamicForm: React.FC<DynamicFormProps> = ({
           );
         }
       }
-
       acc[field.name] = validator;
-      return acc;
-    },
-    {} as Record<string, Yup.StringSchema>
-  );
+    }
+    return acc;
+  }, {} as Record<string, Yup.AnySchema>);
 
   const filteredSchema =
     formMode === "create"
@@ -74,69 +90,77 @@ const DynamicForm: React.FC<DynamicFormProps> = ({
 
   const formikInitialValues = filteredSchema.reduce(
     (acc, field) => {
-      acc[field.name] = initialValues[field.name] || "";
+      if (field.type === "dynamicArray") {
+        acc[field.name] = initialValues[field.name] ?? ["", ""];
+      } else {
+        acc[field.name] = initialValues[field.name] ?? "";
+      }
       return acc;
     },
-    {} as Record<string, string>
+    {} as Record<string, string | string[]>
   );
 
-  const formik = useFormik({
-    initialValues: formikInitialValues,
-    validationSchema: Yup.object(validationSchema),
-    onSubmit,
-  });
-
   return (
-    <form onSubmit={formik.handleSubmit}>
-      {schema.map((field) => {
-        if (field.name === "id" && formMode === "create") {
-          return null;
-        }
-
-        const error =
-          typeof formik.errors[field.name] === "string"
-            ? formik.errors[field.name]
-            : undefined;
-
-        const isReadOnly =
-          typeof field.readOnly === "function"
-            ? field.readOnly(formMode)
-            : field.readOnly;
-
-        const commonProps = {
-          key: field.name,
-          label: field.label,
-          name: field.name,
-          value: formik.values[field.name],
-          onChange: formik.handleChange,
-          onBlur: formik.handleBlur,
-          error: error,
-          readOnly: isReadOnly,
-        };
-
-        switch (field.type) {
-          case "text":
-          case "email":
-          case "password":
-            return <Input type={field.type} {...commonProps} />;
-          case "textarea":
-            return <Textarea {...commonProps} />;
-          case "select":
-            return <Select options={field.options || []} {...commonProps} />;
-          default:
-            return null;
-        }
-      })}
-      <div className="flex justify-end mt-4">
-        <Button
-          type="submit"
-          variant="primary"
-          disabled={!formik.isValid || !formik.dirty}
-        >
-          Submit
-        </Button>
-      </div>
-    </form>
+    <Formik
+      initialValues={formikInitialValues}
+      validationSchema={Yup.object(validationSchema)}
+      validateOnChange={false}
+      validateOnBlur={true}
+      onSubmit={onSubmit}
+    >
+      {(formik) => {
+        return (
+          <form onSubmit={formik.handleSubmit}>
+            {filteredSchema.map((field) => {
+  
+              const isReadOnly =
+                typeof field.readOnly === "function"
+                  ? field.readOnly(formMode)
+                  : field.readOnly;
+  
+              const commonProps = {
+                key: field.name,
+                label: field.label,
+                name: field.name,
+                readOnly: isReadOnly,
+              };
+  
+              switch (field.type) {
+                case "text":
+                case "email":
+                case "password":
+                  return <Input type={field.type} {...commonProps} />;
+                case "textarea":
+                  return <Textarea {...commonProps} />;
+                case "select":
+                  return <Select options={field.options || []} {...commonProps} />;
+                case "dynamicArray":
+                  return (
+                    <DynamicArrayField
+                      key={field.name}
+                      label={field.label}
+                      name={field.name}
+                      minItems={field.validation?.minItems}
+                      readOnly={isReadOnly}
+                    />
+                  );
+                default:
+                  return null;
+              }
+            })}
+            <div className="flex justify-end mt-4">
+              <Button
+                type="submit"
+                variant="primary"
+                disabled={!formik.isValid || !formik.dirty}
+              >
+                Submit
+              </Button>
+            </div>
+          </form>
+        );
+      }}
+    </Formik>
   );
 };
 
