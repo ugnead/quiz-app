@@ -41,25 +41,28 @@ const CategoryList: React.FC = () => {
   >({});
   const [currentPage, setCurrentPage] = useState(1);
 
+  const {
+    data: categories = [],
+    isLoading,
+    error,
+  } = useQuery({
+    queryKey: ["categories"],
+    queryFn: fetchCategories,
+    retry: false,
+  });
+
   const pageSize = 10;
   const totalPages = Math.ceil(categories.length / pageSize);
   const startIndex = (currentPage - 1) * pageSize;
   const currentPageData = categories.slice(startIndex, startIndex + pageSize);
 
-  const navigate = useNavigate();
+  if (isLoading) {
+    return null;
+  }
 
-  useEffect(() => {
-    const loadCategories = async () => {
-      try {
-        const data = await fetchCategories();
-        setCategories(data);
-      } catch (error) {
-        console.error("Failed to fetch categories:", error);
-      }
-    };
-
-    loadCategories();
-  }, []);
+  if (error) {
+    return toast.error("Error loading categories");
+  }
 
   const handleCreate = () => {
     setSelectedCategory(null);
