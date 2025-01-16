@@ -14,6 +14,9 @@ import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import Home from "./components/Public/Home";
 import WaitForAuth from "./components/Routes/WaitForAuth";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+
+export const queryClient = new QueryClient();
 
 const App: React.FC = () => {
   return (
@@ -29,6 +32,7 @@ const App: React.FC = () => {
         theme="colored"
       />
       <WaitForAuth>
+      <QueryClientProvider client={queryClient}>
         <Routes>
           <Route
             path="/"
