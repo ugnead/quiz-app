@@ -95,13 +95,7 @@ const CategoryList: React.FC = () => {
   };
 
   const handleSubmit = async (values: Record<string, string>) => {
-    const changedFields: Record<string, string> = {};
-
-    for (const key in values) {
-      if (values[key] !== initialFormValues[key]) {
-        changedFields[key] = values[key];
-      }
-    }
+    const changedFields = extractChangedFields(initialFormValues, values);
 
     try {
       if (!selectedCategory) {
