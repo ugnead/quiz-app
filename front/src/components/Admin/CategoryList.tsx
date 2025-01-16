@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 import {
@@ -29,7 +29,8 @@ interface Category {
 }
 
 const CategoryList: React.FC = () => {
-  const [categories, setCategories] = useState<Category[]>([]);
+  const navigate = useNavigate();
+
   const [selectedCategory, setSelectedCategory] = useState<Category | null>(
     null
   );
