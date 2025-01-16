@@ -1,6 +1,9 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
+import { getAPIErrorMessage } from "../../types/errors";
+import { extractChangedFields } from "../../utils/extractChangedFields";
+
 import {
   fetchCategories,
   createCategory,
@@ -99,28 +102,15 @@ const CategoryList: React.FC = () => {
 
     try {
       if (!selectedCategory) {
-        const newCategory = await createCategory(changedFields);
-        setCategories((prev) => [newCategory, ...prev]);
+        await createCategory(changedFields);
         toast.success("Category created successfully!");
       } else {
-        const updatedCategory = await updateCategory(
-          selectedCategory._id,
-          changedFields
-        );
-        setCategories((prev) =>
-          prev.map((cat) =>
-            cat._id === updatedCategory._id ? updatedCategory : cat
-          )
-        );
+        await updateCategory(selectedCategory._id, changedFields);
+        toast.success("Category updated successfully!");
       }
-    } catch (error: any) {
-      if (error.response?.data?.message) {
-        toast.error(error.response.data.message);
-      } else {
-        toast.error("An unexpected error occurred.");
-      }
+    } catch (error: unknown) {
+      toast.error(getAPIErrorMessage(error));
     }
-
     handleModalClose();
   };
 
@@ -129,13 +119,10 @@ const CategoryList: React.FC = () => {
 
     try {
       await deleteCategory(selectedCategory._id);
-      setCategories((prev) =>
-        prev.filter((cat) => cat._id !== selectedCategory._id)
-      );
+      toast.success("Category deleted successfully!");
     } catch (error) {
-      console.error("Failed to delete category:", error);
+      toast.error("Failed to delete category");
     }
-
     handleModalClose();
   };
 
