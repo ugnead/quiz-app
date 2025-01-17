@@ -14,9 +14,11 @@ export const getQuestionsBySubcategoryId = async (
   const { subcategoryId } = req.params;
 
   try {
-    const questions = await Question.find({ subcategory: subcategoryId }).select("_id name answerOptions correctAnswer explanation status").sort({
-      createdAt: -1,
-    });
+    const questions = await Question.find({ subcategory: subcategoryId })
+      .select("_id name answerOptions correctAnswer explanation status")
+      .sort({
+        createdAt: -1,
+      });
 
     res.status(200).json({
       status: "success",
@@ -41,9 +43,11 @@ export const getQuestionsByUserProgress = async (
   const { subcategoryId } = req.params;
 
   try {
-    const questions = await Question.find({ subcategory: subcategoryId }).select("_id name answerOptions correctAnswer explanation status").sort({
-      createdAt: -1,
-    });
+    const questions = await Question.find({ subcategory: subcategoryId })
+      .select("_id name answerOptions correctAnswer explanation status")
+      .sort({
+        createdAt: -1,
+      });
 
     const userProgress = await UserProgress.find({
       user: userId,
