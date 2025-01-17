@@ -101,7 +101,7 @@ export const questionFormSchema: FieldSchema[] = [
     },
   },
   {
-    name: "answer",
+    name: "correctAnswer",
     label: "Correct Answer",
     type: "select",
     validation: {

@@ -18,7 +18,7 @@ import { FaArrowLeft } from "react-icons/fa";
 interface Question {
   _id: string;
   name: string;
-  options: string[];
+  answerOptions: string[];
   correctAnswer: string;
   explanation: string;
 }
@@ -194,7 +194,7 @@ const TestQuestions: React.FC = () => {
 
   const currentQuestion = questions[currentQuestionIndex];
 
-  const optionList = currentQuestion.options.map((option) => ({
+  const optionList = currentQuestion.answerOptions.map((option) => ({
     id: option,
     name: option,
   }));
