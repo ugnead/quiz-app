@@ -12,7 +12,9 @@ export const getAllCategories = async (
   res: Response
 ): Promise<void> => {
   try {
-    const categories = await Category.find().sort({ createdAt: -1 });
+    const categories = await Category.find()
+      .select("_id name status")
+      .sort({ createdAt: -1 });
 
     res.status(200).json({
       status: "success",
