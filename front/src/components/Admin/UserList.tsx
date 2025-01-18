@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 
-import { User, UpdateUserDto } from "../../types";
+import { User, UpdateUserDto, getAPIErrorMessage } from "../../types";
 import { extractChangedFields } from "../../utils/extractChangedFields";
 
 import { useQuery, useQueryClient } from "@tanstack/react-query";
@@ -69,14 +69,17 @@ const UserList: React.FC = () => {
   const handleSubmit = async (values: Record<string, string | string[]>) => {
     if (!selectedUser) return;
 
-        const changedFields = extractChangedFields(initialFormValues, values);
-    
+    const changedFields = extractChangedFields(initialFormValues, values);
 
     try {
-      await updateUserRole(selectedUser._id, changedFields as unknown as UpdateUserDto);
+      await updateUserRole(
+        selectedUser._id,
+        changedFields as unknown as UpdateUserDto
+      );
+      toast.success("User updated successfully!");
       queryClient.invalidateQueries({ queryKey: ["users"] });
     } catch (error) {
-      console.error("Failed to update user role:");
+      toast.error(getAPIErrorMessage(error));
     }
 
     handleModalClose();
