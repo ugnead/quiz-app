@@ -12,7 +12,7 @@ export const categoryFormSchema: FieldSchema[] = [
     label: "Category Name",
     type: "text",
     validation: {
-      required: true,
+      required: (formMode) => formMode === "create",
       minLength: 1,
       maxLength: 50,
     },
@@ -25,9 +25,6 @@ export const categoryFormSchema: FieldSchema[] = [
       { value: "enabled", label: "enabled" },
       { value: "disabled", label: "disabled" },
     ],
-    validation: {
-      required: true,
-    },
   },
 ];
 
@@ -49,7 +46,7 @@ export const subcategoryFormSchema: FieldSchema[] = [
     label: "Subcategory Name",
     type: "text",
     validation: {
-      required: true,
+      required: (formMode) => formMode === "create",
       minLength: 1,
       maxLength: 50,
     },
@@ -62,9 +59,6 @@ export const subcategoryFormSchema: FieldSchema[] = [
       { value: "enabled", label: "enabled" },
       { value: "disabled", label: "disabled" },
     ],
-    validation: {
-      required: true,
-    },
   },
 ];
 
@@ -86,7 +80,7 @@ export const questionFormSchema: FieldSchema[] = [
     label: "Question",
     type: "text",
     validation: {
-      required: true,
+      required: (formMode) => formMode === "create",
       minLength: 3,
       maxLength: 255,
     },
@@ -96,7 +90,7 @@ export const questionFormSchema: FieldSchema[] = [
     label: "Answer Options",
     type: "dynamicArray",
     validation: {
-      required: true,
+      required: (formMode) => formMode === "create",
       minItems: 2,
     },
   },
@@ -105,7 +99,7 @@ export const questionFormSchema: FieldSchema[] = [
     label: "Correct Answer",
     type: "select",
     validation: {
-      required: true,
+      required: (formMode) => formMode === "create",
       minLength: 1,
       maxLength: 50,
     },
@@ -127,9 +121,6 @@ export const questionFormSchema: FieldSchema[] = [
       { value: "enabled", label: "enabled" },
       { value: "disabled", label: "disabled" },
     ],
-    validation: {
-      required: true,
-    },
   },
 ];
 
