@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
-import { Category, getAPIErrorMessage } from "../../types";   
+import { Category, CreateCategoryDto, UpdateCategoryDto, getAPIErrorMessage } from "../../types";   
 import { extractChangedFields } from "../../utils/extractChangedFields";
 
 import {
@@ -91,15 +91,15 @@ const CategoryList: React.FC = () => {
     setIsDeleteMode(false);
   };
 
-  const handleSubmit = async (values: Record<string, string>) => {
+  const handleSubmit = async (values: Record<string, string | string[]>) => {
     const changedFields = extractChangedFields(initialFormValues, values);
 
     try {
-      if (!selectedCategory) {
-        await createCategory(changedFields);
+      if (!selectedCategory) {    
+        await createCategory(changedFields as unknown as CreateCategoryDto);
         toast.success("Category created successfully!");
       } else {
-        await updateCategory(selectedCategory._id, changedFields);
+        await updateCategory(selectedCategory._id, changedFields as UpdateCategoryDto);
         toast.success("Category updated successfully!");
       }
     } catch (error: unknown) {
