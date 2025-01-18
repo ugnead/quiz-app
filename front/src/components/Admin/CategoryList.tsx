@@ -22,11 +22,12 @@ import Button from "../Common/Button";
 import Message from "../Common/Message";
 
 import { toast } from "react-toastify";
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, useQueryClient  } from "@tanstack/react-query";
 import { FiEdit, FiTrash2 } from "react-icons/fi";
 
 const CategoryList: React.FC = () => {
   const navigate = useNavigate();
+  const queryClient = useQueryClient();
 
   const [selectedCategory, setSelectedCategory] = useState<Category | null>(
     null
@@ -102,6 +103,7 @@ const CategoryList: React.FC = () => {
         await updateCategory(selectedCategory._id, changedFields as UpdateCategoryDto);
         toast.success("Category updated successfully!");
       }
+      queryClient.invalidateQueries({ queryKey: ["categories"] });
     } catch (error: unknown) {
       toast.error(getAPIErrorMessage(error));
     }
@@ -114,6 +116,7 @@ const CategoryList: React.FC = () => {
     try {
       await deleteCategory(selectedCategory._id);
       toast.success("Category deleted successfully!");
+      queryClient.invalidateQueries({ queryKey: ["categories"] });
     } catch (error) {
       toast.error("Failed to delete category");
     }
