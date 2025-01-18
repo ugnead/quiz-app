@@ -1,5 +1,5 @@
 import React from "react";
-import { Formik } from "formik";
+import { Formik, Form } from "formik";
 import * as Yup from "yup";
 import Input from "./Fields/Input";
 import Select from "./Fields/Select";
@@ -19,7 +19,7 @@ export interface FieldSchema {
     | "dynamicArray";
   options?: { value: string; label: string }[];
   validation?: {
-    required?: boolean;
+    required?: boolean | ((formMode: "create" | "update") => boolean);
     minLength?: number;
     maxLength?: number;
     pattern?: RegExp;
@@ -49,14 +49,22 @@ const DynamicForm: React.FC<DynamicFormProps> = ({
           field.validation?.minItems || 2,
           `At least ${field.validation?.minItems || 2} options required`
         );
-      if (field.validation?.required) {
-        arrayValidator = arrayValidator.required("This field is required");
-      }
+        if (field.validation?.required) {
+          const isRequired = typeof field.validation.required === "function"
+            ? field.validation.required(formMode)
+            : field.validation.required;
+          if (isRequired) {
+            arrayValidator = arrayValidator.required("This field is required");
+          }
+        }
       acc[field.name] = arrayValidator;
     } else {
       let validator = Yup.string();
       if (field.validation) {
-        if (field.validation.required) {
+        const isRequired = typeof field.validation.required === "function"
+          ? field.validation.required(formMode)
+          : field.validation.required;
+        if (isRequired) {
           validator = validator.required("This field is required");
         }
         if (field.validation.minLength) {
@@ -110,7 +118,7 @@ const DynamicForm: React.FC<DynamicFormProps> = ({
     >
       {(formik) => {
         return (
-          <form onSubmit={formik.handleSubmit}>
+          <Form autoComplete="off" onSubmit={formik.handleSubmit}>
             {filteredSchema.map((field) => {
   
               const isReadOnly =
@@ -157,7 +165,7 @@ const DynamicForm: React.FC<DynamicFormProps> = ({
                 Submit
               </Button>
             </div>
-          </form>
+          </Form>
         );
       }}
     </Formik>
