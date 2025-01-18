@@ -1,9 +1,15 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
-import { Category, CreateCategoryDto, UpdateCategoryDto, getAPIErrorMessage } from "../../types";   
+import {
+  Category,
+  CreateCategoryDto,
+  UpdateCategoryDto,
+  getAPIErrorMessage,
+} from "../../types";
 import { extractChangedFields } from "../../utils/extractChangedFields";
 
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 import {
   fetchCategories,
   createCategory,
@@ -22,7 +28,6 @@ import Button from "../Common/Button";
 import Message from "../Common/Message";
 
 import { toast } from "react-toastify";
-import { useQuery, useQueryClient  } from "@tanstack/react-query";
 import { FiEdit, FiTrash2 } from "react-icons/fi";
 
 const CategoryList: React.FC = () => {
@@ -96,11 +101,14 @@ const CategoryList: React.FC = () => {
     const changedFields = extractChangedFields(initialFormValues, values);
 
     try {
-      if (!selectedCategory) {    
+      if (!selectedCategory) {
         await createCategory(changedFields as unknown as CreateCategoryDto);
         toast.success("Category created successfully!");
       } else {
-        await updateCategory(selectedCategory._id, changedFields as UpdateCategoryDto);
+        await updateCategory(
+          selectedCategory._id,
+          changedFields as UpdateCategoryDto
+        );
         toast.success("Category updated successfully!");
       }
       queryClient.invalidateQueries({ queryKey: ["categories"] });
