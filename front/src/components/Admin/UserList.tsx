@@ -47,7 +47,7 @@ const UserList: React.FC = () => {
   }
 
   if (error) {
-    return toast.error("Error loading categories");
+    return toast.error("Error loading users");
   }
 
   const handleEdit = (user: User) => {
