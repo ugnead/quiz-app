@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate, useParams, useLocation } from "react-router-dom";
 
+import { Category} from "../../types";   
+
 import { fetchCategoryById } from "../../services/categoryService";
 import {
   fetchSubcategories,
@@ -19,11 +21,6 @@ import Button from "../Common/Button";
 import Message from "../Common/Message";
 
 import { FiEdit, FiTrash2 } from "react-icons/fi";
-
-interface Category {
-  _id: string;
-  name: string;
-}
 
 interface Subcategory {
   _id: string;

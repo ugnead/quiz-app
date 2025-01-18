@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 
+import { Category} from "../../types";   
+
 import { fetchCategoryById } from "../../services/categoryService";
 import { fetchSubcategories } from "../../services/subcategoryService";
 import { fetchUserProgress } from "../../services/userProgressService";
@@ -11,11 +13,6 @@ import Pagination from "../Common/Pagination";
 import { FaCheckCircle, FaTimesCircle, FaArrowLeft } from "react-icons/fa";
 
 interface Subcategory {
-  _id: string;
-  name: string;
-}
-
-interface Category {
   _id: string;
   name: string;
 }
