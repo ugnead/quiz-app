@@ -1,5 +1,9 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 
+import { User, UpdateUserDto } from "../../types";
+import { extractChangedFields } from "../../utils/extractChangedFields";
+
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { fetchUsers, updateUserRole } from "../../services/userService";
 
 import Table, { Column } from "../Common/Table";
@@ -10,17 +14,12 @@ import Modal from "../Common/Modal";
 import DynamicForm from "../Common/Form/DynamicForm";
 import { userFormSchema } from "../../schemas/formSchemas";
 
+import { toast } from "react-toastify";
 import { FiEdit } from "react-icons/fi";
 
-interface User {
-  _id: string;
-  name: string;
-  email: string;
-  role: string;
-}
-
 const UserList: React.FC = () => {
-  const [users, setUsers] = useState<User[]>([]);
+  const queryClient = useQueryClient();
+
   const [selectedUser, setSelectedUser] = useState<User | null>(null);
   const [isModalOpen, setModalOpen] = useState(false);
   const [initialFormValues, setInitialFormValues] = useState<
@@ -28,23 +27,28 @@ const UserList: React.FC = () => {
   >({});
   const [currentPage, setCurrentPage] = useState(1);
 
+  const {
+    data: users = [],
+    isLoading,
+    error,
+  } = useQuery({
+    queryKey: ["users"],
+    queryFn: fetchUsers,
+    retry: false,
+  });
+
   const pageSize = 10;
   const totalPages = Math.ceil(users.length / pageSize);
   const startIndex = (currentPage - 1) * pageSize;
   const currentPageData = users.slice(startIndex, startIndex + pageSize);
 
-  useEffect(() => {
-    const loadUsers = async () => {
-      try {
-        const data = await fetchUsers();
-        setUsers(data);
-      } catch (error) {
-        console.error("Failed to fetch users:", error);
-      }
-    };
+  if (isLoading) {
+    return null;
+  }
 
-    loadUsers();
-  }, []);
+  if (error) {
+    return toast.error("Error loading categories");
+  }
 
   const handleEdit = (user: User) => {
     setSelectedUser(user);
@@ -62,14 +66,15 @@ const UserList: React.FC = () => {
     setSelectedUser(null);
   };
 
-  const handleSubmit = async (values: Record<string, string>) => {
+  const handleSubmit = async (values: Record<string, string | string[]>) => {
     if (!selectedUser) return;
 
+        const changedFields = extractChangedFields(initialFormValues, values);
+    
+
     try {
-      const updatedUser = await updateUserRole(selectedUser._id, values.role);
-      setUsers((prev) =>
-        prev.map((user) => (user._id === updatedUser._id ? updatedUser : user))
-      );
+      await updateUserRole(selectedUser._id, changedFields as unknown as UpdateUserDto);
+      queryClient.invalidateQueries({ queryKey: ["users"] });
     } catch (error) {
       console.error("Failed to update user role:");
     }
