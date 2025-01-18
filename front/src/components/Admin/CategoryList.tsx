@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
-import { getAPIErrorMessage } from "../../types/errors";
+import { Category, getAPIErrorMessage } from "../../types";   
 import { extractChangedFields } from "../../utils/extractChangedFields";
 
 import {
@@ -24,12 +24,6 @@ import Message from "../Common/Message";
 import { toast } from "react-toastify";
 import { useQuery } from "@tanstack/react-query";
 import { FiEdit, FiTrash2 } from "react-icons/fi";
-
-interface Category {
-  _id: string;
-  name: string;
-  status: string;
-}
 
 const CategoryList: React.FC = () => {
   const navigate = useNavigate();

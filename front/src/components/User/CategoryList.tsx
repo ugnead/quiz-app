@@ -1,16 +1,13 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
+import { Category } from "../../types";   
+
 import { fetchCategories } from "../../services/categoryService";
 
 import OptionsList from "../Common/OptionsList";
 import Pagination from "../Common/Pagination";
 import Message from "../Common/Message";
-
-interface Category {
-  _id: string;
-  name: string;
-}
 
 const CategoryList: React.FC = () => {
   const navigate = useNavigate();
