@@ -3,7 +3,7 @@ import User, { IUser } from "../models/userModel";
 
 export const getAllUsers = async (req: Request, res: Response) => {
   try {
-    const users: IUser[] = await User.find();
+    const users: IUser[] = await User.find().select("_id name email role");
     res.status(200).json({
       status: "success",
       results: users.length,
