@@ -37,11 +37,6 @@ const UserList: React.FC = () => {
     retry: false,
   });
 
-  const pageSize = 10;
-  const totalPages = Math.ceil(users.length / pageSize);
-  const startIndex = (currentPage - 1) * pageSize;
-  const currentPageData = users.slice(startIndex, startIndex + pageSize);
-
   if (isLoading) {
     return null;
   }
@@ -49,6 +44,11 @@ const UserList: React.FC = () => {
   if (error) {
     return toast.error("Error loading users");
   }
+
+  const pageSize = 10;
+  const totalPages = Math.ceil(users.length / pageSize);
+  const startIndex = (currentPage - 1) * pageSize;
+  const currentPageData = users.slice(startIndex, startIndex + pageSize);
 
   const handleEdit = (user: User) => {
     setSelectedUser(user);

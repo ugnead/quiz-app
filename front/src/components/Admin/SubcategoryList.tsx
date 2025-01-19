@@ -71,14 +71,6 @@ const SubcategoryList: React.FC = () => {
     retry: false,
   });
 
-  const pageSize = 10;
-  const totalPages = Math.ceil(subcategories.length / pageSize);
-  const startIndex = (currentPage - 1) * pageSize;
-  const currentPageData = subcategories.slice(
-    startIndex,
-    startIndex + pageSize
-  );
-
   if (isCategoryLoading || isSubcategoriesLoading) {
     return null;
   }
@@ -86,6 +78,14 @@ const SubcategoryList: React.FC = () => {
   if (subcategoryError || categoryError) {
     return toast.error("Error loading subcategories");
   }
+
+  const pageSize = 10;
+  const totalPages = Math.ceil(subcategories.length / pageSize);
+  const startIndex = (currentPage - 1) * pageSize;
+  const currentPageData = subcategories.slice(
+    startIndex,
+    startIndex + pageSize
+  );
 
   const handleCreate = () => {
     setSelectedSubcategory(null);

@@ -54,11 +54,6 @@ const CategoryList: React.FC = () => {
     retry: false,
   });
 
-  const pageSize = 10;
-  const totalPages = Math.ceil(categories.length / pageSize);
-  const startIndex = (currentPage - 1) * pageSize;
-  const currentPageData = categories.slice(startIndex, startIndex + pageSize);
-
   if (isLoading) {
     return null;
   }
@@ -66,6 +61,11 @@ const CategoryList: React.FC = () => {
   if (error) {
     return toast.error("Error loading categories");
   }
+
+  const pageSize = 10;
+  const totalPages = Math.ceil(categories.length / pageSize);
+  const startIndex = (currentPage - 1) * pageSize;
+  const currentPageData = categories.slice(startIndex, startIndex + pageSize);
 
   const handleCreate = () => {
     setSelectedCategory(null);
