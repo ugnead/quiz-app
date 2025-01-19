@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { useNavigate, useParams, useLocation } from "react-router-dom";
 
-import { Category, Subcategory } from "../../types";
+import { Category, Subcategory, getAPIErrorMessage } from "../../types";
 import { extractChangedFields } from "../../utils/extractChangedFields";
 
 import { useQuery } from "@tanstack/react-query";
@@ -124,13 +124,14 @@ const SubcategoryList: React.FC = () => {
           throw new Error("No categoryId specified for creation.");
         }
         await createSubcategory(categoryId, changedFields);
+        toast.success("Subcategory created successfully!");
       } else {
         await updateSubcategory(selectedSubcategory._id, changedFields);
+        toast.success("Subcategory updated successfully!");
       }
-    } catch (error) {
-      console.error("Failed to create/update subcategory:", error);
+    } catch (error: unknown) {
+      toast.error(getAPIErrorMessage(error));
     }
-
     handleModalClose();
   };
 
@@ -139,10 +140,10 @@ const SubcategoryList: React.FC = () => {
 
     try {
       await deleteSubcategory(selectedSubcategory._id);
+      toast.success("Subcategory deleted successfully!");
     } catch (error) {
-      console.error("Failed to delete subcategory:", error);
+      toast.error("Failed to delete subcategory");
     }
-
     handleModalClose();
   };
 
