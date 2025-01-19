@@ -31,7 +31,7 @@ const UserList: React.FC = () => {
     data: users = [],
     isLoading,
     error,
-  } = useQuery({
+  } = useQuery<User[]>({
     queryKey: ["users"],
     queryFn: fetchUsers,
     retry: false,

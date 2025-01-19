@@ -50,7 +50,7 @@ const SubcategoryList: React.FC = () => {
     data: selectedCategory,
     isLoading: isCategoryLoading,
     error: categoryError,
-  } = useQuery({
+  } = useQuery<Category>({
     queryKey: ["category", categoryId],
     queryFn: () =>
       location.state?.category
@@ -64,7 +64,7 @@ const SubcategoryList: React.FC = () => {
     data: subcategories = [],
     isLoading: isSubcategoriesLoading,
     error: subcategoryError,
-  } = useQuery({
+  } = useQuery<Subcategory[]>({
     queryKey: ["subcategories", categoryId],
     queryFn: () => fetchSubcategories(categoryId!),
     enabled: !!categoryId,
