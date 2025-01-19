@@ -1,7 +1,13 @@
 import React, { useState } from "react";
 import { useNavigate, useParams, useLocation } from "react-router-dom";
 
-import { Category, Subcategory, getAPIErrorMessage } from "../../types";
+import {
+  Category,
+  Subcategory,
+  CreateSubcategoryDto,
+  UpdateSubcategoryDto,
+  getAPIErrorMessage,
+} from "../../types";
 import { extractChangedFields } from "../../utils/extractChangedFields";
 
 import { useQuery } from "@tanstack/react-query";
@@ -123,10 +129,16 @@ const SubcategoryList: React.FC = () => {
         if (!categoryId) {
           throw new Error("No categoryId specified for creation.");
         }
-        await createSubcategory(categoryId, changedFields);
+        await createSubcategory(
+          categoryId,
+          changedFields as unknown as CreateSubcategoryDto
+        );
         toast.success("Subcategory created successfully!");
       } else {
-        await updateSubcategory(selectedSubcategory._id, changedFields);
+        await updateSubcategory(
+          selectedSubcategory._id,
+          changedFields as UpdateSubcategoryDto
+        );
         toast.success("Subcategory updated successfully!");
       }
     } catch (error: unknown) {
