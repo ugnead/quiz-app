@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { useNavigate, useParams, useLocation } from "react-router-dom";
 
 import { Category, Subcategory } from "../../types";
+import { extractChangedFields } from "../../utils/extractChangedFields";
 
 import { useQuery } from "@tanstack/react-query";
 import { fetchCategoryById } from "../../services/categoryService";
@@ -115,13 +116,7 @@ const SubcategoryList: React.FC = () => {
   };
 
   const handleSubmit = async (values: Record<string, string>) => {
-    const changedFields: Record<string, string> = {};
-
-    for (const key in values) {
-      if (values[key] !== initialFormValues[key]) {
-        changedFields[key] = values[key];
-      }
-    }
+    const changedFields = extractChangedFields(initialFormValues, values);
 
     try {
       if (!selectedSubcategory) {
