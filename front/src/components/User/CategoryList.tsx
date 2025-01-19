@@ -1,37 +1,44 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
-import { Category } from "../../types";   
+import { Category } from "../../types";
 
+import { useQuery } from "@tanstack/react-query";
 import { fetchCategories } from "../../services/categoryService";
 
 import OptionsList from "../Common/OptionsList";
 import Pagination from "../Common/Pagination";
 import Message from "../Common/Message";
 
+import { toast } from "react-toastify";
+
 const CategoryList: React.FC = () => {
   const navigate = useNavigate();
 
-  const [categories, setCategories] = useState<Category[]>([]);
   const [currentPage, setCurrentPage] = useState(1);
+
+  const {
+    data: categories = [],
+    isLoading,
+    error,
+  } = useQuery<Category[]>({
+    queryKey: ["categories"],
+    queryFn: fetchCategories,
+    retry: false,
+  });
+
+  if (isLoading) {
+    return null;
+  }
+
+  if (error) {
+    return toast.error("Error loading categories");
+  }
 
   const pageSize = 10;
   const totalPages = Math.ceil(categories.length / pageSize);
   const startIndex = (currentPage - 1) * pageSize;
   const currentPageData = categories.slice(startIndex, startIndex + pageSize);
-
-  useEffect(() => {
-    const loadCategories = async () => {
-      try {
-        const data = await fetchCategories();
-        setCategories(data);
-      } catch (error) {
-        console.error("Failed to fetch categories:", error);
-      }
-    };
-
-    loadCategories();
-  }, []);
 
   const handleCategorySelect = (categoryId: string) => {
     navigate(`/quiz/categories/${categoryId}/subcategories`);
