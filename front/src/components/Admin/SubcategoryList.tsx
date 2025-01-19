@@ -10,7 +10,7 @@ import {
 } from "../../types";
 import { extractChangedFields } from "../../utils/extractChangedFields";
 
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { fetchCategoryById } from "../../services/categoryService";
 import {
   fetchSubcategories,
@@ -35,6 +35,7 @@ const SubcategoryList: React.FC = () => {
   const navigate = useNavigate();
   const location = useLocation() as { state?: { category?: Category } };
   const { categoryId } = useParams<{ categoryId: string }>();
+  const queryClient = useQueryClient();
 
   const [selectedSubcategory, setSelectedSubcategory] =
     useState<Subcategory | null>(null);
@@ -141,6 +142,7 @@ const SubcategoryList: React.FC = () => {
         );
         toast.success("Subcategory updated successfully!");
       }
+      queryClient.invalidateQueries({ queryKey: ["subcategories"] });
     } catch (error: unknown) {
       toast.error(getAPIErrorMessage(error));
     }
@@ -153,6 +155,7 @@ const SubcategoryList: React.FC = () => {
     try {
       await deleteSubcategory(selectedSubcategory._id);
       toast.success("Subcategory deleted successfully!");
+      queryClient.invalidateQueries({ queryKey: ["subcategories"] });
     } catch (error) {
       toast.error("Failed to delete subcategory");
     }
