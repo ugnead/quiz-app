@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 
-import { Category, Subcategory } from "../../types";   
+import { Category, Subcategory } from "../../types";
 
 import { fetchCategoryById } from "../../services/categoryService";
 import { fetchSubcategories } from "../../services/subcategoryService";
@@ -9,6 +9,7 @@ import { fetchUserProgress } from "../../services/userProgressService";
 
 import Button from "../Common/Button";
 import Pagination from "../Common/Pagination";
+import Message from "../Common/Message";
 
 import { FaCheckCircle, FaTimesCircle, FaArrowLeft } from "react-icons/fa";
 
@@ -94,59 +95,68 @@ const SubcategoryList: React.FC = () => {
 
   return (
     <>
-      <div className="flex items-center justify-center relative pb-6 sm:pb-12">
-        <button
-          onClick={handleBackToCategories}
-          className="absolute sm:top-5 top-2 left-0"
-        >
-          <FaArrowLeft className="text-2xl" />
-        </button>
-        <h1>{category?.name}</h1>
-      </div>
-      <ul className="flex flex-col space-y-4">
-        {currentPageData.map((subcategory) => {
-          const progress = progressData.find(
-            (p) => p.subcategoryId === subcategory._id
-          );
+      {subcategories.length > 0 ? (
+        <>
+          <div className="flex items-center justify-center relative pb-6 sm:pb-12">
+            <button
+              onClick={handleBackToCategories}
+              className="absolute sm:top-5 top-2 left-0"
+            >
+              <FaArrowLeft className="text-2xl" />
+            </button>
+            <h1>{category?.name}</h1>
+          </div>
+          <ul className="flex flex-col space-y-4">
+            {currentPageData.map((subcategory) => {
+              const progress = progressData.find(
+                (p) => p.subcategoryId === subcategory._id
+              );
 
-          return (
-            <li key={subcategory._id} className="flex flex-col justify-between">
-              <span className="pb-1 pe-5 font-bold text-lg">
-                {subcategory.name}
-              </span>
-              <div className="flex space-x-4">
-                <Button
-                  className="w-2/4 text-nowrap"
-                  variant="secondary"
-                  onClick={() => handleLearnSelect(subcategory._id)}
+              return (
+                <li
+                  key={subcategory._id}
+                  className="flex flex-col justify-between"
                 >
-                  Learn{" "}
-                  {progress
-                    ? `${progress.learnedQuestions}/${progress.totalQuestions}`
-                    : ""}
-                  {progress && getLearnIcon(progress)}
-                </Button>
-                <Button
-                  className="w-2/4 text-nowrap"
-                  onClick={() => handleTestSelect(subcategory._id)}
-                >
-                  Test{" "}
-                  {progress && progress.correctTestAnswers !== null
-                    ? `${progress.correctTestAnswers}/${progress.totalQuestions}`
-                    : ""}
-                  {progress && getTestIcon(progress)}
-                </Button>
-              </div>
-            </li>
-          );
-        })}
-      </ul>
-      {totalPages > 1 && (
-        <Pagination
-          currentPage={currentPage}
-          totalPages={totalPages}
-          onPageChange={handlePageChange}
-        />
+                  <span className="pb-1 pe-5 font-bold text-lg">
+                    {subcategory.name}
+                  </span>
+                  <div className="flex space-x-4">
+                    <Button
+                      className="w-2/4 text-nowrap"
+                      variant="secondary"
+                      onClick={() => handleLearnSelect(subcategory._id)}
+                    >
+                      Learn{" "}
+                      {progress
+                        ? `${progress.learnedQuestions}/${progress.totalQuestions}`
+                        : ""}
+                      {progress && getLearnIcon(progress)}
+                    </Button>
+                    <Button
+                      className="w-2/4 text-nowrap"
+                      onClick={() => handleTestSelect(subcategory._id)}
+                    >
+                      Test{" "}
+                      {progress && progress.correctTestAnswers !== null
+                        ? `${progress.correctTestAnswers}/${progress.totalQuestions}`
+                        : ""}
+                      {progress && getTestIcon(progress)}
+                    </Button>
+                  </div>
+                </li>
+              );
+            })}
+          </ul>
+          {totalPages > 1 && (
+            <Pagination
+              currentPage={currentPage}
+              totalPages={totalPages}
+              onPageChange={handlePageChange}
+            />
+          )}
+        </>
+      ) : (
+        <Message message="No categories found" variant="info" />
       )}
     </>
   );
