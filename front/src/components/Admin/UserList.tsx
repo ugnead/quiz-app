@@ -42,7 +42,7 @@ const UserList: React.FC = () => {
   }
 
   if (error) {
-    return toast.error("Error loading users");
+    return toast.error("Error loading data");
   }
 
   const pageSize = 10;

@@ -59,7 +59,7 @@ const CategoryList: React.FC = () => {
   }
 
   if (error) {
-    return toast.error("Error loading categories");
+    return toast.error("Error loading data");
   }
 
   const pageSize = 10;

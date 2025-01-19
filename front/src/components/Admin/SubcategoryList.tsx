@@ -76,7 +76,7 @@ const SubcategoryList: React.FC = () => {
   }
 
   if (subcategoryError || categoryError) {
-    return toast.error("Error loading subcategories");
+    return toast.error("Error loading data");
   }
 
   const pageSize = 10;
