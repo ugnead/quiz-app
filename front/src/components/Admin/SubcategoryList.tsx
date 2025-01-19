@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate, useParams, useLocation } from "react-router-dom";
 
-import { Category} from "../../types";   
+import { Category, Subcategory } from "../../types";   
 
 import { fetchCategoryById } from "../../services/categoryService";
 import {
@@ -22,16 +22,10 @@ import Message from "../Common/Message";
 
 import { FiEdit, FiTrash2 } from "react-icons/fi";
 
-interface Subcategory {
-  _id: string;
-  name: string;
-  status: string;
-}
-
 const SubcategoryList: React.FC = () => {
   const navigate = useNavigate();
-  const { categoryId } = useParams<{ categoryId: string }>();
   const location = useLocation() as { state?: { category?: Category } };
+  const { categoryId } = useParams<{ categoryId: string }>();
 
   const [selectedCategory, setSelectedCategory] = useState<Category | null>(
     null
