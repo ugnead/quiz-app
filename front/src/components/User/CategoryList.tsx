@@ -40,8 +40,10 @@ const CategoryList: React.FC = () => {
   const startIndex = (currentPage - 1) * pageSize;
   const currentPageData = categories.slice(startIndex, startIndex + pageSize);
 
-  const handleCategorySelect = (categoryId: string) => {
-    navigate(`/quiz/categories/${categoryId}/subcategories`);
+  const handleCategorySelect = (category: Category) => {
+    navigate(`/quiz/categories/${category._id}/subcategories`, {
+      state: { category },
+    });
   };
 
   const handlePageChange = (page: number) => {
