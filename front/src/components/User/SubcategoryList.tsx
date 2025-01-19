@@ -10,6 +10,7 @@ import { fetchUserProgress } from "../../services/userProgressService";
 import Button from "../Common/Button";
 import Pagination from "../Common/Pagination";
 import Message from "../Common/Message";
+import Label from "../Common/Label";
 
 import { FaCheckCircle, FaTimesCircle, FaArrowLeft } from "react-icons/fa";
 
@@ -24,7 +25,9 @@ const SubcategoryList: React.FC = () => {
   const navigate = useNavigate();
   const { categoryId } = useParams<{ categoryId: string }>();
 
-  const [category, setCategory] = useState<Category | null>(null);
+  const [selectedCategory, setSelectedCategory] = useState<Category | null>(
+    null
+  );
   const [subcategories, setSubcategories] = useState<Subcategory[]>([]);
   const [progressData, setProgressData] = useState<SubcategoryProgress[]>([]);
   const [currentPage, setCurrentPage] = useState(1);
@@ -45,7 +48,7 @@ const SubcategoryList: React.FC = () => {
             fetchCategoryById(categoryId),
             fetchSubcategories(categoryId),
           ]);
-          setCategory(categoryData);
+          setSelectedCategory(categoryData);
           setSubcategories(subcategoryData);
 
           const progressPromises = subcategoryData.map(
@@ -104,7 +107,16 @@ const SubcategoryList: React.FC = () => {
             >
               <FaArrowLeft className="text-2xl" />
             </button>
-            <h1>{category?.name}</h1>
+            <div className="text-center">
+              <h1>{selectedCategory?.name}</h1>
+              <Label
+                text={
+                  selectedCategory ? `Category: ${selectedCategory.name}` : ""
+                }
+                variant="warning"
+                className="mt-4"
+              />
+            </div>
           </div>
           <ul className="flex flex-col space-y-4">
             {currentPageData.map((subcategory) => {
