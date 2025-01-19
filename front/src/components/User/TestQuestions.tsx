@@ -249,7 +249,7 @@ const TestQuestions: React.FC = () => {
   }
 
   return (
-    <div>
+    <>
       <div className="flex justify-between mb-5">
         <Timer
           duration={questions.length * 60}
@@ -300,7 +300,7 @@ const TestQuestions: React.FC = () => {
       >
         <p>Are you sure you want to end the test?</p>
       </Modal>
-    </div>
+    </>
   );
 };
 

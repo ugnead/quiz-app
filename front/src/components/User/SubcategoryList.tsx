@@ -93,7 +93,7 @@ const SubcategoryList: React.FC = () => {
   };
 
   return (
-    <div>
+    <>
       <div className="flex items-center justify-center relative pb-6 sm:pb-12">
         <button
           onClick={handleBackToCategories}
@@ -148,7 +148,7 @@ const SubcategoryList: React.FC = () => {
           onPageChange={handlePageChange}
         />
       )}
-    </div>
+    </>
   );
 };
 

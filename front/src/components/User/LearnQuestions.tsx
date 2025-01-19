@@ -122,7 +122,7 @@ const LearnQuestions: React.FC = () => {
   }));
 
   return (
-    <div>
+    <>
       <h2 className="pb-6 text-center">{currentQuestion.name}</h2>
       <OptionsList
         options={optionList}
@@ -161,7 +161,7 @@ const LearnQuestions: React.FC = () => {
           explanation={currentQuestion.explanation}
         />
       )}
-    </div>
+    </>
   );
 };
 

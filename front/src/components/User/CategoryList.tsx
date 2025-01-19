@@ -51,7 +51,7 @@ const CategoryList: React.FC = () => {
   };
 
   return (
-    <div>
+    <>
       {categories.length > 0 ? (
         <>
           <h1 className="pb-6 sm:pb-12 text-center">Categories</h1>
@@ -79,7 +79,7 @@ const CategoryList: React.FC = () => {
       ) : (
         <Message message="No categories found" variant="info" />
       )}
-    </div>
+    </>
   );
 };
 
