@@ -1,8 +1,9 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { useNavigate, useParams, useLocation } from "react-router-dom";
 
-import { Category, Subcategory } from "../../types";   
+import { Category, Subcategory } from "../../types";
 
+import { useQuery } from "@tanstack/react-query";
 import { fetchCategoryById } from "../../services/categoryService";
 import {
   fetchSubcategories,
@@ -20,6 +21,7 @@ import { subcategoryFormSchema } from "../../schemas/formSchemas";
 import Button from "../Common/Button";
 import Message from "../Common/Message";
 
+import { toast } from "react-toastify";
 import { FiEdit, FiTrash2 } from "react-icons/fi";
 
 const SubcategoryList: React.FC = () => {
@@ -27,10 +29,6 @@ const SubcategoryList: React.FC = () => {
   const location = useLocation() as { state?: { category?: Category } };
   const { categoryId } = useParams<{ categoryId: string }>();
 
-  const [selectedCategory, setSelectedCategory] = useState<Category | null>(
-    null
-  );
-  const [subcategories, setSubcategories] = useState<Subcategory[]>([]);
   const [selectedSubcategory, setSelectedSubcategory] =
     useState<Subcategory | null>(null);
   const [isModalOpen, setModalOpen] = useState(false);
@@ -40,6 +38,31 @@ const SubcategoryList: React.FC = () => {
   >({});
   const [currentPage, setCurrentPage] = useState(1);
 
+  const {
+    data: selectedCategory,
+    isLoading: isCategoryLoading,
+    error: categoryError,
+  } = useQuery({
+    queryKey: ["category", categoryId],
+    queryFn: () =>
+      location.state?.category
+        ? Promise.resolve(location.state.category)
+        : fetchCategoryById(categoryId!),
+    enabled: !!categoryId,
+    retry: false,
+  });
+
+  const {
+    data: subcategories = [],
+    isLoading: isSubcategoriesLoading,
+    error: subcategoryError,
+  } = useQuery({
+    queryKey: ["subcategories", categoryId],
+    queryFn: () => fetchSubcategories(categoryId!),
+    enabled: !!categoryId,
+    retry: false,
+  });
+
   const pageSize = 10;
   const totalPages = Math.ceil(subcategories.length / pageSize);
   const startIndex = (currentPage - 1) * pageSize;
@@ -48,34 +71,13 @@ const SubcategoryList: React.FC = () => {
     startIndex + pageSize
   );
 
-  useEffect(() => {
-    const loadCategory = async () => {
-      if (location.state?.category) {
-        setSelectedCategory(location.state.category);
-      } else if (categoryId) {
-        try {
-          const data = await fetchCategoryById(categoryId);
-          setSelectedCategory(data);
-        } catch (error) {
-          console.error("Failed to fetch category:", error);
-        }
-      }
-    };
+  if (isCategoryLoading || isSubcategoriesLoading) {
+    return null;
+  }
 
-    const loadSubcategories = async () => {
-      if (categoryId) {
-        try {
-          const data = await fetchSubcategories(categoryId);
-          setSubcategories(data);
-        } catch (error) {
-          console.error("Failed to fetch subcategories:", error);
-        }
-      }
-    };
-
-    loadCategory();
-    loadSubcategories();
-  }, [categoryId, location.state?.category]);
+  if (subcategoryError || categoryError) {
+    return toast.error("Error loading subcategories");
+  }
 
   const handleCreate = () => {
     setSelectedSubcategory(null);
@@ -126,21 +128,9 @@ const SubcategoryList: React.FC = () => {
         if (!categoryId) {
           throw new Error("No categoryId specified for creation.");
         }
-        const newSubcategory = await createSubcategory(
-          categoryId,
-          changedFields
-        );
-        setSubcategories((prev) => [newSubcategory, ...prev]);
+        await createSubcategory(categoryId, changedFields);
       } else {
-        const updatedSubcategory = await updateSubcategory(
-          selectedSubcategory._id,
-          changedFields
-        );
-        setSubcategories((prev) =>
-          prev.map((subcat) =>
-            subcat._id === updatedSubcategory._id ? updatedSubcategory : subcat
-          )
-        );
+        await updateSubcategory(selectedSubcategory._id, changedFields);
       }
     } catch (error) {
       console.error("Failed to create/update subcategory:", error);
@@ -154,9 +144,6 @@ const SubcategoryList: React.FC = () => {
 
     try {
       await deleteSubcategory(selectedSubcategory._id);
-      setSubcategories((prev) =>
-        prev.filter((subcat) => subcat._id !== selectedSubcategory._id)
-      );
     } catch (error) {
       console.error("Failed to delete subcategory:", error);
     }
