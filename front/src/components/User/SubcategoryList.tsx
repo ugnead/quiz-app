@@ -1,8 +1,9 @@
-import React, { useEffect, useState } from "react";
-import { useParams, useNavigate } from "react-router-dom";
+import React, { useState } from "react";
+import { useNavigate, useParams, useLocation } from "react-router-dom";
 
 import { Category, Subcategory } from "../../types";
 
+import { useQuery } from "@tanstack/react-query";
 import { fetchCategoryById } from "../../services/categoryService";
 import { fetchSubcategories } from "../../services/subcategoryService";
 import { fetchUserProgress } from "../../services/userProgressService";
@@ -12,6 +13,7 @@ import Pagination from "../Common/Pagination";
 import Message from "../Common/Message";
 import Label from "../Common/Label";
 
+import { toast } from "react-toastify";
 import { FaCheckCircle, FaTimesCircle, FaArrowLeft } from "react-icons/fa";
 
 interface SubcategoryProgress {
@@ -23,14 +25,59 @@ interface SubcategoryProgress {
 
 const SubcategoryList: React.FC = () => {
   const navigate = useNavigate();
+  const location = useLocation() as { state?: { category?: Category } };
   const { categoryId } = useParams<{ categoryId: string }>();
 
-  const [selectedCategory, setSelectedCategory] = useState<Category | null>(
-    null
-  );
-  const [subcategories, setSubcategories] = useState<Subcategory[]>([]);
-  const [progressData, setProgressData] = useState<SubcategoryProgress[]>([]);
   const [currentPage, setCurrentPage] = useState(1);
+
+  const {
+    data: selectedCategory,
+    isLoading: isCategoryLoading,
+    error: categoryError,
+  } = useQuery<Category>({
+    queryKey: ["category", categoryId],
+    queryFn: () =>
+      location.state?.category
+        ? Promise.resolve(location.state.category)
+        : fetchCategoryById(categoryId!),
+    enabled: !!categoryId,
+    retry: false,
+  });
+
+  const {
+    data: subcategories = [],
+    isLoading: isSubcategoriesLoading,
+    error: subcategoryError,
+  } = useQuery<Subcategory[]>({
+    queryKey: ["subcategories", categoryId],
+    queryFn: () => fetchSubcategories(categoryId!),
+    enabled: !!categoryId,
+    retry: false,
+  });
+
+  const {
+    data: progressData = [],
+    isLoading: isProgressLoading,
+    error: progressError,
+  } = useQuery<SubcategoryProgress[]>({
+    queryKey: ["userProgress", categoryId],
+    queryFn: async () => {
+      const progress = subcategories.map((subcategory) =>
+        fetchUserProgress(subcategory._id)
+      );
+      return Promise.all(progress);
+    },
+    enabled: !!categoryId && subcategories.length > 0,
+    retry: false,
+  });
+
+  if (isCategoryLoading || isSubcategoriesLoading || isProgressLoading) {
+    return null;
+  }
+
+  if (subcategoryError || categoryError || progressError) {
+    return toast.error("Error loading data");
+  }
 
   const pageSize = 6;
   const totalPages = Math.ceil(subcategories.length / pageSize);
@@ -39,31 +86,6 @@ const SubcategoryList: React.FC = () => {
     startIndex,
     startIndex + pageSize
   );
-
-  useEffect(() => {
-    const loadSubcategories = async () => {
-      if (categoryId) {
-        try {
-          const [categoryData, subcategoryData] = await Promise.all([
-            fetchCategoryById(categoryId),
-            fetchSubcategories(categoryId),
-          ]);
-          setSelectedCategory(categoryData);
-          setSubcategories(subcategoryData);
-
-          const progressPromises = subcategoryData.map(
-            (subcategory: Subcategory) => fetchUserProgress(subcategory._id)
-          );
-          const progressResults = await Promise.all(progressPromises);
-          setProgressData(progressResults);
-        } catch (error) {
-          console.error("Failed to fetch subcategories or category:", error);
-        }
-      }
-    };
-
-    loadSubcategories();
-  }, [categoryId]);
 
   const handleLearnSelect = (subcategoryId: string) => {
     navigate(`/quiz/subcategories/${subcategoryId}/questions/learn`);
