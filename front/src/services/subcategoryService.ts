@@ -1,19 +1,23 @@
 import api from "./api";
 
-export const fetchSubcategories = async (categoryId: string) => {
+import { Subcategory, CreateSubcategoryDto, UpdateSubcategoryDto } from "../types";
+
+export const fetchSubcategories = async (categoryId: string,): Promise<Subcategory[]> => {
   const response = await api.get(`/categories/${categoryId}/subcategories`);
-  return response.data.data.subcategories;
+  return response.data.data.subcategories as Subcategory[];
 };
 
-export const fetchSubcategoryById = async (subcategoryId: string) => {
+export const fetchSubcategoryById = async (
+  subcategoryId: string
+): Promise<Subcategory> => {
   const response = await api.get(`/subcategories/${subcategoryId}`);
-  return response.data.data.subcategory;
+  return response.data.data.subcategory as Subcategory;
 };
 
 export const createSubcategory = async (
   categoryId: string,
-  subcategoryData: Record<string, string>
-) => {
+  subcategoryData: CreateSubcategoryDto
+): Promise<Subcategory> => {
   const response = await api.post(
     `/categories/${categoryId}/subcategories`,
     subcategoryData
@@ -23,8 +27,8 @@ export const createSubcategory = async (
 
 export const updateSubcategory = async (
   subcategoryId: string,
-  subcategoryData: Record<string, string>
-) => {
+  subcategoryData: UpdateSubcategoryDto
+): Promise<Subcategory> => {
   const response = await api.patch(
     `/subcategories/${subcategoryId}`,
     subcategoryData
@@ -32,7 +36,7 @@ export const updateSubcategory = async (
   return response.data.data.subcategory;
 };
 
-export const deleteSubcategory = async (subcategoryId: string) => {
+export const deleteSubcategory = async (subcategoryId: string): Promise<void> => {
   const response = await api.delete(`/subcategories/${subcategoryId}`);
   return response.data;
 };
