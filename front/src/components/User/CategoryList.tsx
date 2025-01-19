@@ -6,9 +6,9 @@ import { Category } from "../../types";
 import { useQuery } from "@tanstack/react-query";
 import { fetchCategories } from "../../services/categoryService";
 
-import OptionsList from "../Common/OptionsList";
 import Pagination from "../Common/Pagination";
 import Message from "../Common/Message";
+import Button from "../Common/Button";
 
 import { toast } from "react-toastify";
 
@@ -48,20 +48,24 @@ const CategoryList: React.FC = () => {
     setCurrentPage(page);
   };
 
-  const categoryOptions = currentPageData.map((category) => ({
-    id: category._id,
-    name: category.name,
-  }));
-
   return (
     <div>
       {categories.length > 0 ? (
         <>
           <h1 className="pb-6 sm:pb-12 text-center">Categories</h1>
-          <OptionsList
-            options={categoryOptions}
-            onSelectOption={handleCategorySelect}
-          />
+          <ul className="flex flex-col space-y-4">
+            {currentPageData.map((category) => (
+              <li key={category._id}>
+                <Button
+                  variant="secondary"
+                  onClick={() => handleCategorySelect(category)}
+                  fullWidth
+                >
+                  {category.name}
+                </Button>
+              </li>
+            ))}
+          </ul>
           {totalPages > 1 && (
             <Pagination
               currentPage={currentPage}
