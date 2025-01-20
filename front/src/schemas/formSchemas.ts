@@ -97,11 +97,10 @@ export const questionFormSchema: FieldSchema[] = [
   {
     name: "correctAnswer",
     label: "Correct Answer",
-    type: "select",
+    type: "dynamicSelectField",
+    relatedFieldName: "answerOptions",
     validation: {
       required: (formMode) => formMode === "create",
-      minLength: 1,
-      maxLength: 50,
     },
   },
   {
