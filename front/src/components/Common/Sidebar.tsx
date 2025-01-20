@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { NavLink } from "react-router-dom";
 import { IconType } from "react-icons";
 import { MdKeyboardDoubleArrowRight } from "react-icons/md";
+import { v4 as uuidv4 } from "uuid";
 
 interface NavItem {
   label: string;
@@ -54,7 +55,7 @@ const Sidebar: React.FC<SidebarProps> = ({ items, title, footer }) => {
             )}
             <ul>
               {items.map((item) => (
-                <li key={item.path}>
+                <li key={uuidv4()}>
                   <NavLink
                     to={item.path}
                     className={({ isActive }) =>

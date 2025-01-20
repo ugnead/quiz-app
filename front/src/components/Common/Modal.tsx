@@ -2,6 +2,7 @@ import React, { useEffect } from "react";
 import ReactDOM from "react-dom";
 import Button from "./Button";
 import { IoClose } from "react-icons/io5";
+import { v4 as uuidv4 } from "uuid";
 
 interface Action {
   label: string;
@@ -86,9 +87,9 @@ const Modal: React.FC<ModalProps> = ({
               actions.length === 1 ? "justify-end" : "justify-between"
             }`}
           >
-            {actions.map((action, index) => (
+            {actions.map((action) => (
               <Button
-                key={index}
+                key={uuidv4()}
                 onClick={action.onClick}
                 variant={action.variant || "primary"}
               >

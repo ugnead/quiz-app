@@ -1,5 +1,6 @@
 import React from "react";
 import { useField } from "formik";
+import { v4 as uuidv4 } from "uuid";
 
 interface Option {
   value: string | number;
@@ -62,7 +63,7 @@ const Select: React.FC<SelectProps & { name: string }> = ({
           {...props}
         >
           {options.map((option) => (
-            <option key={option.value.toString()} value={option.value}>
+            <option key={uuidv4()} value={option.value}>
               {option.label}
             </option>
           ))}

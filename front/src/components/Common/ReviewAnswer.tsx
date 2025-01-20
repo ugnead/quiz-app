@@ -1,5 +1,6 @@
 import React from "react";
 import Button from "./Button";
+import { v4 as uuidv4 } from "uuid";
 
 interface ReviewAnswerProps {
   answeredQuestions: {
@@ -27,7 +28,7 @@ const ReviewAnswer: React.FC<ReviewAnswerProps> = ({
 
         return (
           <Button
-            key={answerSequence}
+            key={uuidv4()}
             onClick={() => handleReviewQuestion(answerSequence)}
             variant={colorClass}
             className={`w-11 mx-[3.6px] my-[3.6px] px-0 py-2 text-white`}

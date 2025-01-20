@@ -1,5 +1,6 @@
 import React from "react";
 import { MdKeyboardArrowLeft, MdKeyboardArrowRight } from "react-icons/md";
+import { v4 as uuidv4 } from "uuid";
 
 interface PaginationProps {
   currentPage: number;
@@ -32,7 +33,7 @@ const Pagination: React.FC<PaginationProps> = ({
 
       {pageNumbers.map((page) => (
         <button
-          key={page}
+          key={uuidv4()}
           onClick={() => onPageChange(page)}
           className={`px-3 py-1 rounded-md ${
             currentPage === page

@@ -1,5 +1,6 @@
 import React from "react";
 import Button from "./Button";
+import { v4 as uuidv4 } from "uuid";
 
 interface Option {
   id: string;
@@ -31,7 +32,7 @@ const OptionsList: React.FC<OptionsListProps> = ({
   return (
     <ul className="flex flex-col space-y-4">
       {options.map((option) => (
-        <li key={option.id}>
+        <li key={uuidv4()}>
           <Button
             variant={getOptionClass(option.id)}
             onClick={() => onSelectOption && onSelectOption(option.id)}

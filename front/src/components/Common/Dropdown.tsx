@@ -1,5 +1,6 @@
 import React, { useState, useRef, useEffect } from "react";
 import { FiMoreVertical } from "react-icons/fi";
+import { v4 as uuidv4 } from "uuid";
 
 interface Item {
   label: string;
@@ -50,9 +51,9 @@ const Dropdown: React.FC<DropdownProps> = ({ items }) => {
       </button>
       {isOpen && (
         <div className="absolute bottom-full right-0 mb-0.5 w-32 bg-white border border-gray-200 rounded shadow z-50">
-          {items.map((item, index) => (
+          {items.map((item) => (
             <button
-              key={index}
+              key={uuidv4()}
               onClick={(e) => {
                 setIsOpen(false);
                 item.onClick();

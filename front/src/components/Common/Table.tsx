@@ -1,4 +1,5 @@
 import React from "react";
+import { v4 as uuidv4 } from "uuid";
 
 export interface Column<T> {
   header: string;
@@ -29,20 +30,16 @@ function Table<T extends object>({
       {title && (
         <div className="text-center mb-7">
           <h3>{title}</h3>
-          {subtitle && (
-            <div className="mt-6">
-              {subtitle}
-            </div>
-          )}
+          {subtitle && <div className="mt-6">{subtitle}</div>}
         </div>
       )}
-      <div >
+      <div>
         <table className="w-full bg-white rounded-lg">
           <thead className="bg-gray-800">
             <tr>
               {columns.map((column, colIndex) => (
                 <th
-                  key={String(column.header || colIndex)}
+                  key={uuidv4()}
                   className={`py-3 px-3 text-left text-white font-semibold ${
                     colIndex === 0 ? "rounded-tl-lg" : ""
                   } ${colIndex === columns.length - 1 ? "rounded-tr-lg" : ""}`}
@@ -64,13 +61,13 @@ function Table<T extends object>({
 
               return (
                 <tr
-                  key={rowIndex}
+                  key={uuidv4()}
                   className={rowClasses}
                   onClick={() => onRowClick && onRowClick(row)}
                 >
                   {columns.map((column, colIndex) => (
                     <td
-                      key={String(column.header || colIndex)}
+                      key={uuidv4()}
                       className={`py-3 px-3 text-gray-800 ${
                         column.cellClassName || ""
                       } ${isLastRow && colIndex === 0 ? "rounded-bl-lg" : ""} ${
