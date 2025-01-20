@@ -41,55 +41,60 @@ const DynamicForm: React.FC<DynamicFormProps> = ({
   onSubmit,
   formMode = "create",
 }) => {
-  const validationSchema = schema.reduce((acc, field) => {
-    if (field.type === "dynamicArray") {
-      let arrayValidator = Yup.array()
-        .of(Yup.string().required("Option cannot be empty"))
-        .min(
-          field.validation?.minItems || 2,
-          `At least ${field.validation?.minItems || 2} options required`
-        );
+  const validationSchema = schema.reduce(
+    (acc, field) => {
+      if (field.type === "dynamicArray") {
+        let arrayValidator = Yup.array()
+          .of(Yup.string().required("Option cannot be empty"))
+          .min(
+            field.validation?.minItems || 2,
+            `At least ${field.validation?.minItems || 2} options required`
+          );
         if (field.validation?.required) {
-          const isRequired = typeof field.validation.required === "function"
-            ? field.validation.required(formMode)
-            : field.validation.required;
+          const isRequired =
+            typeof field.validation.required === "function"
+              ? field.validation.required(formMode)
+              : field.validation.required;
           if (isRequired) {
             arrayValidator = arrayValidator.required("This field is required");
           }
         }
-      acc[field.name] = arrayValidator;
-    } else {
-      let validator = Yup.string();
-      if (field.validation) {
-        const isRequired = typeof field.validation.required === "function"
-          ? field.validation.required(formMode)
-          : field.validation.required;
-        if (isRequired) {
-          validator = validator.required("This field is required");
+        acc[field.name] = arrayValidator;
+      } else {
+        let validator = Yup.string();
+        if (field.validation) {
+          const isRequired =
+            typeof field.validation.required === "function"
+              ? field.validation.required(formMode)
+              : field.validation.required;
+          if (isRequired) {
+            validator = validator.required("This field is required");
+          }
+          if (field.validation.minLength) {
+            validator = validator.min(
+              field.validation.minLength,
+              `Minimum ${field.validation.minLength} characters`
+            );
+          }
+          if (field.validation.maxLength) {
+            validator = validator.max(
+              field.validation.maxLength,
+              `Maximum ${field.validation.maxLength} characters`
+            );
+          }
+          if (field.validation.pattern) {
+            validator = validator.matches(
+              field.validation.pattern,
+              "Invalid format"
+            );
+          }
         }
-        if (field.validation.minLength) {
-          validator = validator.min(
-            field.validation.minLength,
-            `Minimum ${field.validation.minLength} characters`
-          );
-        }
-        if (field.validation.maxLength) {
-          validator = validator.max(
-            field.validation.maxLength,
-            `Maximum ${field.validation.maxLength} characters`
-          );
-        }
-        if (field.validation.pattern) {
-          validator = validator.matches(
-            field.validation.pattern,
-            "Invalid format"
-          );
-        }
+        acc[field.name] = validator;
       }
-      acc[field.name] = validator;
-    }
-    return acc;
-  }, {} as Record<string, Yup.AnySchema>);
+      return acc;
+    },
+    {} as Record<string, Yup.AnySchema>
+  );
 
   const filteredSchema =
     formMode === "create"
