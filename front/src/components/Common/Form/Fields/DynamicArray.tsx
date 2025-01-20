@@ -62,7 +62,7 @@ const DynamicArrayField: React.FC<DynamicArrayFieldProps> = ({
               );
             })}
             {!readOnly && (
-              <Button onClick={() => push("")} fullWidth>
+              <Button type="button" onClick={() => push("")} fullWidth>
                 + Add Option
               </Button>
             )}
