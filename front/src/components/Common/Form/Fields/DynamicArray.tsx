@@ -1,5 +1,6 @@
 import React from "react";
 import { useFormikContext, FieldArray } from "formik";
+import { v4 as uuidv4 } from "uuid";
 
 import Input from "./Input";
 import Button from "../../Button";
@@ -37,14 +38,13 @@ const DynamicArrayField: React.FC<DynamicArrayFieldProps> = ({
         validateOnChange={true}
         render={({ push, remove }) => (
           <>
-            {arrayValues.map((val: string, index: number) => {
+            {arrayValues.map((value: string, index: number) => {
               const fieldName = `${name}.${index}`;
-
               return (
-                <div key={index} className="relative group">
+                <div key={uuidv4()} className="relative group">
                   <Input
                     name={fieldName}
-                    value={val}
+                  
                     readOnly={readOnly}
                   />
 
