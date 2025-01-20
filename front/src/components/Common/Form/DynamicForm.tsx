@@ -1,10 +1,14 @@
 import React from "react";
 import { Formik, Form } from "formik";
 import * as Yup from "yup";
+import { v4 as uuidv4 } from "uuid";
+
 import Input from "./Fields/Input";
 import Select from "./Fields/Select";
 import Textarea from "./Fields/Textarea";
-import DynamicArrayField from "./Fields/DynamicArray";
+import DynamicArray from "./Fields/DynamicArray";
+import DynamicSelectField from "./Fields/DynamicSelectField";
+
 import Button from "../Button";
 
 export interface FieldSchema {
@@ -16,7 +20,8 @@ export interface FieldSchema {
     | "email"
     | "password"
     | "textarea"
-    | "dynamicArray";
+    | "dynamicArray"
+    | "dynamicSelectField";
   options?: { value: string; label: string }[];
   validation?: {
     required?: boolean | ((formMode: "create" | "update") => boolean);
@@ -26,6 +31,7 @@ export interface FieldSchema {
     minItems?: number;
   };
   readOnly?: boolean | ((formMode: "create" | "update") => boolean);
+  relatedFieldName?: string;
 }
 
 interface DynamicFormProps {
@@ -60,6 +66,14 @@ const DynamicForm: React.FC<DynamicFormProps> = ({
           }
         }
         acc[field.name] = arrayValidator;
+      } else if (field.type === "dynamicSelectField") {
+        const relatedFieldOptions = initialValues[field.relatedFieldName] || [];
+        acc[field.name] = Yup.string()
+          .required("A correct answer is required")
+          .oneOf(
+            relatedFieldOptions,
+            "The correct answer must match one of the answer options"
+          );
       } else {
         let validator = Yup.string();
         if (field.validation) {
@@ -145,13 +159,24 @@ const DynamicForm: React.FC<DynamicFormProps> = ({
                 case "textarea":
                   return <Textarea {...commonProps} />;
                 case "select":
-                  return <Select options={field.options || []} {...commonProps} />;
+                  return (
+                    <Select options={field.options || []} {...commonProps} />
+                  );
+                case "dynamicSelectField":
+                  return (
+                    <DynamicSelectField
+                      key={uuidv4()}
+                      name={field.name}
+                      label={field.label}
+                      optionsFieldName={field.relatedFieldName || ""}
+                    />
+                  );
                 case "dynamicArray":
                   return (
-                    <DynamicArrayField
-                      key={field.name}
-                      label={field.label}
+                    <DynamicArray
+                      key={uuidv4()}
                       name={field.name}
+                      label={field.label}
                       minItems={field.validation?.minItems}
                       readOnly={isReadOnly}
                     />
