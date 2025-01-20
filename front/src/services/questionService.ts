@@ -20,7 +20,7 @@ export const createQuestion = async (subcategoryId: string, questionData: Record
   };
   
   export const updateQuestion = async (questionId: string, questionData: Record<string, string | string[]>) => {
-    const response = await api.put(`/questions/${questionId}`, questionData);
+    const response = await api.patch(`/questions/${questionId}`, questionData);
     return response.data.data.question;
   };
   
