@@ -125,19 +125,18 @@ const DynamicForm: React.FC<DynamicFormProps> = ({
         return (
           <Form autoComplete="off" onSubmit={formik.handleSubmit}>
             {filteredSchema.map((field) => {
-  
               const isReadOnly =
                 typeof field.readOnly === "function"
                   ? field.readOnly(formMode)
                   : field.readOnly;
-  
+
               const commonProps = {
                 key: field.name,
-                label: field.label,
                 name: field.name,
+                label: field.label,
                 readOnly: isReadOnly,
               };
-  
+
               switch (field.type) {
                 case "text":
                 case "email":
