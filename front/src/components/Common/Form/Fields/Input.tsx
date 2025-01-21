@@ -1,5 +1,6 @@
 import React from "react";
 import { useField } from "formik";
+import { v4 as uuidv4 } from "uuid";
 
 interface InputProps extends React.InputHTMLAttributes<HTMLInputElement> {
   label?: string;
@@ -18,7 +19,7 @@ const Input: React.FC<InputProps & { name: string }> = ({
   ...props
 }) => {
   const [field, meta] = useField(props.name);
-  const inputId = id || `input-${label?.replace(/\s+/g, "-").toLowerCase()}`;
+  const inputId = id || uuidv4();
 
   return (
     <div className={`mb-4 ${containerClassName}`}>
