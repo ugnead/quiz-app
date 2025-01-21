@@ -26,7 +26,7 @@ const Select: React.FC<SelectProps & { name: string }> = ({
   ...props
 }) => {
   const [field, meta] = useField(props.name);
-  const selectId = id || `select-${label?.replace(/\s+/g, "-").toLowerCase()}`;
+  const selectId = id || uuidv4();
 
   if (readOnly) {
     const selectedOption = options.find(

@@ -18,9 +18,8 @@ const Textarea: React.FC<TextareaProps & { name: string }> = ({
   readOnly = false,
   ...props
 }) => {
-    const [field, meta] = useField(props.name);
-  const textareaId =
-    id || `textarea-${label?.replace(/\s+/g, "-").toLowerCase()}`;
+  const [field, meta] = useField(props.name);
+  const textareaId = id || uuidv4();
 
   return (
     <div className={`mb-4 ${containerClassName}`}>
@@ -33,7 +32,7 @@ const Textarea: React.FC<TextareaProps & { name: string }> = ({
         </label>
       )}
       <textarea
-      {...field}
+        {...field}
         id={textareaId}
         readOnly={readOnly}
         className={`block w-full border rounded-md px-3 py-2 cursor-pointer
