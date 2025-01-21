@@ -9,6 +9,7 @@ interface InputProps extends React.InputHTMLAttributes<HTMLInputElement> {
 }
 
 const Input: React.FC<InputProps & { name: string }> = ({
+  name,
   label,
   helperText,
   containerClassName = "",
@@ -18,7 +19,7 @@ const Input: React.FC<InputProps & { name: string }> = ({
   readOnly = false,
   ...props
 }) => {
-  const [field, meta] = useField(props.name);
+  const [field, meta] = useField(name);
   const inputId = id || uuidv4();
 
   return (
