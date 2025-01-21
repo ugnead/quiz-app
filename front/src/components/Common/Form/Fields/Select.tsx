@@ -16,6 +16,7 @@ interface SelectProps extends React.SelectHTMLAttributes<HTMLSelectElement> {
 }
 
 const Select: React.FC<SelectProps & { name: string }> = ({
+  name,
   label,
   helperText,
   options,
@@ -25,7 +26,7 @@ const Select: React.FC<SelectProps & { name: string }> = ({
   readOnly = false,
   ...props
 }) => {
-  const [field, meta] = useField(props.name);
+  const [field, meta] = useField(name);
   const selectId = id || uuidv4();
 
   if (readOnly) {
@@ -42,7 +43,7 @@ const Select: React.FC<SelectProps & { name: string }> = ({
         <div className="px-3 py-2 bg-gray-200 text-gray-500 border border-gray-300 rounded-md pointer-events-none">
           {selectedOption ? selectedOption.label : ""}
         </div>
-        <input type="hidden" name={props.name} value={props.value} />
+        <input type="hidden" name={name} value={props.value} />
       </div>
     );
   }

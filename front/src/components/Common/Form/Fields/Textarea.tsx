@@ -1,5 +1,6 @@
 import React from "react";
 import { useField } from "formik";
+import { v4 as uuidv4 } from "uuid";
 
 interface TextareaProps
   extends React.TextareaHTMLAttributes<HTMLTextAreaElement> {
@@ -10,6 +11,7 @@ interface TextareaProps
 }
 
 const Textarea: React.FC<TextareaProps & { name: string }> = ({
+  name,
   label,
   helperText,
   containerClassName = "",
@@ -18,7 +20,7 @@ const Textarea: React.FC<TextareaProps & { name: string }> = ({
   readOnly = false,
   ...props
 }) => {
-  const [field, meta] = useField(props.name);
+  const [field, meta] = useField(name);
   const textareaId = id || uuidv4();
 
   return (
