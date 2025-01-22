@@ -6,6 +6,11 @@ export const fetchCategories = async (): Promise<Category[]> => {
   return response.data.data.categories as Category[];
 };
 
+export async function fetchEnabledCategories(): Promise<Category[]> {
+  const response = await api.get("/categories?status=enabled");
+  return response.data.data.categories as Category[];
+}
+
 export const fetchCategoryById = async (
   categoryId: string
 ): Promise<Category> => {
