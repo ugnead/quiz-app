@@ -52,7 +52,7 @@ const DynamicArrayField: React.FC<DynamicArrayFieldProps> = ({
                     <button
                       type="button"
                       onClick={() => remove(index)}
-                      className="absolute left-0 top-3 transform -translate-x-7"
+                      className="absolute left-0 top-3 transform -translate-x-2.5 md:-translate-x-7 bg-white"
                       title="Remove Option"
                     >
                       <FiMinusCircle className="text-gray-500 h-5 w-5" />
