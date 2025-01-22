@@ -36,7 +36,9 @@ const DynamicSelectField: React.FC<DynamicSelectFieldProps> = ({
       label={label}
       options={selectOptions}
       readOnly={isDisabled}
-      onChange={(value) => setFieldValue(name, value)}
+      onChange={(e: React.ChangeEvent<HTMLSelectElement>) =>
+        setFieldValue(name, e.target.value)
+      }
     />
   );
 };
