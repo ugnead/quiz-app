@@ -12,7 +12,15 @@ export const getAllCategories = async (
   res: Response
 ): Promise<void> => {
   try {
-    const categories = await Category.find()
+    const { status } = req.query;
+
+    const filter: Record<string, unknown> = {};
+
+    if (status) {
+      filter.status = status;
+    }
+
+    const categories = await Category.find(filter)
       .select("_id name status")
       .sort({ createdAt: -1 });
 
