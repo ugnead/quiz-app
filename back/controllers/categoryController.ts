@@ -16,7 +16,7 @@ export const getAllCategories = async (
 
     const filter: Record<string, unknown> = {};
 
-    if (status) {
+    if (status && typeof status === "string") {
       filter.status = status;
     }
 
