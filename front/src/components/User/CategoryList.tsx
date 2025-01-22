@@ -5,7 +5,7 @@ import { v4 as uuidv4 } from "uuid";
 import { Category } from "../../types";
 
 import { useQuery } from "@tanstack/react-query";
-import { fetchCategories } from "../../services/categoryService";
+import { fetchEnabledCategories  } from "../../services/categoryService";
 
 import Pagination from "../Common/Pagination";
 import Message from "../Common/Message";
@@ -23,8 +23,8 @@ const CategoryList: React.FC = () => {
     isLoading,
     error,
   } = useQuery<Category[]>({
-    queryKey: ["categories"],
-    queryFn: fetchCategories,
+    queryKey: ["enabledCategories"],
+    queryFn: fetchEnabledCategories ,
     retry: false,
   });
 
