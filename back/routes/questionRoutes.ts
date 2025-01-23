@@ -10,8 +10,14 @@ import { isAdmin } from "../middlewares/isAdmin";
 
 const router = express.Router();
 
-router.get("/subcategories/:subcategoryId/questions/learn", getQuestionsByUserProgress);
-router.get("/subcategories/:subcategoryId/questions", getQuestionsBySubcategoryId);
+router.get(
+  "/subcategories/:subcategoryId/questions/learn",
+  getQuestionsByUserProgress
+);
+router.get(
+  "/subcategories/:subcategoryId/questions",
+  getQuestionsBySubcategoryId
+);
 
 router.post("/subcategories/:subcategoryId/questions", isAdmin, createQuestion);
 router.patch("/questions/:questionId", isAdmin, updateQuestion);

@@ -1,11 +1,11 @@
 import React, { useEffect, useState } from "react";
 import { useParams, useLocation } from "react-router-dom";
 
-import { Category } from "../../types";   
+import { Category } from "../../types";
 
 import { fetchSubcategoryById } from "../../services/subcategoryService";
 import {
-  getQuestionsBySubcategoryId,
+  fetchQuestionsBySubcategoryId,
   createQuestion,
   updateQuestion,
   deleteQuestion,
@@ -84,7 +84,7 @@ const QuestionList: React.FC = () => {
     const loadQuestions = async () => {
       if (subcategoryId) {
         try {
-          const data = await getQuestionsBySubcategoryId(subcategoryId);
+          const data = await fetchQuestionsBySubcategoryId(subcategoryId);
           setQuestions(data);
         } catch (error) {
           console.error("Failed to fetch questions:", error);
@@ -142,13 +142,15 @@ const QuestionList: React.FC = () => {
 
     for (const key in values) {
       if (Array.isArray(values[key]) && Array.isArray(initialFormValues[key])) {
-        if (JSON.stringify(values[key]) !== JSON.stringify(initialFormValues[key])) {
+        if (
+          JSON.stringify(values[key]) !== JSON.stringify(initialFormValues[key])
+        ) {
           changedFields[key] = values[key];
         }
       } else if (values[key] !== initialFormValues[key]) {
         changedFields[key] = values[key];
       }
-      
+
       if (values[key] !== initialFormValues[key]) {
         changedFields[key] = values[key];
       }

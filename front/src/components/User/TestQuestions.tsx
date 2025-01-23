@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 
-import { getQuestionsBySubcategoryId } from "../../services/questionService";
+import { fetchQuestionsBySubcategoryId } from "../../services/questionService";
 import { updateUserProgress } from "../../services/userProgressService";
 import { deleteUserTestProgress } from "../../services/userProgressService";
 import { fetchSubcategoryById } from "../../services/subcategoryService";
@@ -66,7 +66,7 @@ const TestQuestions: React.FC = () => {
       if (subcategoryId) {
         try {
           await deleteUserTestProgress(subcategoryId);
-          const data = await getQuestionsBySubcategoryId(subcategoryId);
+          const data = await fetchQuestionsBySubcategoryId(subcategoryId);
           setQuestions(data);
         } catch (error) {
           console.error("Failed to fetch questions:", error);
