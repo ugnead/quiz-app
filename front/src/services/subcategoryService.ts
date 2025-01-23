@@ -7,6 +7,11 @@ export const fetchSubcategories = async (categoryId: string,): Promise<Subcatego
   return response.data.data.subcategories as Subcategory[];
 };
 
+export const fetchEnabledSubcategories = async (categoryId: string,): Promise<Subcategory[]> => {
+  const response = await api.get(`/categories/${categoryId}/subcategories?status=enabled`);
+  return response.data.data.subcategories as Subcategory[];
+};
+
 export const fetchSubcategoryById = async (
   subcategoryId: string
 ): Promise<Subcategory> => {

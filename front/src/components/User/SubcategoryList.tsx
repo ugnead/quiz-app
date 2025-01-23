@@ -6,7 +6,7 @@ import { Category, Subcategory } from "../../types";
 
 import { useQuery } from "@tanstack/react-query";
 import { fetchCategoryById } from "../../services/categoryService";
-import { fetchSubcategories } from "../../services/subcategoryService";
+import { fetchEnabledSubcategories } from "../../services/subcategoryService";
 import { fetchUserProgress } from "../../services/userProgressService";
 
 import Button from "../Common/Button";
@@ -50,8 +50,8 @@ const SubcategoryList: React.FC = () => {
     isLoading: isSubcategoriesLoading,
     error: subcategoryError,
   } = useQuery<Subcategory[]>({
-    queryKey: ["subcategories", categoryId],
-    queryFn: () => fetchSubcategories(categoryId!),
+    queryKey: ["enabledSubcategories", categoryId],
+    queryFn: () => fetchEnabledSubcategories(categoryId!),
     enabled: !!categoryId,
     retry: false,
   });
