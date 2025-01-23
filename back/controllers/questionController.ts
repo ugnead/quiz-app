@@ -13,6 +13,13 @@ export const getQuestionsBySubcategoryId = async (
 ): Promise<void> => {
   try {
     const { subcategoryId } = req.params;
+    const { status } = req.query;
+
+    const filter: Record<string, unknown> = {};
+
+    if (status && typeof status === "string") {
+      filter.status = status;
+    }
 
     const questions = await Question.find({ subcategory: subcategoryId })
       .select("_id name answerOptions correctAnswer explanation status")
@@ -42,6 +49,13 @@ export const getQuestionsByUserProgress = async (
   try {
     const { userId } = (req as any).user;
     const { subcategoryId } = req.params;
+    const { status } = req.query;
+
+    const filter: Record<string, unknown> = {};
+
+    if (status && typeof status === "string") {
+      filter.status = status;
+    }
 
     const questions = await Question.find({ subcategory: subcategoryId })
       .select("_id name answerOptions correctAnswer explanation status")
