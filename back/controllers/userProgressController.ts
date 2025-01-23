@@ -6,10 +6,10 @@ export const getUserProgress = async (
   req: Request,
   res: Response
 ): Promise<void> => {
-  const { userId } = (req as any).user;
-  const { subcategoryId } = req.params;
-
   try {
+    const { userId } = (req as any).user;
+    const { subcategoryId } = req.params;
+
     const learnProgress = await UserProgress.find({
       user: userId,
       subcategory: subcategoryId,
@@ -53,10 +53,10 @@ export const updateUserProgress = async (
   req: Request,
   res: Response
 ): Promise<void> => {
-  const { userId } = (req as any).user;
-  const { questionId, isCorrect, mode } = req.body;
-
   try {
+    const { userId } = (req as any).user;
+    const { questionId, isCorrect, mode } = req.body;
+
     const userProgress = await UserProgress.findOne({
       user: userId,
       question: questionId,
@@ -93,10 +93,10 @@ export const deleteUserTestProgress = async (
   req: Request,
   res: Response
 ): Promise<void> => {
-  const { userId } = (req as any).user;
-  const { subcategoryId } = req.params;
-
   try {
+    const { userId } = (req as any).user;
+    const { subcategoryId } = req.params;
+
     await UserProgress.deleteMany({
       user: userId,
       subcategory: subcategoryId,

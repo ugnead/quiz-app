@@ -11,9 +11,9 @@ export const getQuestionsBySubcategoryId = async (
   req: Request,
   res: Response
 ): Promise<void> => {
-  const { subcategoryId } = req.params;
-
   try {
+    const { subcategoryId } = req.params;
+
     const questions = await Question.find({ subcategory: subcategoryId })
       .select("_id name answerOptions correctAnswer explanation status")
       .sort({
@@ -39,10 +39,10 @@ export const getQuestionsByUserProgress = async (
   req: Request,
   res: Response
 ): Promise<void> => {
-  const { userId } = (req as any).user;
-  const { subcategoryId } = req.params;
-
   try {
+    const { userId } = (req as any).user;
+    const { subcategoryId } = req.params;
+
     const questions = await Question.find({ subcategory: subcategoryId })
       .select("_id name answerOptions correctAnswer explanation status")
       .sort({

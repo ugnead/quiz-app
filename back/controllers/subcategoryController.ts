@@ -11,9 +11,9 @@ export const getSubcategoriesByCategoryId = async (
   req: Request,
   res: Response
 ): Promise<void> => {
-  const { categoryId } = req.params;
-
   try {
+    const { categoryId } = req.params;
+
     const subcategories = await Subcategory.find({ category: categoryId })
       .select("_id name status")
       .sort({ createdAt: -1 });
