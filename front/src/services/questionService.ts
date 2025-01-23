@@ -7,8 +7,26 @@ export const fetchQuestionsByUserProgress = async (subcategoryId: string) => {
   return response.data.data.questions;
 };
 
+export const fetchEnabledQuestionsByUserProgress = async (
+  subcategoryId: string
+) => {
+  const response = await api.get(
+    `/subcategories/${subcategoryId}/questions/learn?status=enabled`
+  );
+  return response.data.data.questions;
+};
+
 export const fetchQuestionsBySubcategoryId = async (subcategoryId: string) => {
   const response = await api.get(`/subcategories/${subcategoryId}/questions`);
+  return response.data.data.questions;
+};
+
+export const fetchEnabledQuestionsBySubcategoryId = async (
+  subcategoryId: string
+) => {
+  const response = await api.get(
+    `/subcategories/${subcategoryId}/questions?status=enabled`
+  );
   return response.data.data.questions;
 };
 

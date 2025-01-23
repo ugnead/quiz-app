@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 
-import { fetchQuestionsBySubcategoryId } from "../../services/questionService";
+import { fetchEnabledQuestionsBySubcategoryId } from "../../services/questionService";
+import { fetchSubcategoryById } from "../../services/subcategoryService";
 import { updateUserProgress } from "../../services/userProgressService";
 import { deleteUserTestProgress } from "../../services/userProgressService";
-import { fetchSubcategoryById } from "../../services/subcategoryService";
 
 import OptionsList from "../Common/OptionsList";
 import Modal from "../Common/Modal";
@@ -66,7 +66,7 @@ const TestQuestions: React.FC = () => {
       if (subcategoryId) {
         try {
           await deleteUserTestProgress(subcategoryId);
-          const data = await fetchQuestionsBySubcategoryId(subcategoryId);
+          const data = await fetchEnabledQuestionsBySubcategoryId(subcategoryId);
           setQuestions(data);
         } catch (error) {
           console.error("Failed to fetch questions:", error);
