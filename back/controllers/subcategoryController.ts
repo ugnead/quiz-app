@@ -13,6 +13,13 @@ export const getSubcategoriesByCategoryId = async (
 ): Promise<void> => {
   try {
     const { categoryId } = req.params;
+    const { status } = req.query;
+
+    const filter: Record<string, unknown> = {};
+
+    if (status && typeof status === "string") {
+      filter.status = status;
+    }
 
     const subcategories = await Subcategory.find({ category: categoryId })
       .select("_id name status")
