@@ -138,7 +138,7 @@ const DynamicForm: React.FC<DynamicFormProps> = ({
       {(formik) => {
         return (
           <Form autoComplete="off" onSubmit={formik.handleSubmit}>
-            {filteredSchema.map((field) => {
+            {filteredSchema.map((field, index) => {
               const isReadOnly =
                 typeof field.readOnly === "function"
                   ? field.readOnly(formMode)
@@ -165,7 +165,7 @@ const DynamicForm: React.FC<DynamicFormProps> = ({
                 case "dynamicSelectField":
                   return (
                     <DynamicSelectField
-                      key={uuidv4()}
+                      key={`${field.name}-${index}`}
                       name={field.name}
                       label={field.label}
                       optionsFieldName={field.relatedFieldName || ""}
@@ -174,7 +174,7 @@ const DynamicForm: React.FC<DynamicFormProps> = ({
                 case "dynamicArray":
                   return (
                     <DynamicArray
-                      key={uuidv4()}
+                      key={`${field.name}-${index}`}
                       name={field.name}
                       label={field.label}
                       minItems={field.validation?.minItems}
