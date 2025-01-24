@@ -12,7 +12,6 @@ import { fetchUserProgress } from "../../services/userProgressService";
 import Button from "../Common/Button";
 import Pagination from "../Common/Pagination";
 import Message from "../Common/Message";
-import Label from "../Common/Label";
 
 import { toast } from "react-toastify";
 import { FaCheckCircle, FaTimesCircle, FaArrowLeft } from "react-icons/fa";
@@ -130,16 +129,7 @@ const SubcategoryList: React.FC = () => {
             >
               <FaArrowLeft className="text-2xl" />
             </button>
-            <div className="text-center">
-              <h1>{selectedCategory?.name}</h1>
-              <Label
-                text={
-                  selectedCategory ? `Category: ${selectedCategory.name}` : ""
-                }
-                variant="warning"
-                className="mt-4"
-              />
-            </div>
+            <h1>{selectedCategory?.name}</h1>
           </div>
           <ul className="flex flex-col space-y-4">
             {currentPageData.map((subcategory) => {
@@ -148,10 +138,7 @@ const SubcategoryList: React.FC = () => {
               );
 
               return (
-                <li
-                  key={uuidv4()}
-                  className="flex flex-col justify-between"
-                >
+                <li key={uuidv4()} className="flex flex-col justify-between">
                   <span className="pb-1 pe-5 font-bold text-lg">
                     {subcategory.name}
                   </span>
