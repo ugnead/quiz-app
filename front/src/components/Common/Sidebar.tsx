@@ -80,7 +80,7 @@ const Sidebar: React.FC<SidebarProps> = ({ items, title, footer }) => {
         </div>
 
         <button
-          className={`md:hidden absolute top-[70px] sm:top-[88px] right-[-15px] sm:right-[-35px] translate-x-full text-black p-2 z-50 bg-gray-100 rounded-full
+          className={`md:hidden absolute top-1 right-[-5px] translate-x-full text-black p-2 z-50
             ${isOpen ? "hidden" : ""}`}
           onClick={toggleSidebar}
         >
