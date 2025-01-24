@@ -15,13 +15,13 @@ export const getQuestionsBySubcategoryId = async (
     const { subcategoryId } = req.params;
     const { status } = req.query;
 
-    const filter: Record<string, unknown> = {};
+    const filter: Record<string, unknown> = { subcategory: subcategoryId };
 
     if (status && typeof status === "string") {
       filter.status = status;
     }
 
-    const questions = await Question.find({ subcategory: subcategoryId })
+    const questions = await Question.find(filter)
       .select("_id name answerOptions correctAnswer explanation status")
       .sort({
         createdAt: -1,

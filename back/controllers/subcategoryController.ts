@@ -15,13 +15,13 @@ export const getSubcategoriesByCategoryId = async (
     const { categoryId } = req.params;
     const { status } = req.query;
 
-    const filter: Record<string, unknown> = {};
+    const filter: Record<string, unknown> = { category: categoryId };
 
     if (status && typeof status === "string") {
       filter.status = status;
     }
 
-    const subcategories = await Subcategory.find({ category: categoryId })
+    const subcategories = await Subcategory.find(filter)
       .select("_id name status")
       .sort({ createdAt: -1 });
 
