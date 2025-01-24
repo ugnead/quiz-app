@@ -166,19 +166,16 @@ const DynamicForm: React.FC<DynamicFormProps> = ({
                   return (
                     <DynamicSelectField
                       key={`${field.name}-${index}`}
-                      name={field.name}
-                      label={field.label}
                       optionsFieldName={field.relatedFieldName || ""}
+                      {...commonProps}
                     />
                   );
                 case "dynamicArray":
                   return (
                     <DynamicArray
                       key={`${field.name}-${index}`}
-                      name={field.name}
-                      label={field.label}
                       minItems={field.validation?.minItems}
-                      readOnly={isReadOnly}
+                      {...commonProps}
                     />
                   );
                 default:
