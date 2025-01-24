@@ -145,7 +145,6 @@ const DynamicForm: React.FC<DynamicFormProps> = ({
                   : field.readOnly;
 
               const commonProps = {
-                key: field.name,
                 name: field.name,
                 label: field.label,
                 readOnly: isReadOnly,
@@ -155,12 +154,22 @@ const DynamicForm: React.FC<DynamicFormProps> = ({
                 case "text":
                 case "email":
                 case "password":
-                  return <Input type={field.type} {...commonProps} />;
+                  return (
+                    <Input
+                      key={`${field.name}`}
+                      type={field.type}
+                      {...commonProps}
+                    />
+                  );
                 case "textarea":
-                  return <Textarea {...commonProps} />;
+                  return <Textarea key={`${field.name}`} {...commonProps} />;
                 case "select":
                   return (
-                    <Select options={field.options || []} {...commonProps} />
+                    <Select
+                      key={`${field.name}`}
+                      options={field.options || []}
+                      {...commonProps}
+                    />
                   );
                 case "dynamicSelectField":
                   return (
@@ -174,7 +183,7 @@ const DynamicForm: React.FC<DynamicFormProps> = ({
                   return (
                     <DynamicArray
                       key={`${field.name}-${index}`}
-                      minItems={field.validation?.minItems}
+                      minItems={field.validation?.minItems ?? 2}
                       {...commonProps}
                     />
                   );
