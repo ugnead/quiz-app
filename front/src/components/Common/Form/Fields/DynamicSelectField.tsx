@@ -7,7 +7,7 @@ interface DynamicSelectFieldProps {
   name: string;
   label: string;
   optionsFieldName: string;
-  minAnswers;
+  minAnswers: number;
 }
 
 const DynamicSelectField: React.FC<DynamicSelectFieldProps> = ({
