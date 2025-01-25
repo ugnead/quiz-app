@@ -1,15 +1,16 @@
 import React from "react";
 import { useFormikContext, FieldArray } from "formik";
-import { v4 as uuidv4 } from "uuid";
 
 import Input from "./Input";
 import Button from "../../Button";
 
 import { FiMinusCircle } from "react-icons/fi";
+
 interface DynamicArrayFieldProps {
   name: string;
   label: string;
   minItems?: number;
+  maxItems?: number;
   readOnly?: boolean;
 }
 
@@ -17,6 +18,7 @@ const DynamicArrayField: React.FC<DynamicArrayFieldProps> = ({
   name,
   label,
   minItems = 2,
+  maxItems = 5,
   readOnly = false,
 }) => {
   const { values, errors, touched } =
@@ -62,7 +64,12 @@ const DynamicArrayField: React.FC<DynamicArrayFieldProps> = ({
               );
             })}
             {!readOnly && (
-              <Button type="button" onClick={() => push("")} fullWidth>
+              <Button
+                type="button"
+                onClick={() => push("")}
+                disabled={arrayValues.length >= maxItems}
+                fullWidth
+              >
                 + Add Option
               </Button>
             )}

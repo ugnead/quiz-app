@@ -92,6 +92,7 @@ export const questionFormSchema: FieldSchema[] = [
     validation: {
       required: (formMode) => formMode === "create",
       minItems: 2,
+      maxItems: 5,
     },
   },
   {

@@ -29,6 +29,7 @@ export interface FieldSchema {
     maxLength?: number;
     pattern?: RegExp;
     minItems?: number;
+    maxItems?: number;
   };
   readOnly?: boolean | ((formMode: "create" | "update") => boolean);
   relatedFieldName?: string;
@@ -54,7 +55,10 @@ const DynamicForm: React.FC<DynamicFormProps> = ({
           .of(Yup.string().required("Option cannot be empty"))
           .min(
             field.validation?.minItems || 2,
-            `At least ${field.validation?.minItems || 2} options required`
+            `At least ${field.validation?.minItems || 2} option(s) required`
+          ).max(
+            field.validation?.maxItems || 5,
+            `You cannot have more than ${field.validation?.maxItems || 5} option(s)`
           );
         if (field.validation?.required) {
           const isRequired =
