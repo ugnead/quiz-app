@@ -1,5 +1,6 @@
 import React from "react";
 import { useField } from "formik";
+import Input from "./Input";
 import { v4 as uuidv4 } from "uuid";
 
 interface Option {
@@ -30,22 +31,7 @@ const Select: React.FC<SelectProps & { name: string }> = ({
   const selectId = id || uuidv4();
 
   if (readOnly) {
-    const selectedOption = options.find(
-      (option) => option.value === props.value
-    );
-    return (
-      <div className={`mb-4 ${containerClassName}`}>
-        {label && (
-          <label className="block text-sm font-medium mb-1 pointer-events-none">
-            {label}
-          </label>
-        )}
-        <div className="px-3 py-2 bg-gray-200 text-gray-500 border border-gray-300 rounded-md pointer-events-none">
-          {selectedOption ? selectedOption.label : ""}
-        </div>
-        <input type="hidden" name={name} value={props.value} />
-      </div>
-    );
+    return <Input name={name} label={label} readOnly />;
   }
 
   return (
