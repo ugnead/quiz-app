@@ -16,21 +16,31 @@ const DynamicSelectField: React.FC<DynamicSelectFieldProps> = ({
   optionsFieldName,
   minAnswers,
 }) => {
-  const { values, setFieldValue } = useFormikContext<Record<string, any>>();
+  const { values, errors, setFieldValue } =
+    useFormikContext<Record<string, string | string[]>>();
 
-  const answerOptions = Array.isArray(values[optionsFieldName])
+  const answerOptions: string[] = Array.isArray(values[optionsFieldName])
     ? values[optionsFieldName]
     : [];
 
-  const selectOptions =
-    answerOptions.length >= 2
-      ? answerOptions.map((option: string) => ({
-        value: String(option || uuidv4()),
-        label: String(option || "Empty Option"),
-        }))
-      : [];
+  const answerErrors = errors[optionsFieldName];
 
-  const isDisabled = selectOptions.length < minAnswers;
+  let validAnswersCount = 0;
+  const selectOptions = answerOptions.map((option: string, index: number) => {
+    const singleError = Array.isArray(answerErrors)
+      ? answerErrors[index]
+      : undefined;
+
+    const isValid = !singleError && option.trim() !== "";
+    if (isValid) validAnswersCount++;
+
+    return {
+      value: option,
+      label: option || "Empty Option",
+    };
+  });
+
+  const isDisabled = validAnswersCount < minAnswers;
 
   return (
     <Select
