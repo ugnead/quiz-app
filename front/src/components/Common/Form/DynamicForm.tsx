@@ -131,8 +131,7 @@ const DynamicForm: React.FC<DynamicFormProps> = ({
     <Formik
       initialValues={formikInitialValues}
       validationSchema={Yup.object(validationSchema)}
-      validateOnChange={false}
-      validateOnBlur={true}
+      validateOnChange={true}
       onSubmit={onSubmit}
     >
       {(formik) => {
