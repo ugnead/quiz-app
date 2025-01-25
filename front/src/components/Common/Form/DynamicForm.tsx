@@ -171,19 +171,26 @@ const DynamicForm: React.FC<DynamicFormProps> = ({
                       {...commonProps}
                     />
                   );
-                case "dynamicSelectField":
+                case "dynamicSelectField": {
+                  const arrayFieldSchema = schema.find(
+                    (s) => s.name === field.relatedFieldName
+                  );
+                  const minItemsFromReference =
+                    arrayFieldSchema?.validation?.minItems || 2;
                   return (
                     <DynamicSelectField
                       key={`${field.name}-${index}`}
                       optionsFieldName={field.relatedFieldName || ""}
+                      minAnswers={minItemsFromReference}
                       {...commonProps}
                     />
                   );
+                }
                 case "dynamicArray":
                   return (
                     <DynamicArray
                       key={`${field.name}-${index}`}
-                      minItems={field.validation?.minItems ?? 2}
+                      minItems={field.validation?.minItems}
                       {...commonProps}
                     />
                   );

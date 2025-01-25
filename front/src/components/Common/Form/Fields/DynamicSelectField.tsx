@@ -5,14 +5,16 @@ import { v4 as uuidv4 } from "uuid";
 
 interface DynamicSelectFieldProps {
   name: string;
-  optionsFieldName: string;
   label: string;
+  optionsFieldName: string;
+  minAnswers;
 }
 
 const DynamicSelectField: React.FC<DynamicSelectFieldProps> = ({
   name,
-  optionsFieldName,
   label,
+  optionsFieldName,
+  minAnswers,
 }) => {
   const { values, setFieldValue } = useFormikContext<Record<string, any>>();
 
@@ -28,7 +30,7 @@ const DynamicSelectField: React.FC<DynamicSelectFieldProps> = ({
         }))
       : [];
 
-  const isDisabled = selectOptions.length < 2;
+  const isDisabled = selectOptions.length < minAnswers;
 
   return (
     <Select
