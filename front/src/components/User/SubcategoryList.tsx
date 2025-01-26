@@ -122,14 +122,16 @@ const SubcategoryList: React.FC = () => {
     <>
       {subcategories.length > 0 ? (
         <>
-          <div className="flex items-center justify-center relative pb-6 sm:pb-12">
+          <div className="flex items-center justify-center relative">
             <button
               onClick={handleBackToCategories}
-              className="absolute sm:top-5 top-2 left-0"
+              className="absolute top-2.5 left-0"
             >
-              <FaArrowLeft className="text-2xl" />
+              <FaArrowLeft className="text-xl" />
             </button>
-            <h1>{selectedCategory?.name}</h1>
+            <div className="text-center mb-7">
+              <h2>{selectedCategory?.name}</h2>
+            </div>
           </div>
           <ul className="flex flex-col space-y-4">
             {currentPageData.map((subcategory) => {

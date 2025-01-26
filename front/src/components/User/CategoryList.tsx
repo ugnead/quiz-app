@@ -5,7 +5,7 @@ import { v4 as uuidv4 } from "uuid";
 import { Category } from "../../types";
 
 import { useQuery } from "@tanstack/react-query";
-import { fetchEnabledCategories  } from "../../services/categoryService";
+import { fetchEnabledCategories } from "../../services/categoryService";
 
 import Pagination from "../Common/Pagination";
 import Message from "../Common/Message";
@@ -24,7 +24,7 @@ const CategoryList: React.FC = () => {
     error,
   } = useQuery<Category[]>({
     queryKey: ["enabledCategories"],
-    queryFn: fetchEnabledCategories ,
+    queryFn: fetchEnabledCategories,
     retry: false,
   });
 
@@ -55,7 +55,9 @@ const CategoryList: React.FC = () => {
     <>
       {categories.length > 0 ? (
         <>
-          <h1 className="pb-6 sm:pb-12 text-center">Categories</h1>
+          <div className="text-center mb-7">
+            <h2>Categories</h2>
+          </div>
           <ul className="flex flex-col space-y-4">
             {currentPageData.map((category) => (
               <li key={uuidv4()}>

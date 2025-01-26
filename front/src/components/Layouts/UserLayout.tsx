@@ -42,7 +42,7 @@ const UserLayout: React.FC = () => {
               </Button>
             }
           />
-          <div className="flex-1 p-5 pb-10 sm:p-10 min-w-0">
+          <div className="flex-1 p-5 pb-10 sm:p-10 sm:pt-8 min-w-0">
             <div className="w-full max-w-lg mx-auto">
               <Routes>
                 <Route index element={<Navigate to="categories" replace />} />
