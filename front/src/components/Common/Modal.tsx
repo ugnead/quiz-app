@@ -73,7 +73,7 @@ const Modal: React.FC<ModalProps> = ({
       onClick={handleOutsideClick}
     >
       <div
-        className={`bg-white rounded-lg shadow w-full max-w-lg p-7 md:p-10 relative ${className} m-5`}
+        className={`bg-white rounded-lg shadow w-full max-w-lg max-h-[90vh] overflow-y-auto p-7 md:p-10 relative ${className} m-5`}
       >
         {title && (
           <h3 id="modal-title" className="mb-4">
