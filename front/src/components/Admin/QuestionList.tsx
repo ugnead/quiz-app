@@ -150,10 +150,6 @@ const QuestionList: React.FC = () => {
       } else if (values[key] !== initialFormValues[key]) {
         changedFields[key] = values[key];
       }
-
-      if (values[key] !== initialFormValues[key]) {
-        changedFields[key] = values[key];
-      }
     }
 
     try {
