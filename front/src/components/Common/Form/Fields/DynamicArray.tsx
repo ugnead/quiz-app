@@ -29,6 +29,8 @@ const DynamicArrayField: React.FC<DynamicArrayFieldProps> = ({
   const fieldError = errors[name];
   const fieldTouched = touched[name];
 
+  const isDisabled = arrayValues.length >= maxItems;
+
   return (
     <div className="mb-4">
       <label className="block text-sm font-medium mb-1">{label}</label>
@@ -60,10 +62,10 @@ const DynamicArrayField: React.FC<DynamicArrayFieldProps> = ({
               <Button
                 type="button"
                 onClick={() => push("")}
-                disabled={arrayValues.length >= maxItems}
+                disabled={isDisabled}
                 fullWidth
               >
-                + Add Option
+                {isDisabled ? "Max Options Reached" : "Add Option"}
               </Button>
             )}
             {fieldTouched && typeof fieldError === "string" && (
