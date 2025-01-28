@@ -122,7 +122,7 @@ const SubcategoryList: React.FC = () => {
     setIsDeleteMode(false);
   };
 
-  const handleSubmit = async (values: Record<string, string>) => {
+  const handleSubmit = async (values: Record<string, string | string[]>) => {
     const changedFields = extractChangedFields(initialFormValues, values);
 
     try {
