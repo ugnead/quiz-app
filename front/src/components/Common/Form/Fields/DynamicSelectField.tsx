@@ -36,7 +36,7 @@ const DynamicSelectField: React.FC<DynamicSelectFieldProps> = ({
 
     return {
       value: option,
-      label: option || "Empty Option",
+      label: option || "",
     };
   });
 
