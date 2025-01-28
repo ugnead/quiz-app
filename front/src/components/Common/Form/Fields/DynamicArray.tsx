@@ -24,9 +24,7 @@ const DynamicArrayField: React.FC<DynamicArrayFieldProps> = ({
   const { values, errors, touched } =
     useFormikContext<Record<string, string | string[]>>();
 
-  const arrayValues = Array.isArray(values[name])
-    ? (values[name] as string[])
-    : [];
+  const arrayValues: string[] = Array.isArray(values[name]) ? values[name] : [];
 
   const fieldError = errors[name];
   const fieldTouched = touched[name];
@@ -37,18 +35,13 @@ const DynamicArrayField: React.FC<DynamicArrayFieldProps> = ({
 
       <FieldArray
         name={name}
-        validateOnChange={true}
         render={({ push, remove }) => (
           <>
-            {arrayValues.map((value: string, index: number) => {
+            {arrayValues.map((_, index) => {
               const fieldName = `${name}.${index}`;
               return (
-                <div key={uuidv4()} className="relative group">
-                  <Input
-                    name={fieldName}
-                  
-                    readOnly={readOnly}
-                  />
+                <div key={index} className="relative group">
+                  <Input name={fieldName} readOnly={readOnly} />
 
                   {!readOnly && arrayValues.length > minItems && (
                     <button
