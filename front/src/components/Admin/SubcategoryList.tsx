@@ -230,6 +230,7 @@ const SubcategoryList: React.FC = () => {
             />
           }
           data={currentPageData}
+          getRowKey={(row) => row._id}
           columns={columns}
           onRowClick={handleRowClick}
         />

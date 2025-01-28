@@ -190,6 +190,7 @@ const CategoryList: React.FC = () => {
         <Table
           title="Category List"
           data={currentPageData}
+          getRowKey={(row) => row._id}
           columns={columns}
           onRowClick={handleRowClick}
         />

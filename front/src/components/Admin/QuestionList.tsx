@@ -264,6 +264,7 @@ const QuestionList: React.FC = () => {
             </>
           }
           data={currentPageData}
+          getRowKey={(row) => row._id}
           columns={columns}
         />
       ) : (

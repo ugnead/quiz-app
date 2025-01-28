@@ -132,7 +132,12 @@ const UserList: React.FC = () => {
 
   return (
     <>
-      <Table title="Users List" data={currentPageData} columns={columns} />
+      <Table
+        title="Users List"
+        data={currentPageData}
+        getRowKey={(row) => row._id}
+        columns={columns}
+      />
       {totalPages > 1 && (
         <Pagination
           currentPage={currentPage}

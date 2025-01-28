@@ -15,6 +15,7 @@ interface TableProps<T> {
   columns: Column<T>[];
   onRowClick?: (row: T) => void;
   getRowClass?: (row: T, rowIndex: number) => string;
+  getRowKey: (row: T) => string | number;
 }
 
 function Table<T extends object>({
@@ -24,6 +25,7 @@ function Table<T extends object>({
   columns,
   onRowClick,
   getRowClass,
+  getRowKey,
 }: TableProps<T>) {
   return (
     <div className="overflow-x-auto">
@@ -39,7 +41,7 @@ function Table<T extends object>({
             <tr>
               {columns.map((column, colIndex) => (
                 <th
-                  key={uuidv4()}
+                  key={column.header}
                   className={`py-3 px-3 text-left text-white font-semibold ${
                     colIndex === 0 ? "rounded-tl-lg" : ""
                   } ${colIndex === columns.length - 1 ? "rounded-tr-lg" : ""}`}
@@ -51,6 +53,7 @@ function Table<T extends object>({
           </thead>
           <tbody>
             {data.map((row, rowIndex) => {
+              const rowKey = getRowKey(row);
               const isLastRow = rowIndex === data.length - 1;
               const clickableClass = onRowClick ? "cursor-pointer" : "";
               const rowClasses = `${
@@ -61,28 +64,31 @@ function Table<T extends object>({
 
               return (
                 <tr
-                  key={uuidv4()}
+                  key={rowKey}
                   className={rowClasses}
                   onClick={() => onRowClick && onRowClick(row)}
                 >
-                  {columns.map((column, colIndex) => (
-                    <td
-                      key={uuidv4()}
-                      className={`py-3 px-3 text-gray-800 ${
-                        column.cellClassName || ""
-                      } ${isLastRow && colIndex === 0 ? "rounded-bl-lg" : ""} ${
-                        isLastRow && colIndex === columns.length - 1
-                          ? "rounded-br-lg"
-                          : ""
-                      }`}
-                    >
-                      {column.render
-                        ? column.render(row)
-                        : column.accessor
-                          ? String(row[column.accessor])
-                          : null}
-                    </td>
-                  ))}
+                  {columns.map((column, colIndex) => {
+                    const cellKey = `${rowKey}-${column.header}`;
+                    return (
+                      <td
+                        key={cellKey}
+                        className={`py-3 px-3 text-gray-800 ${
+                          column.cellClassName || ""
+                        } ${isLastRow && colIndex === 0 ? "rounded-bl-lg" : ""} ${
+                          isLastRow && colIndex === columns.length - 1
+                            ? "rounded-br-lg"
+                            : ""
+                        }`}
+                      >
+                        {column.render
+                          ? column.render(row)
+                          : column.accessor
+                            ? String(row[column.accessor])
+                            : null}
+                      </td>
+                    );
+                  })}
                 </tr>
               );
             })}
