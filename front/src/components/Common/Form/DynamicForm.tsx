@@ -24,7 +24,7 @@ export interface FieldSchema {
     | "dynamicSelectField";
   options?: { value: string; label: string }[];
   validation?: {
-    required?: boolean | ((formMode: "create" | "update") => boolean);
+    required?: boolean;
     minLength?: number;
     maxLength?: number;
     pattern?: RegExp;
@@ -61,14 +61,8 @@ const DynamicForm: React.FC<DynamicFormProps> = ({
             `You cannot have more than ${field.validation?.maxItems || 5} option(s)`
           );
         if (field.validation?.required) {
-          const isRequired =
-            typeof field.validation.required === "function"
-              ? field.validation.required(formMode)
-              : field.validation.required;
-          if (isRequired) {
             arrayValidator = arrayValidator.required("This field is required");
           }
-        }
         acc[field.name] = arrayValidator;
       } else if (field.type === "dynamicSelectField") {
         const relatedFieldOptions = initialValues[field.relatedFieldName] || [];
@@ -81,11 +75,7 @@ const DynamicForm: React.FC<DynamicFormProps> = ({
       } else {
         let validator = Yup.string();
         if (field.validation) {
-          const isRequired =
-            typeof field.validation.required === "function"
-              ? field.validation.required(formMode)
-              : field.validation.required;
-          if (isRequired) {
+          if (field.validation.required) {
             validator = validator.required("This field is required");
           }
           if (field.validation.minLength) {
