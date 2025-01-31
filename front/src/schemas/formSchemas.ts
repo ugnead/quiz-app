@@ -12,7 +12,7 @@ export const categoryFormSchema: FieldSchema[] = [
     label: "Category Name",
     type: "text",
     validation: {
-      required: (formMode) => formMode === "create",
+      required: true,
       minLength: 1,
       maxLength: 50,
     },
@@ -25,6 +25,9 @@ export const categoryFormSchema: FieldSchema[] = [
       { value: "enabled", label: "enabled" },
       { value: "disabled", label: "disabled" },
     ],
+    validation: {
+      required: true,
+    },
   },
 ];
 
@@ -46,7 +49,7 @@ export const subcategoryFormSchema: FieldSchema[] = [
     label: "Subcategory Name",
     type: "text",
     validation: {
-      required: (formMode) => formMode === "create",
+      required: true,
       minLength: 1,
       maxLength: 50,
     },
@@ -59,6 +62,9 @@ export const subcategoryFormSchema: FieldSchema[] = [
       { value: "enabled", label: "enabled" },
       { value: "disabled", label: "disabled" },
     ],
+    validation: {
+      required: true,
+    },
   },
 ];
 
@@ -80,7 +86,7 @@ export const questionFormSchema: FieldSchema[] = [
     label: "Question",
     type: "text",
     validation: {
-      required: (formMode) => formMode === "create",
+      required: true,
       minLength: 3,
       maxLength: 255,
     },
@@ -90,7 +96,7 @@ export const questionFormSchema: FieldSchema[] = [
     label: "Answer Options",
     type: "dynamicArray",
     validation: {
-      required: (formMode) => formMode === "create",
+      required: true,
       minItems: 2,
       maxItems: 5,
     },
@@ -101,7 +107,7 @@ export const questionFormSchema: FieldSchema[] = [
     type: "dynamicSelectField",
     relatedFieldName: "answerOptions",
     validation: {
-      required: (formMode) => formMode === "create",
+      required: true,
     },
   },
   {
@@ -121,6 +127,9 @@ export const questionFormSchema: FieldSchema[] = [
       { value: "enabled", label: "enabled" },
       { value: "disabled", label: "disabled" },
     ],
+    validation: {
+      required: true,
+    },
   },
 ];
 
