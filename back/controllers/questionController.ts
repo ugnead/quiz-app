@@ -57,7 +57,7 @@ export const getQuestionsByUserProgress = async (
       filter.status = status;
     }
 
-    const questions = await Question.find({ subcategory: subcategoryId })
+    const questions = await Question.find(filter)
       .select("_id name answerOptions correctAnswer explanation status")
       .sort({
         createdAt: -1,
