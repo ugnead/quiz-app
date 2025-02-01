@@ -11,7 +11,7 @@ export const categoryFormSchema: FieldSchema[] = [
     name: "name",
     label: "Category Name",
     type: "text",
-    validation: {
+    fieldValidation: {
       required: true,
       minLength: 1,
       maxLength: 50,
@@ -25,7 +25,7 @@ export const categoryFormSchema: FieldSchema[] = [
       { value: "enabled", label: "enabled" },
       { value: "disabled", label: "disabled" },
     ],
-    validation: {
+    fieldValidation: {
       required: true,
     },
   },
@@ -48,7 +48,7 @@ export const subcategoryFormSchema: FieldSchema[] = [
     name: "name",
     label: "Subcategory Name",
     type: "text",
-    validation: {
+    fieldValidation: {
       required: true,
       minLength: 1,
       maxLength: 50,
@@ -62,7 +62,7 @@ export const subcategoryFormSchema: FieldSchema[] = [
       { value: "enabled", label: "enabled" },
       { value: "disabled", label: "disabled" },
     ],
-    validation: {
+    fieldValidation: {
       required: true,
     },
   },
@@ -85,7 +85,7 @@ export const questionFormSchema: FieldSchema[] = [
     name: "name",
     label: "Question",
     type: "text",
-    validation: {
+    fieldValidation: {
       required: true,
       minLength: 3,
       maxLength: 255,
@@ -95,7 +95,12 @@ export const questionFormSchema: FieldSchema[] = [
     name: "answerOptions",
     label: "Answer Options",
     type: "dynamicArray",
-    validation: {
+    fieldValidation: {
+      required: true,
+      minLength: 1,
+      maxLength: 50,
+    },
+    arrayValidation: {
       required: true,
       minFields: 2,
       maxFields: 5,
@@ -106,7 +111,7 @@ export const questionFormSchema: FieldSchema[] = [
     label: "Correct Answer",
     type: "dynamicSelectField",
     relatedFieldName: "answerOptions",
-    validation: {
+    fieldValidation: {
       required: true,
     },
   },
@@ -114,7 +119,7 @@ export const questionFormSchema: FieldSchema[] = [
     name: "explanation",
     label: "Explanation",
     type: "textarea",
-    validation: {
+    fieldValidation: {
       minLength: 3,
       maxLength: 255,
     },
@@ -127,7 +132,7 @@ export const questionFormSchema: FieldSchema[] = [
       { value: "enabled", label: "enabled" },
       { value: "disabled", label: "disabled" },
     ],
-    validation: {
+    fieldValidation: {
       required: true,
     },
   },
@@ -160,7 +165,7 @@ export const userFormSchema: FieldSchema[] = [
       { value: "admin", label: "Admin" },
       { value: "user", label: "User" },
     ],
-    validation: {
+    fieldValidation: {
       required: true,
     },
   },

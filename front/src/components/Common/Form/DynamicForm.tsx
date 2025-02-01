@@ -23,11 +23,14 @@ export interface FieldSchema {
     | "dynamicArray"
     | "dynamicSelectField";
   options?: { value: string; label: string }[];
-  validation?: {
+  fieldValidation?: {
     required?: boolean;
     minLength?: number;
     maxLength?: number;
     pattern?: RegExp;
+  };
+  arrayValidation?: {
+    required?: boolean;
     minFields?: number;
     maxFields?: number;
   };
@@ -54,14 +57,14 @@ const DynamicForm: React.FC<DynamicFormProps> = ({
         let arrayValidator = Yup.array()
           .of(Yup.string().required("Option cannot be empty"))
           .min(
-            field.validation?.minFields || 2,
-            `At least ${field.validation?.minFields || 2} option(s) required`
+            field.arrayValidation?.minFields || 2,
+            `At least ${field.arrayValidation?.minFields || 2} option(s) required`
           )
           .max(
-            field.validation?.maxFields || 5,
-            `You cannot have more than ${field.validation?.maxFields || 5} option(s)`
+            field.arrayValidation?.maxFields || 5,
+            `You cannot have more than ${field.arrayValidation?.maxFields || 5} option(s)`
           );
-        if (field.validation?.required) {
+        if (field.fieldValidation?.required) {
           arrayValidator = arrayValidator.required("This field is required");
         }
         acc[field.name] = arrayValidator;
@@ -75,25 +78,25 @@ const DynamicForm: React.FC<DynamicFormProps> = ({
           );
       } else {
         let validator = Yup.string();
-        if (field.validation) {
-          if (field.validation.required) {
+        if (field.fieldValidation) {
+          if (field.fieldValidation.required) {
             validator = validator.required("This field is required");
           }
-          if (field.validation.minLength) {
+          if (field.fieldValidation.minLength) {
             validator = validator.min(
-              field.validation.minLength,
-              `Minimum ${field.validation.minLength} characters`
+              field.fieldValidation.minLength,
+              `Minimum ${field.fieldValidation.minLength} characters`
             );
           }
-          if (field.validation.maxLength) {
+          if (field.fieldValidation.maxLength) {
             validator = validator.max(
-              field.validation.maxLength,
-              `Maximum ${field.validation.maxLength} characters`
+              field.fieldValidation.maxLength,
+              `Maximum ${field.fieldValidation.maxLength} characters`
             );
           }
-          if (field.validation.pattern) {
+          if (field.fieldValidation.pattern) {
             validator = validator.matches(
-              field.validation.pattern,
+              field.fieldValidation.pattern,
               "Invalid format"
             );
           }
@@ -170,7 +173,7 @@ const DynamicForm: React.FC<DynamicFormProps> = ({
                     (s) => s.name === field.relatedFieldName
                   );
                   const minFieldsFromReference =
-                    arrayFieldSchema?.validation?.minFields || 2;
+                    arrayFieldSchema?.arrayValidation?.minFields || 2;
                   return (
                     <DynamicSelectField
                       key={`${field.name}-${index}`}
@@ -184,7 +187,7 @@ const DynamicForm: React.FC<DynamicFormProps> = ({
                   return (
                     <DynamicArray
                       key={`${field.name}-${index}`}
-                      minFields={field.validation?.minFields}
+                      minFields={field.arrayValidation?.minFields}
                       {...commonProps}
                     />
                   );
