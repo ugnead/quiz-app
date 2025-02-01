@@ -51,7 +51,7 @@ export const getQuestionsByUserProgress = async (
     const { subcategoryId } = req.params;
     const { status } = req.query;
 
-    const filter: Record<string, unknown> = {};
+    const filter: Record<string, unknown> = { subcategory: subcategoryId };
 
     if (status && typeof status === "string") {
       filter.status = status;
