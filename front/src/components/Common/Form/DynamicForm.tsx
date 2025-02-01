@@ -3,6 +3,8 @@ import { Formik, Form } from "formik";
 import * as Yup from "yup";
 import { v4 as uuidv4 } from "uuid";
 
+import { FieldSchema, FormMode } from "../../../types/form";
+
 import Input from "./Fields/Input";
 import Select from "./Fields/Select";
 import Textarea from "./Fields/Textarea";
@@ -11,38 +13,11 @@ import DynamicSelectField from "./Fields/DynamicSelectField";
 
 import Button from "../Button";
 
-export interface FieldSchema {
-  name: string;
-  label: string;
-  type:
-    | "text"
-    | "select"
-    | "email"
-    | "password"
-    | "textarea"
-    | "dynamicArray"
-    | "dynamicSelectField";
-  options?: { value: string; label: string }[];
-  fieldValidation?: {
-    required?: boolean;
-    minLength?: number;
-    maxLength?: number;
-    pattern?: RegExp;
-  };
-  arrayValidation?: {
-    required?: boolean;
-    minFields?: number;
-    maxFields?: number;
-  };
-  readOnly?: boolean | ((formMode: "create" | "update") => boolean);
-  relatedFieldName?: string;
-}
-
 interface DynamicFormProps {
   schema: FieldSchema[];
   initialValues?: Record<string, string | string[]>;
   onSubmit: (values: Record<string, string | string[]>) => void;
-  formMode?: "create" | "update";
+  formMode?: FormMode;
 }
 
 const DynamicForm: React.FC<DynamicFormProps> = ({
