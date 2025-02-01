@@ -97,8 +97,8 @@ export const questionFormSchema: FieldSchema[] = [
     type: "dynamicArray",
     validation: {
       required: true,
-      minItems: 2,
-      maxItems: 5,
+      minFields: 2,
+      maxFields: 5,
     },
   },
   {

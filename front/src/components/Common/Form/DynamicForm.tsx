@@ -28,8 +28,8 @@ export interface FieldSchema {
     minLength?: number;
     maxLength?: number;
     pattern?: RegExp;
-    minItems?: number;
-    maxItems?: number;
+    minFields?: number;
+    maxFields?: number;
   };
   readOnly?: boolean | ((formMode: "create" | "update") => boolean);
   relatedFieldName?: string;
@@ -54,15 +54,16 @@ const DynamicForm: React.FC<DynamicFormProps> = ({
         let arrayValidator = Yup.array()
           .of(Yup.string().required("Option cannot be empty"))
           .min(
-            field.validation?.minItems || 2,
-            `At least ${field.validation?.minItems || 2} option(s) required`
-          ).max(
-            field.validation?.maxItems || 5,
-            `You cannot have more than ${field.validation?.maxItems || 5} option(s)`
+            field.validation?.minFields || 2,
+            `At least ${field.validation?.minFields || 2} option(s) required`
+          )
+          .max(
+            field.validation?.maxFields || 5,
+            `You cannot have more than ${field.validation?.maxFields || 5} option(s)`
           );
         if (field.validation?.required) {
-            arrayValidator = arrayValidator.required("This field is required");
-          }
+          arrayValidator = arrayValidator.required("This field is required");
+        }
         acc[field.name] = arrayValidator;
       } else if (field.type === "dynamicSelectField") {
         const relatedFieldOptions = initialValues[field.relatedFieldName] || [];
@@ -168,13 +169,13 @@ const DynamicForm: React.FC<DynamicFormProps> = ({
                   const arrayFieldSchema = schema.find(
                     (s) => s.name === field.relatedFieldName
                   );
-                  const minItemsFromReference =
-                    arrayFieldSchema?.validation?.minItems || 2;
+                  const minFieldsFromReference =
+                    arrayFieldSchema?.validation?.minFields || 2;
                   return (
                     <DynamicSelectField
                       key={`${field.name}-${index}`}
                       optionsFieldName={field.relatedFieldName || ""}
-                      minAnswers={minItemsFromReference}
+                      minAnswers={minFieldsFromReference}
                       {...commonProps}
                     />
                   );
@@ -183,7 +184,7 @@ const DynamicForm: React.FC<DynamicFormProps> = ({
                   return (
                     <DynamicArray
                       key={`${field.name}-${index}`}
-                      minItems={field.validation?.minItems}
+                      minFields={field.validation?.minFields}
                       {...commonProps}
                     />
                   );

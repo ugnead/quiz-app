@@ -9,16 +9,16 @@ import { FiMinusCircle } from "react-icons/fi";
 interface DynamicArrayFieldProps {
   name: string;
   label: string;
-  minItems?: number;
-  maxItems?: number;
+  minFields?: number;
+  maxFields?: number;
   readOnly?: boolean;
 }
 
 const DynamicArrayField: React.FC<DynamicArrayFieldProps> = ({
   name,
   label,
-  minItems = 2,
-  maxItems = 5,
+  minFields = 2,
+  maxFields = 5,
   readOnly = false,
 }) => {
   const { values, errors, touched } =
@@ -29,7 +29,7 @@ const DynamicArrayField: React.FC<DynamicArrayFieldProps> = ({
   const fieldError = errors[name];
   const fieldTouched = touched[name];
 
-  const isDisabled = arrayValues.length >= maxItems;
+  const isDisabled = arrayValues.length >= maxFields;
 
   return (
     <div className="mb-4">
@@ -45,7 +45,7 @@ const DynamicArrayField: React.FC<DynamicArrayFieldProps> = ({
                 <div key={index} className="relative group">
                   <Input name={fieldName} readOnly={readOnly} />
 
-                  {!readOnly && arrayValues.length > minItems && (
+                  {!readOnly && arrayValues.length > minFields && (
                     <button
                       type="button"
                       onClick={() => remove(index)}
