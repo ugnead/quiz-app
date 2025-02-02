@@ -4,6 +4,11 @@ import * as Yup from "yup";
 import { v4 as uuidv4 } from "uuid";
 
 import { FieldSchema, FormMode } from "../../../types/form";
+import {
+  stringValidator,
+  DynamicArrayValidator,
+  DynamicSelectFieldValidator,
+} from "../../../utils/validationHelpers";
 
 import Input from "./Fields/Input";
 import Select from "./Fields/Select";
@@ -29,54 +34,17 @@ const DynamicForm: React.FC<DynamicFormProps> = ({
   const validationSchema = schema.reduce(
     (acc, field) => {
       if (field.type === "dynamicArray") {
-        let arrayValidator = Yup.array()
-          .of(Yup.string().required("Option cannot be empty"))
-          .min(
-            field.arrayValidation?.minFields || 2,
-            `At least ${field.arrayValidation?.minFields || 2} option(s) required`
-          )
-          .max(
-            field.arrayValidation?.maxFields || 5,
-            `You cannot have more than ${field.arrayValidation?.maxFields || 5} option(s)`
-          );
-        if (field.fieldValidation?.required) {
-          arrayValidator = arrayValidator.required("This field is required");
-        }
-        acc[field.name] = arrayValidator;
+        acc[field.name] = DynamicArrayValidator(
+          field.fieldValidation,
+          field.arrayValidation
+        );
       } else if (field.type === "dynamicSelectField") {
-        const relatedFieldOptions = initialValues[field.relatedFieldName] || [];
-        acc[field.name] = Yup.string()
-          .required("A correct answer is required")
-          .oneOf(
-            relatedFieldOptions,
-            "The correct answer must match one of the answer options"
-          );
+        const relatedOptions = (initialValues[field.relatedFieldName] ??
+          []) as string[];
+
+        acc[field.name] = DynamicSelectFieldValidator(relatedOptions);
       } else {
-        let validator = Yup.string();
-        if (field.fieldValidation) {
-          if (field.fieldValidation.required) {
-            validator = validator.required("This field is required");
-          }
-          if (field.fieldValidation.minLength) {
-            validator = validator.min(
-              field.fieldValidation.minLength,
-              `Minimum ${field.fieldValidation.minLength} characters`
-            );
-          }
-          if (field.fieldValidation.maxLength) {
-            validator = validator.max(
-              field.fieldValidation.maxLength,
-              `Maximum ${field.fieldValidation.maxLength} characters`
-            );
-          }
-          if (field.fieldValidation.pattern) {
-            validator = validator.matches(
-              field.fieldValidation.pattern,
-              "Invalid format"
-            );
-          }
-        }
-        acc[field.name] = validator;
+        acc[field.name] = stringValidator(field.fieldValidation);
       }
       return acc;
     },
