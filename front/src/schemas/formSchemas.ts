@@ -1,4 +1,4 @@
-import { FieldSchema } from "../components/Common/Form/DynamicForm";
+import { FieldSchema } from "../types/form";
 
 export const categoryFormSchema: FieldSchema[] = [
   {
