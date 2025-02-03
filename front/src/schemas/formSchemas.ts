@@ -121,7 +121,7 @@ export const questionFormSchema: FieldSchema[] = [
     type: "textarea",
     fieldValidation: {
       minLength: 3,
-      maxLength: 255,
+      maxLength:500,
     },
   },
   {
