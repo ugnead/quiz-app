@@ -39,10 +39,7 @@ const DynamicForm: React.FC<DynamicFormProps> = ({
           field.arrayValidation
         );
       } else if (field.type === "dynamicSelectField") {
-        const relatedOptions = (initialValues[field.relatedFieldName] ??
-          []) as string[];
-
-        acc[field.name] = DynamicSelectFieldValidator(relatedOptions);
+        acc[field.name] = DynamicSelectFieldValidator(field.relatedFieldName);
       } else {
         acc[field.name] = stringValidator(field.fieldValidation);
       }

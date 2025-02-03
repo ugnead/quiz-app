@@ -58,12 +58,17 @@ export const DynamicArrayValidator = (
 };
 
 export const DynamicSelectFieldValidator = (
-  relatedOptions: string[],
+  relatedFieldName: string
 ): Yup.StringSchema<string> => {
   return Yup.string()
     .required("You need to select a correct answer")
-    .oneOf(
-      relatedOptions,
-      "The correct answer must match one of the answer options"
+    .test(
+      "match-options",
+      "The correct answer must match one of the answer options",
+      function (value) {
+        const currentOptions: string[] =
+          (this.parent && this.parent[relatedFieldName]) || [];
+        return currentOptions.some((option) => option.trim() === value?.trim());
+      }
     );
 };
