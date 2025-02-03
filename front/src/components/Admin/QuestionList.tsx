@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useParams, useLocation } from "react-router-dom";
 
-import { Category } from "../../types";
+import { Category, Subcategory, Question } from "../../types";
 
 import { fetchSubcategoryById } from "../../services/subcategoryService";
 import {
@@ -22,20 +22,6 @@ import Button from "../Common/Button";
 import Message from "../Common/Message";
 
 import { FiEdit, FiTrash2 } from "react-icons/fi";
-
-interface Subcategory {
-  _id: string;
-  name: string;
-}
-
-interface Question {
-  _id: string;
-  name: string;
-  answerOptions: string[];
-  correctAnswer: string;
-  explanation: string;
-  status: string;
-}
 
 const QuestionList: React.FC = () => {
   const { subcategoryId } = useParams<{ subcategoryId: string }>();
