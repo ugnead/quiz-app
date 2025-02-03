@@ -63,7 +63,7 @@ const SubcategoryList: React.FC = () => {
   const {
     data: subcategories = [],
     isLoading: isSubcategoriesLoading,
-    error: subcategoryError,
+    error: subcategoriesError,
   } = useQuery<Subcategory[]>({
     queryKey: ["subcategories", categoryId],
     queryFn: () => fetchSubcategories(categoryId!),
@@ -75,7 +75,7 @@ const SubcategoryList: React.FC = () => {
     return null;
   }
 
-  if (subcategoryError || categoryError) {
+  if (categoryError || subcategoriesError) {
     return toast.error("Error loading data");
   }
 
