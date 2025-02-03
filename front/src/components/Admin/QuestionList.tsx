@@ -105,7 +105,7 @@ const QuestionList: React.FC = () => {
       name: question.name,
       answerOptions: question.answerOptions,
       correctAnswer: question.correctAnswer,
-      explanation: question.explanation,
+      explanation: question.explanation || "",
       status: question.status,
     });
     setModalOpen(true);
