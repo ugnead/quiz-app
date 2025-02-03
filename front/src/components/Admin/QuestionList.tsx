@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { useParams, useLocation } from "react-router-dom";
 
 import { Category, Subcategory, Question } from "../../types";
@@ -22,6 +22,7 @@ import Pagination from "../Common/Pagination";
 import Button from "../Common/Button";
 import Message from "../Common/Message";
 
+import { toast } from "react-toastify";
 import { FiEdit, FiTrash2 } from "react-icons/fi";
 
 const QuestionList: React.FC = () => {
@@ -76,7 +77,7 @@ const QuestionList: React.FC = () => {
   }
 
   if (subcategoryError || questionsError) {
-    return null;
+    return toast.error("Error loading data");
   }
 
   const pageSize = 10;
@@ -147,10 +148,7 @@ const QuestionList: React.FC = () => {
         }
         await createQuestion(subcategoryId, changedFields);
       } else {
-        await updateQuestion(
-          selectedQuestion._id,
-          changedFields
-        );
+        await updateQuestion(selectedQuestion._id, changedFields);
       }
     } catch (error) {
       console.error("Failed to create/update question:", error);
