@@ -3,6 +3,7 @@ import { useParams, useLocation } from "react-router-dom";
 
 import { Category, Subcategory, Question } from "../../types";
 
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { fetchSubcategoryById } from "../../services/subcategoryService";
 import {
   fetchQuestionsBySubcategoryId,
@@ -31,9 +32,6 @@ const QuestionList: React.FC = () => {
   const [selectedCategory, setSelectedCategory] = useState<Category | null>(
     null
   );
-  const [selectedSubcategory, setSelectedSubcategory] =
-    useState<Subcategory | null>(null);
-  const [questions, setQuestions] = useState<Question[]>([]);
   const [selectedQuestion, setSelectedQuestion] = useState<Question | null>(
     null
   );
@@ -44,43 +42,47 @@ const QuestionList: React.FC = () => {
   >({});
   const [currentPage, setCurrentPage] = useState(1);
 
+  if (location.state?.category) {
+    setSelectedCategory(location.state.category);
+  }
+
+  const {
+    data: selectedSubcategory,
+    isLoading: isSubcategoryLoading,
+    error: subcategoryError,
+  } = useQuery<Subcategory>({
+    queryKey: ["subcategory", subcategoryId],
+    queryFn: () =>
+      location.state?.subcategory
+        ? Promise.resolve(location.state.subcategory)
+        : fetchSubcategoryById(subcategoryId!),
+    enabled: !!subcategoryId,
+    retry: false,
+  });
+
+  const {
+    data: questions = [],
+    isLoading: isQuestionsLoading,
+    error: questionsError,
+  } = useQuery<Question[]>({
+    queryKey: ["questions", subcategoryId],
+    queryFn: () => fetchQuestionsBySubcategoryId(subcategoryId!),
+    enabled: !!subcategoryId,
+    retry: false,
+  });
+
+  if (isSubcategoryLoading || isQuestionsLoading) {
+    return null;
+  }
+
+  if (subcategoryError || questionsError) {
+    return null;
+  }
+
   const pageSize = 10;
   const totalPages = Math.ceil(questions.length / pageSize);
   const startIndex = (currentPage - 1) * pageSize;
   const currentPageData = questions.slice(startIndex, startIndex + pageSize);
-
-  useEffect(() => {
-    if (location.state?.category) {
-      setSelectedCategory(location.state.category);
-    }
-
-    const loadSubcategory = async () => {
-      if (location.state?.subcategory) {
-        setSelectedSubcategory(location.state.subcategory);
-      } else if (subcategoryId) {
-        try {
-          const data = await fetchSubcategoryById(subcategoryId);
-          setSelectedSubcategory(data);
-        } catch (error) {
-          console.error("Failed to fetch subcategory:", error);
-        }
-      }
-    };
-
-    const loadQuestions = async () => {
-      if (subcategoryId) {
-        try {
-          const data = await fetchQuestionsBySubcategoryId(subcategoryId);
-          setQuestions(data);
-        } catch (error) {
-          console.error("Failed to fetch questions:", error);
-        }
-      }
-    };
-
-    loadSubcategory();
-    loadQuestions();
-  }, [subcategoryId, location.state]);
 
   const handleCreate = () => {
     setSelectedQuestion(null);
@@ -143,17 +145,11 @@ const QuestionList: React.FC = () => {
         if (!subcategoryId) {
           throw new Error("No subcategoryId specified for creation.");
         }
-        const newQuestion = await createQuestion(subcategoryId, changedFields);
-        setQuestions((prev) => [newQuestion, ...prev]);
+        await createQuestion(subcategoryId, changedFields);
       } else {
-        const updatedQuestion = await updateQuestion(
+        await updateQuestion(
           selectedQuestion._id,
           changedFields
-        );
-        setQuestions((prev) =>
-          prev.map((question) =>
-            question._id === updatedQuestion._id ? updatedQuestion : question
-          )
         );
       }
     } catch (error) {
@@ -168,9 +164,6 @@ const QuestionList: React.FC = () => {
 
     try {
       await deleteQuestion(selectedQuestion._id);
-      setQuestions((prev) =>
-        prev.filter((question) => question._id !== selectedQuestion._id)
-      );
     } catch (error) {
       console.error("Failed to delete question:", error);
     }
