@@ -1,7 +1,14 @@
 import React, { useState, useEffect } from "react";
 import { useParams, useLocation } from "react-router-dom";
 
-import { Category, Subcategory, Question } from "../../types";
+import {
+  Category,
+  Subcategory,
+  Question,
+  CreateQuestionDto,
+  UpdateQuestionDto,
+} from "../../types";
+import { extractChangedFields } from "../../utils/extractChangedFields";
 
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { fetchSubcategoryById } from "../../services/subcategoryService";
@@ -129,28 +136,22 @@ const QuestionList: React.FC = () => {
   };
 
   const handleSubmit = async (values: Record<string, string | string[]>) => {
-    const changedFields: Record<string, string | string[]> = {};
-
-    for (const key in values) {
-      if (Array.isArray(values[key]) && Array.isArray(initialFormValues[key])) {
-        if (
-          JSON.stringify(values[key]) !== JSON.stringify(initialFormValues[key])
-        ) {
-          changedFields[key] = values[key];
-        }
-      } else if (values[key] !== initialFormValues[key]) {
-        changedFields[key] = values[key];
-      }
-    }
+    const changedFields = extractChangedFields(initialFormValues, values);
 
     try {
       if (!selectedQuestion) {
         if (!subcategoryId) {
           throw new Error("No subcategoryId specified for creation.");
         }
-        await createQuestion(subcategoryId, changedFields);
+        await createQuestion(
+          subcategoryId,
+          changedFields as unknown as CreateQuestionDto
+        );
       } else {
-        await updateQuestion(selectedQuestion._id, changedFields);
+        await updateQuestion(
+          selectedQuestion._id,
+          changedFields as UpdateQuestionDto
+        );
       }
     } catch (error) {
       console.error("Failed to create/update question:", error);
