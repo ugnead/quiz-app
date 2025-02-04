@@ -4,7 +4,7 @@ export function extractChangedFields<T extends Record<string, string | string[]>
 ): Partial<T> {
   const changedFields = {} as Partial<T>;
   for (const key in newVals) {
-    if (newVals[key] !== oldVals[key]) {
+    if (JSON.stringify(newVals[key]) !== JSON.stringify(oldVals[key])) {
       changedFields[key] = newVals[key];
     }
   }
