@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useParams, useLocation } from "react-router-dom";
 
 import { Category, Subcategory, Question } from "../../types";
@@ -43,9 +43,11 @@ const QuestionList: React.FC = () => {
   >({});
   const [currentPage, setCurrentPage] = useState(1);
 
-  if (location.state?.category) {
-    setSelectedCategory(location.state.category);
-  }
+  useEffect(() => {
+    if (location.state?.category) {
+      setSelectedCategory(location.state.category);
+    }
+  }, [location.state?.category]);
 
   const {
     data: selectedSubcategory,
