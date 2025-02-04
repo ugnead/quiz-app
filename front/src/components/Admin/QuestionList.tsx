@@ -34,10 +34,12 @@ import { toast } from "react-toastify";
 import { FiEdit, FiTrash2 } from "react-icons/fi";
 
 const QuestionList: React.FC = () => {
-  const { subcategoryId } = useParams<{ subcategoryId: string }>();
   const location = useLocation() as {
     state?: { category?: Category; subcategory?: Subcategory };
   };
+  const { subcategoryId } = useParams<{ subcategoryId: string }>();
+  const queryClient = useQueryClient();
+
   const [selectedCategory, setSelectedCategory] = useState<Category | null>(
     null
   );
@@ -156,10 +158,10 @@ const QuestionList: React.FC = () => {
         );
         toast.success("Question updated successfully!");
       }
+      queryClient.invalidateQueries({ queryKey: ["questions"] });
     } catch (error: unknown) {
       toast.error(getAPIErrorMessage(error));
     }
-
     handleModalClose();
   };
 
@@ -169,10 +171,10 @@ const QuestionList: React.FC = () => {
     try {
       await deleteQuestion(selectedQuestion._id);
       toast.success("Question deleted successfully!");
+      queryClient.invalidateQueries({ queryKey: ["questions"] });
     } catch (error) {
       toast.error("Failed to delete question");
     }
-
     handleModalClose();
   };
 
