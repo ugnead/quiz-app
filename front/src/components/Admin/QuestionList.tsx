@@ -7,6 +7,7 @@ import {
   Question,
   CreateQuestionDto,
   UpdateQuestionDto,
+  getAPIErrorMessage,
 } from "../../types";
 import { extractChangedFields } from "../../utils/extractChangedFields";
 
@@ -147,14 +148,16 @@ const QuestionList: React.FC = () => {
           subcategoryId,
           changedFields as unknown as CreateQuestionDto
         );
+        toast.success("Question created successfully!");
       } else {
         await updateQuestion(
           selectedQuestion._id,
           changedFields as UpdateQuestionDto
         );
+        toast.success("Question updated successfully!");
       }
-    } catch (error) {
-      console.error("Failed to create/update question:", error);
+    } catch (error: unknown) {
+      toast.error(getAPIErrorMessage(error));
     }
 
     handleModalClose();
@@ -165,8 +168,9 @@ const QuestionList: React.FC = () => {
 
     try {
       await deleteQuestion(selectedQuestion._id);
+      toast.success("Question deleted successfully!");
     } catch (error) {
-      console.error("Failed to delete question:", error);
+      toast.error("Failed to delete question");
     }
 
     handleModalClose();
