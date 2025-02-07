@@ -104,7 +104,7 @@ const SubcategoryList: React.FC = () => {
   };
 
   const getLearnIcon = (progress: SubcategoryProgress) => {
-    if (progress.learnedQuestions === progress.totalQuestions) {
+    if (progress.learnedQuestions === progress.totalQuestions && progress.totalQuestions > 0) {
       return <FaCheckCircle className="text-green-500 ml-2 mt-0.5" />;
     }
     return null;
