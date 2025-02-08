@@ -25,22 +25,24 @@ const DynamicSelectField: React.FC<DynamicSelectFieldProps> = ({
 
   const answerErrors = errors[optionsFieldName];
 
-  let validAnswersCount = 0;
-  const selectOptions = answerOptions.map((option: string, index: number) => {
-    const singleError = Array.isArray(answerErrors)
-      ? answerErrors[index]
-      : undefined;
+  const validOptions = answerOptions
+    .map((option: string, index: number) => {
+      const singleError = Array.isArray(answerErrors)
+        ? answerErrors[index]
+        : undefined;
 
-    const isValid = !singleError && option.trim() !== "";
-    if (isValid) validAnswersCount++;
+      const isValid = !singleError && option.trim() !== "";
 
-    return {
-      value: option,
-      label: option || "",
-    };
-  });
+      return { option, isValid };
+    })
+    .filter(({ isValid }) => isValid);
 
-  const isDisabled = validAnswersCount < minAnswers;
+  const selectOptions = validOptions.map(({ option }) => ({
+    value: option,
+    label: option,
+  }));
+
+  const isDisabled = selectOptions.length < minAnswers;
 
   return (
     <Select
