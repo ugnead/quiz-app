@@ -32,14 +32,15 @@ const UserLayout: React.FC = () => {
             items={navItems}
             title={user ? `Hello, ${firstName}!` : "User Panel"}
             footer={
-              <Button
-                onClick={() => navigate("/admin/categories")}
-                fullWidth
-                variant="secondary"
-               
-              >
-                Switch to Admin Panel
-              </Button>
+              user && user.role === "admin" ? (
+                <Button
+                  onClick={() => navigate("/admin/categories")}
+                  fullWidth
+                  variant="secondary"
+                >
+                  Switch to Admin Panel
+                </Button>
+              ) : null
             }
           />
           <div className="flex-1 p-5 pb-10 sm:p-10 sm:pt-8 min-w-0">
