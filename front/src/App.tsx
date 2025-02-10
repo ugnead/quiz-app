@@ -10,6 +10,7 @@ import { ProtectedRoute } from "./components/Routes/ProtectedRoute";
 import { AdminRoute } from "./components/Routes/AdminRoute";
 
 import ErrorBoundary from "./components/Common/ErrorBoundary";
+import NotFoundPage from "./components/Common/NotFoundPage";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import Home from "./components/Public/Home";
@@ -32,37 +33,39 @@ const App: React.FC = () => {
         theme="colored"
       />
       <WaitForAuth>
-      <QueryClientProvider client={queryClient}>
-        <Routes>
-          <Route
-            path="/"
-            element={
-              <PublicRoute>
-                <PublicLayout />
-              </PublicRoute>
-            }
-          >
-            <Route index element={<Home />} />
-          </Route>
+        <QueryClientProvider client={queryClient}>
+          <Routes>
+            <Route
+              path="/"
+              element={
+                <PublicRoute>
+                  <PublicLayout />
+                </PublicRoute>
+              }
+            >
+              <Route index element={<Home />} />
+            </Route>
 
-          <Route
-            path="/quiz/*"
-            element={
-              <ProtectedRoute>
-                <UserLayout />
-              </ProtectedRoute>
-            }
-          />
+            <Route
+              path="/quiz/*"
+              element={
+                <ProtectedRoute>
+                  <UserLayout />
+                </ProtectedRoute>
+              }
+            />
 
-          <Route
-            path="/admin/*"
-            element={
-              <AdminRoute>
-                <AdminLayout />
-              </AdminRoute>
-            }
-          />
-        </Routes>
+            <Route
+              path="/admin/*"
+              element={
+                <AdminRoute>
+                  <AdminLayout />
+                </AdminRoute>
+              }
+            />
+            <Route path="*" element={<NotFoundPage />} />
+          </Routes>
+        </QueryClientProvider>
       </WaitForAuth>
     </ErrorBoundary>
   );
