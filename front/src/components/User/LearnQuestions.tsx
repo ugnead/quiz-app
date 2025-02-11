@@ -12,6 +12,8 @@ import QuestionExplanation from "../Common/QuestionExplanation";
 import ReviewAnswer from "../Common/ReviewAnswer";
 import Button from "../Common/Button";
 
+import { toast } from "react-toastify";
+
 interface AnsweredQuestion {
   questionIndex: number;
   isCorrect: boolean;
@@ -48,7 +50,7 @@ const LearnQuestions: React.FC = () => {
   }
 
   if (error) {
-    return null;
+    return toast.error("Error loading data");
   }
 
   const handleOptionSelect = (option: string) => {
@@ -90,7 +92,7 @@ const LearnQuestions: React.FC = () => {
         setSubmissionCount(0);
         await queryClient.invalidateQueries({ queryKey: ["categories"] });
       } catch (error) {
-        console.error("Failed to refetch questions:", error);
+        return toast.error("Error loading data");
       }
     } else {
       setCurrentQuestionIndex(
