@@ -1,8 +1,9 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { useParams } from "react-router-dom";
 
 import { Question } from "../../types";
 
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { fetchEnabledQuestionsByUserProgress } from "../../services/questionService";
 import { updateUserProgress } from "../../services/userProgressService";
 
@@ -20,7 +21,8 @@ interface AnsweredQuestion {
 
 const LearnQuestions: React.FC = () => {
   const { subcategoryId } = useParams<{ subcategoryId: string }>();
-  const [questions, setQuestions] = useState<Question[]>([]);
+  const queryClient = useQueryClient();
+
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
   const [selectedOption, setSelectedOption] = useState<string | null>(null);
   const [showExplanation, setShowExplanation] = useState(false);
@@ -30,20 +32,24 @@ const LearnQuestions: React.FC = () => {
   >([]);
   const [answerSequence, setAnswerSequence] = useState(0);
 
-  useEffect(() => {
-    const loadQuestions = async () => {
-      if (subcategoryId) {
-        try {
-          const data = await fetchEnabledQuestionsByUserProgress(subcategoryId);
-          setQuestions(data);
-        } catch (error) {
-          console.error("Failed to fetch questions:", error);
-        }
-      }
-    };
+  const {
+    data: questions = [],
+    isLoading,
+    error,
+  } = useQuery<Question[]>({
+    queryKey: ["enabledQuestions", subcategoryId],
+    queryFn: () => fetchEnabledQuestionsByUserProgress(subcategoryId!),
+    enabled: !!subcategoryId,
+    retry: false,
+  });
 
-    loadQuestions();
-  }, [subcategoryId]);
+  if (isLoading) {
+    return null;
+  }
+
+  if (error) {
+    return null;
+  }
 
   const handleOptionSelect = (option: string) => {
     setSelectedOption(option);
@@ -80,10 +86,9 @@ const LearnQuestions: React.FC = () => {
 
     if (submissionCount >= 5) {
       try {
-        const data = await fetchEnabledQuestionsByUserProgress(subcategoryId!);
-        setQuestions(data);
         setCurrentQuestionIndex(0);
         setSubmissionCount(0);
+        await queryClient.invalidateQueries({ queryKey: ["categories"] });
       } catch (error) {
         console.error("Failed to refetch questions:", error);
       }
