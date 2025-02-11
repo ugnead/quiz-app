@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 
+import { Question } from "../../types";
+
 import { fetchEnabledQuestionsByUserProgress } from "../../services/questionService";
 import { updateUserProgress } from "../../services/userProgressService";
 
@@ -8,14 +10,6 @@ import OptionsList from "../Common/OptionsList";
 import QuestionExplanation from "../Common/QuestionExplanation";
 import ReviewAnswer from "../Common/ReviewAnswer";
 import Button from "../Common/Button";
-
-interface Question {
-  _id: string;
-  name: string;
-  answerOptions: string[];
-  correctAnswer: string;
-  explanation: string;
-}
 
 interface AnsweredQuestion {
   questionIndex: number;

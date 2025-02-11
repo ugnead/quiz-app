@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 
+import { Question } from "../../types";
+
 import { fetchEnabledQuestionsBySubcategoryId } from "../../services/questionService";
 import { fetchSubcategoryById } from "../../services/subcategoryService";
 import { updateUserProgress } from "../../services/userProgressService";
@@ -14,14 +16,6 @@ import ReviewAnswer from "../Common/ReviewAnswer";
 import Button from "../Common/Button";
 
 import { FaArrowLeft } from "react-icons/fa";
-
-interface Question {
-  _id: string;
-  name: string;
-  answerOptions: string[];
-  correctAnswer: string;
-  explanation: string;
-}
 
 interface AnsweredQuestion {
   questionIndex: number;
