@@ -3,6 +3,7 @@ import { useParams, useNavigate, useLocation } from "react-router-dom";
 
 import { Question } from "../../types";
 
+import { useQuery } from "@tanstack/react-query";
 import { fetchEnabledQuestionsBySubcategoryId } from "../../services/questionService";
 import { updateUserProgress } from "../../services/userProgressService";
 import { deleteUserTestProgress } from "../../services/userProgressService";
@@ -28,7 +29,6 @@ const TestQuestions: React.FC = () => {
   const { subcategoryId } = useParams<{ subcategoryId: string }>();
   const location = useLocation() as { state?: { categoryId?: string } };
 
-  const [questions, setQuestions] = useState<Question[]>([]);
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
   const [selectedOption, setSelectedOption] = useState<string | null>(null);
   const [score, setScore] = useState(0);
@@ -40,21 +40,19 @@ const TestQuestions: React.FC = () => {
   const [answerSequence, setAnswerSequence] = useState(0);
   const [isReviewing, setIsReviewing] = useState(false);
 
-  useEffect(() => {
-    const loadQuestions = async () => {
-      if (subcategoryId) {
-        try {
-          await deleteUserTestProgress(subcategoryId);
-          const data =
-            await fetchEnabledQuestionsBySubcategoryId(subcategoryId);
-          setQuestions(data);
-        } catch (error) {
-          console.error("Failed to fetch questions:", error);
-        }
-      }
-    };
-    loadQuestions();
-  }, [subcategoryId]);
+  const {
+    data: questions = [],
+    isLoading,
+    error,
+  } = useQuery<Question[]>({
+    queryKey: ["enabledTestQuestions", subcategoryId],
+    queryFn: async () => {
+      await deleteUserTestProgress(subcategoryId!);
+      return await fetchEnabledQuestionsBySubcategoryId(subcategoryId!);
+    },
+    enabled: !!subcategoryId,
+    retry: false,
+  });
 
   useEffect(() => {
     const updateProgressForCurrentQuestion = async () => {
@@ -77,6 +75,14 @@ const TestQuestions: React.FC = () => {
     isTestFinished,
     isReviewing,
   ]);
+
+  if (isLoading) {
+    return null;
+  }
+
+  if (error) {
+    return null;
+  }
 
   const handleOptionSelect = (option: string) => {
     setSelectedOption(option);

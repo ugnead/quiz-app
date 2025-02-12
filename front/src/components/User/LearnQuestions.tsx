@@ -39,7 +39,7 @@ const LearnQuestions: React.FC = () => {
     isLoading,
     error,
   } = useQuery<Question[]>({
-    queryKey: ["enabledQuestions", subcategoryId],
+    queryKey: ["enabledLearnQuestions", subcategoryId],
     queryFn: () => fetchEnabledQuestionsByUserProgress(subcategoryId!),
     enabled: !!subcategoryId,
     retry: false,
