@@ -1,10 +1,9 @@
 import React, { useState, useEffect } from "react";
-import { useParams, useNavigate } from "react-router-dom";
+import { useParams, useNavigate, useLocation } from "react-router-dom";
 
 import { Question } from "../../types";
 
 import { fetchEnabledQuestionsBySubcategoryId } from "../../services/questionService";
-import { fetchSubcategoryById } from "../../services/subcategoryService";
 import { updateUserProgress } from "../../services/userProgressService";
 import { deleteUserTestProgress } from "../../services/userProgressService";
 
@@ -27,13 +26,14 @@ interface AnsweredQuestion {
 const TestQuestions: React.FC = () => {
   const navigate = useNavigate();
   const { subcategoryId } = useParams<{ subcategoryId: string }>();
+  const location = useLocation() as { state?: { categoryId?: string } };
+
   const [questions, setQuestions] = useState<Question[]>([]);
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
   const [selectedOption, setSelectedOption] = useState<string | null>(null);
   const [score, setScore] = useState(0);
   const [isTestFinished, setIsTestFinished] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [categoryId, setCategoryId] = useState<string | null>(null);
   const [answeredQuestions, setAnsweredQuestions] = useState<
     AnsweredQuestion[]
   >([]);
@@ -41,33 +41,18 @@ const TestQuestions: React.FC = () => {
   const [isReviewing, setIsReviewing] = useState(false);
 
   useEffect(() => {
-    const loadSubcategory = async () => {
-      if (subcategoryId) {
-        try {
-          const subcategory = await fetchSubcategoryById(subcategoryId);
-          setCategoryId(subcategory.category);
-        } catch (error) {
-          console.error("Failed to fetch subcategory:", error);
-        }
-      }
-    };
-
-    loadSubcategory();
-  }, [subcategoryId]);
-
-  useEffect(() => {
     const loadQuestions = async () => {
       if (subcategoryId) {
         try {
           await deleteUserTestProgress(subcategoryId);
-          const data = await fetchEnabledQuestionsBySubcategoryId(subcategoryId);
+          const data =
+            await fetchEnabledQuestionsBySubcategoryId(subcategoryId);
           setQuestions(data);
         } catch (error) {
           console.error("Failed to fetch questions:", error);
         }
       }
     };
-
     loadQuestions();
   }, [subcategoryId]);
 
@@ -163,7 +148,13 @@ const TestQuestions: React.FC = () => {
   };
 
   const handleBackToSubcategories = () => {
-    navigate(`/quiz/categories/${categoryId}/subcategories`, { replace: true });
+    if (location.state?.categoryId) {
+      navigate(`/quiz/categories/${location.state?.categoryId}/subcategories`, {
+        replace: true,
+      });
+    } else {
+      navigate(-1);
+    }
   };
 
   const handleReviewAnswers = () => {

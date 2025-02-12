@@ -90,7 +90,7 @@ const LearnQuestions: React.FC = () => {
       try {
         setCurrentQuestionIndex(0);
         setSubmissionCount(0);
-        await queryClient.invalidateQueries({ queryKey: ["questions"] });
+        queryClient.invalidateQueries({ queryKey: ["questions"] });
       } catch (error) {
         return toast.error("Error loading data");
       }

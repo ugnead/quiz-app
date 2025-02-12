@@ -92,7 +92,9 @@ const SubcategoryList: React.FC = () => {
   };
 
   const handleTestSelect = (subcategoryId: string) => {
-    navigate(`/quiz/subcategories/${subcategoryId}/questions`);
+    navigate(`/quiz/subcategories/${subcategoryId}/questions`, {
+      state: { categoryId },
+    });
   };
 
   const handleBackToCategories = () => {
@@ -104,7 +106,10 @@ const SubcategoryList: React.FC = () => {
   };
 
   const getLearnIcon = (progress: SubcategoryProgress) => {
-    if (progress.learnedQuestions === progress.totalQuestions && progress.totalQuestions > 0) {
+    if (
+      progress.learnedQuestions === progress.totalQuestions &&
+      progress.totalQuestions > 0
+    ) {
       return <FaCheckCircle className="text-green-500 ml-2 mt-0.5" />;
     }
     return null;
