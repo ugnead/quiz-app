@@ -15,6 +15,7 @@ import QuestionExplanation from "../Common/QuestionExplanation";
 import ReviewAnswer from "../Common/ReviewAnswer";
 import Button from "../Common/Button";
 
+import { toast } from "react-toastify";
 import { FaArrowLeft } from "react-icons/fa";
 
 interface AnsweredQuestion {
@@ -81,7 +82,7 @@ const TestQuestions: React.FC = () => {
   }
 
   if (error) {
-    return null;
+    return toast.error("Error loading data");
   }
 
   const handleOptionSelect = (option: string) => {
