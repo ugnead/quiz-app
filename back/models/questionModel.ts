@@ -29,7 +29,7 @@ let questionSchema = new Schema<IQuestion>({
     type: String,
     required: true,
     enum: ["enabled", "disabled"],
-    default: "enabled",
+    default: "disabled",
   },
   createdAt: { type: Date, default: Date.now },
 });

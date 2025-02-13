@@ -106,7 +106,7 @@ const QuestionList: React.FC = () => {
       answerOptions: ["", ""],
       correctAnswer: "",
       explanation: "",
-      status: "enabled",
+      status: "disabled",
     });
     setModalOpen(true);
   };

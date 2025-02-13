@@ -70,7 +70,7 @@ const CategoryList: React.FC = () => {
   const handleCreate = () => {
     setSelectedCategory(null);
     setIsDeleteMode(false);
-    setInitialFormValues({ name: "", status: "enabled" });
+    setInitialFormValues({ name: "", status: "disabled" });
     setModalOpen(true);
   };
 

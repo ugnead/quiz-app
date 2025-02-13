@@ -93,7 +93,7 @@ const SubcategoryList: React.FC = () => {
     setInitialFormValues({
       parentName: selectedCategory?.name || "",
       name: "",
-      status: "enabled",
+      status: "disabled",
     });
     setModalOpen(true);
   };

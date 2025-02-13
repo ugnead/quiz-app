@@ -24,7 +24,7 @@ let categorySchema = new Schema<ICategory>({
     type: String,
     required: true,
     enum: ["enabled", "disabled"],
-    default: "enabled",
+    default: "disabled",
   },
   createdAt: { type: Date, default: Date.now },
 });

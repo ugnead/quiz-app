@@ -144,7 +144,10 @@ const SubcategoryList: React.FC = () => {
               );
 
               return (
-                <li key={subcategory._id} className="flex flex-col justify-between">
+                <li
+                  key={subcategory._id}
+                  className="flex flex-col justify-between"
+                >
                   <span className="pb-1 pe-5 font-bold text-lg">
                     {subcategory.name}
                   </span>
