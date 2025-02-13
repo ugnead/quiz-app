@@ -236,7 +236,7 @@ const QuestionList: React.FC = () => {
                 text={
                   selectedCategory ? `Category: ${selectedCategory.name}` : ""
                 }
-                variant="success"
+                variant="warning"
                 className="mr-2"
               />
               <Label
@@ -245,7 +245,7 @@ const QuestionList: React.FC = () => {
                     ? `Subcategory: ${selectedSubcategory.name}`
                     : ""
                 }
-                variant="warning"
+                variant="success"
               />
             </>
           }
