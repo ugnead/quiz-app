@@ -37,10 +37,13 @@ const DynamicSelectField: React.FC<DynamicSelectFieldProps> = ({
     })
     .filter(({ isValid }) => isValid);
 
-  const selectOptions = validOptions.map(({ option }) => ({
-    value: option,
-    label: option,
-  }));
+  const selectOptions = [
+    { value: "", label: "Select answer" },
+    ...validOptions.map(({ option }) => ({
+      value: option,
+      label: option,
+    })),
+  ];
 
   const isDisabled = selectOptions.length < minAnswers;
 
