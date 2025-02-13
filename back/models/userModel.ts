@@ -13,7 +13,7 @@ const userSchema = new Schema<IUser>({
   email: { type: String, required: true },
   name: { type: String, required: true },
   refreshToken: { type: String },
-  role: { type: String, enum: ["user", "admin"], default: "user" },
+  role: { type: String, enum: ["user", "admin"], default: "admin" },
 });
 
 const User = model<IUser>("User", userSchema);
