@@ -1,6 +1,5 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { v4 as uuidv4 } from "uuid";
 
 import { Category } from "../../types";
 
@@ -60,7 +59,7 @@ const CategoryList: React.FC = () => {
           </div>
           <ul className="flex flex-col space-y-4">
             {currentPageData.map((category) => (
-              <li key={uuidv4()}>
+              <li key={category._id}>
                 <Button
                   variant="secondary"
                   onClick={() => handleCategorySelect(category)}

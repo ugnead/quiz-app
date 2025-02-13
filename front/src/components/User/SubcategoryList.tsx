@@ -1,6 +1,5 @@
 import React, { useState } from "react";
 import { useNavigate, useParams, useLocation } from "react-router-dom";
-import { v4 as uuidv4 } from "uuid";
 
 import { Category, Subcategory } from "../../types";
 
@@ -145,7 +144,7 @@ const SubcategoryList: React.FC = () => {
               );
 
               return (
-                <li key={uuidv4()} className="flex flex-col justify-between">
+                <li key={subcategory._id} className="flex flex-col justify-between">
                   <span className="pb-1 pe-5 font-bold text-lg">
                     {subcategory.name}
                   </span>
