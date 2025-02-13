@@ -45,7 +45,7 @@ const DynamicSelectField: React.FC<DynamicSelectFieldProps> = ({
     })),
   ];
 
-  const isDisabled = selectOptions.length < minAnswers;
+  const isDisabled = validOptions.length < minAnswers;
 
   return (
     <Select
