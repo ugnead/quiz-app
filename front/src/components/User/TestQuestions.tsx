@@ -13,6 +13,7 @@ import Modal from "../Common/Modal";
 import Timer from "../Common/Timer";
 import QuestionExplanation from "../Common/QuestionExplanation";
 import ReviewAnswer from "../Common/ReviewAnswer";
+import Message from "../Common/Message";
 import Button from "../Common/Button";
 
 import { toast } from "react-toastify";
@@ -182,7 +183,7 @@ const TestQuestions: React.FC = () => {
   };
 
   if (questions.length === 0)
-    return <div className="text-lg">No questions available</div>;
+    return <Message message="No questions found" variant="info" />;
 
   const currentQuestion = questions[currentQuestionIndex];
 
