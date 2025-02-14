@@ -53,7 +53,7 @@ const DynamicSelectField: React.FC<DynamicSelectFieldProps> = ({
       label={label}
       options={selectOptions}
       readOnly={isDisabled}
-      placeholder={`Fill at least ${minAnswers} Answer Options to enable selection`}
+      placeholder={`At least ${minAnswers} options above must be valid before selection`}
       onChange={(e: React.ChangeEvent<HTMLSelectElement>) =>
         setFieldValue(name, e.target.value)
       }
