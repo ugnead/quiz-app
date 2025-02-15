@@ -14,8 +14,8 @@ let questionSchema = new Schema<IQuestion>({
   name: {
     type: String,
     required: true,
-    minlength: [1, "Name must be at least 1 character(s) long"],
-    maxlength: [50, "Name cannot exceed 50 character(s)"],
+    minlength: [3, "Name must be at least 3 character(s) long"],
+    maxlength: [255, "Name cannot exceed 255 character(s)"],
   },
   answerOptions: [{ type: String, required: true }],
   correctAnswer: { type: String, required: true },
