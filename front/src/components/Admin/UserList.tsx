@@ -2,6 +2,7 @@ import React, { useState } from "react";
 
 import { User, UpdateUserDto, getAPIErrorMessage } from "../../types";
 import { extractChangedFields } from "../../utils/extractChangedFields";
+import { partialDisplay } from "../../utils/textFormatting";
 
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { fetchUsers, updateUserRole } from "../../services/userService";
@@ -94,7 +95,7 @@ const UserList: React.FC = () => {
       header: "ID",
       accessor: "_id",
       render: (user) => (
-        <span title={user._id}>{`...${user._id.slice(-4)}`}</span>
+        <span title={user._id}>{partialDisplay(user._id, 0, 4)}</span>
       ),
     },
     {
