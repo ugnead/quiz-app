@@ -8,6 +8,7 @@ import {
   getAPIErrorMessage,
 } from "../../types";
 import { extractChangedFields } from "../../utils/extractChangedFields";
+import { shortId } from "../../utils/textFormatting";
 
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import {
@@ -146,7 +147,7 @@ const CategoryList: React.FC = () => {
       header: "ID",
       accessor: "_id",
       render: (category) => (
-        <span title={category._id}>{`...${category._id.slice(-4)}`}</span>
+        <span title={category._id}>{shortId(category._id)}</span>
       ),
     },
     {
