@@ -228,7 +228,9 @@ const SubcategoryList: React.FC = () => {
           subtitle={
             <Label
               text={
-                selectedCategory ? `Category: ${selectedCategory.name}` : ""
+                selectedCategory
+                  ? `Category: ${shortName(selectedCategory.name)}`
+                  : ""
               }
               variant="warning"
             />
