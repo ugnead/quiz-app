@@ -9,7 +9,7 @@ export function partialDisplay(
   }
 
   const start = text.slice(0, firstCount);
-  const end = text.slice(-lastCount);
+  const end = lastCount > 0 ? text.slice(-lastCount) : "";
   return `${start}${ellipsis}${end}`;
 }
 
