@@ -241,7 +241,7 @@ const QuestionList: React.FC = () => {
                   selectedCategory ? `Category: ${shortName(selectedCategory.name)}` : ""
                 }
                 variant="warning"
-                className="mr-2"
+                className="mr-2 mb-2 sm:mb-0"
               />
               <Label
                 text={
