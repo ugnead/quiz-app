@@ -10,7 +10,7 @@ import {
   getAPIErrorMessage,
 } from "../../types";
 import { extractChangedFields } from "../../utils/extractChangedFields";
-import { shortId } from "../../utils/textFormatting";
+import { shortId, shortName } from "../../utils/textFormatting";
 
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { fetchSubcategoryById } from "../../services/subcategoryService";
@@ -194,6 +194,9 @@ const QuestionList: React.FC = () => {
     {
       header: "Name",
       accessor: "name",
+      render: (question) => (
+        <span title={question.name}>{shortName(question.name)}</span>
+      ),
     },
     {
       header: "Status",

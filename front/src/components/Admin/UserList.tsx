@@ -2,7 +2,7 @@ import React, { useState } from "react";
 
 import { User, UpdateUserDto, getAPIErrorMessage } from "../../types";
 import { extractChangedFields } from "../../utils/extractChangedFields";
-import { shortId } from "../../utils/textFormatting";
+import { shortId, shortName } from "../../utils/textFormatting";
 
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { fetchUsers, updateUserRole } from "../../services/userService";
@@ -99,6 +99,7 @@ const UserList: React.FC = () => {
     {
       header: "Name",
       accessor: "name",
+      render: (user) => <span title={user.name}>{shortName(user.name)}</span>,
     },
     {
       header: "Email",
