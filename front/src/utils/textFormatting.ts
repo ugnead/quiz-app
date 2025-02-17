@@ -16,3 +16,7 @@ export function partialDisplay(
 export function shortId(id: string): string {
   return partialDisplay(id, 0, 4);
 }
+
+export function shortName(name: string): string {
+  return partialDisplay(name, 20, 0);
+}
