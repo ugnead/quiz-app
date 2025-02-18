@@ -134,7 +134,7 @@ const SubcategoryList: React.FC = () => {
               <FaArrowLeft className="text-xl" />
             </button>
             <div className="text-center mb-7">
-              <h2>{selectedCategory?.name}</h2>
+              <h2 className="max-w-xs sm:max-w-md break-words">{selectedCategory?.name}</h2>
             </div>
           </div>
           <ul className="flex flex-col space-y-4">

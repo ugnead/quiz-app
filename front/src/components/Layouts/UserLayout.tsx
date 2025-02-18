@@ -44,7 +44,7 @@ const UserLayout: React.FC = () => {
             }
           />
           <div className="flex-1 p-5 pb-10 sm:p-10 sm:pt-9 min-w-0">
-            <div className="w-full max-w-lg mx-auto">
+            <div className="w-full max-w-lg mx-auto break-words">
               <Routes>
                 <Route index element={<Navigate to="categories" replace />} />
                 <Route path="categories" element={<CategoryList />} />
