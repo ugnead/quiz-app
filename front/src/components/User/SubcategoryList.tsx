@@ -148,7 +148,7 @@ const SubcategoryList: React.FC = () => {
                   key={subcategory._id}
                   className="flex flex-col justify-between"
                 >
-                  <span className="pb-1 pe-5 font-bold text-lg leading-none">
+                  <span className="pb-1 pe-5 font-bold text-lg leading-5">
                     {subcategory.name}
                   </span>
                   <div className="flex space-x-4">
