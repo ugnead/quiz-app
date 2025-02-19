@@ -20,11 +20,14 @@ export const googleAuth = async (req: Request, res: Response) => {
       return res.status(401).json({ message: "Invalid Google token" });
     }
 
-    const { sub: googleId, email, name } = payload;
+    const { sub: googleId, email, name, picture } = payload;
     let user = await User.findOne({ email });
 
     if (!user) {
-      user = await User.create({ googleId, email, name });
+      user = await User.create({ googleId, email, name, picture });
+    // } else {
+    //   user.name = name;
+    //   user.picture = picture;
     }
 
     await user.save();
