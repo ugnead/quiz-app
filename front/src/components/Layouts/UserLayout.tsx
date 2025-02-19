@@ -5,16 +5,18 @@ import CategoryList from "../User/CategoryList";
 import SubcategoryList from "../User/SubcategoryList";
 import LearnQuestions from "../User/LearnQuestions";
 import TestQuestions from "../User/TestQuestions";
+import Profile from "../User/Profile";
 import { useAuth } from "../../contexts/AuthContext";
 
 import Navigation from "../Common/Navigation";
 import Sidebar from "../Common/Sidebar";
 import Button from "../Common/Button";
 
-import { FaQuestionCircle } from "react-icons/fa";
+import { FaQuestionCircle, FaUser } from "react-icons/fa";
 
 const navItems = [
   { label: "Quiz", path: "/quiz/categories", icon: FaQuestionCircle },
+  { label: "Profile", path: "/quiz/profile", icon: FaUser },
 ];
 
 const UserLayout: React.FC = () => {
@@ -59,6 +61,10 @@ const UserLayout: React.FC = () => {
                 <Route
                   path="subcategories/:subcategoryId/questions"
                   element={<TestQuestions />}
+                />
+                <Route
+                  path="profile"
+                  element={<Profile />}
                 />
 
                 <Route
