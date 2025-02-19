@@ -114,7 +114,7 @@ const LearnQuestions: React.FC = () => {
   };
 
   if (questions.length === 0)
-    return <Message message="No questions found" variant="info" />
+    return <Message message="No questions found in selected subcategory" variant="info" />
 
   const currentQuestion = questions[currentQuestionIndex];
 

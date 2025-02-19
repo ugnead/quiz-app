@@ -187,7 +187,7 @@ const SubcategoryList: React.FC = () => {
           )}
         </>
       ) : (
-        <Message message="No categories found" variant="info" />
+        <Message message="No subcategories found in selected category" variant="info" />
       )}
     </>
   );
