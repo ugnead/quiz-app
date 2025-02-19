@@ -1,18 +1,13 @@
 import api from "./api";
-
-interface UserProfile {
-  name: string;
-  email: string;
-  role: string;
-}
+import { User } from "../types/user";
 
 interface AuthResponse {
-  user: UserProfile;
+  user: User;
   token: string;
   refreshToken: string;
 }
 
-export async function verifyToken(): Promise<UserProfile | null> {
+export async function verifyToken(): Promise<User | null> {
   const token = localStorage.getItem("jwtToken");
   if (!token) {
     return null;
@@ -22,15 +17,16 @@ export async function verifyToken(): Promise<UserProfile | null> {
     if (response.data.user) {
       return response.data.user;
     } else {
+      console.error("Token is invalid");
       throw new Error("Token is invalid");
     }
   } catch (error) {
-    console.error("Token verification failed:", error);
-    return null;
+    console.log("Token verification failed:", error);
+    throw error;
   }
 }
 
-export async function loginUser(idToken: string): Promise<UserProfile> {
+export async function loginUser(idToken: string): Promise<User> {
   try {
     const response = await api.post<AuthResponse>("/auth/google", {
       token: idToken,

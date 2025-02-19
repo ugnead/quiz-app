@@ -6,20 +6,17 @@ import React, {
   useContext,
   ReactNode,
 } from "react";
+
+import { User } from "../types/user";
+
 import { verifyToken, loginUser, logoutUser } from "../services/auth";
 import { useLoading } from "./LoadingContext";
 import { toast } from "react-toastify";
 
 interface AuthContextProps {
-  user: UserProfile | null;
+  user: User | null;
   login: (response: string) => Promise<void>;
   logout: () => void;
-}
-
-interface UserProfile {
-  name: string;
-  email: string;
-  role: string;
 }
 
 export const AuthContext = createContext<AuthContextProps | undefined>(
@@ -30,7 +27,7 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({
   children,
 }) => {
   const { setLoading } = useLoading();
-  const [user, setUser] = useState<UserProfile | null>(null);
+  const [user, setUser] = useState<User | null>(null);
 
   const logout = useCallback(() => {
     logoutUser();
