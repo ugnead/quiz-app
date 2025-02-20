@@ -1,30 +1,42 @@
-// Profile.tsx
 import React from "react";
 import { useAuth } from "../../contexts/AuthContext";
-
+import Button from "../Common/Button";
 
 const Profile: React.FC = () => {
   const { user } = useAuth();
 
   if (!user) {
-    return <div>Loading profile...</div>;
+    return null;
   }
 
+  const handleDelete = () => {
+    return null;
+    };
+
   return (
-    <div className="max-w-md mx-auto p-4 border border-gray-300 rounded-md">
-      <h2 className="text-xl font-bold mb-4">User Profile</h2>
-      <div className="flex items-center gap-4">
-        <img
-          src={user.picture || "/images/default-avatar.webp"}
-          alt={`${user.name}'s avatar`}
-          className="w-16 h-16 rounded-full"
-        />
-        <div>
-          <p className="font-medium">Name: {user.name}</p>
-          <p className="text-sm text-gray-600">Email: {user.email}</p>
+    <>
+      <div className="bg-white rounded-md shadow-sm p-8">
+        <div className="mb-8 text-center">
+          <h2 className="font-bold">Your Profile</h2>
+          <p className="text-gray-600 mt-2">Manage your account</p>
+        </div>
+        <div className="space-y-6">
+          <div>
+            <label className="block text-gray-600 uppercase mb-1">Name</label>
+            <div className="font-medium bg-gray-50 rounded-md p-3 shadow-sm">
+              {user.name}
+            </div>
+          </div>
+          <div>
+            <label className="block uppercase mb-1">Email</label>
+            <div className="font-medium bg-gray-50 rounded-md p-3 shadow-sm">
+              {user.email}
+            </div>
+          </div>
         </div>
       </div>
-    </div>
+      
+    </>
   );
 };
 
