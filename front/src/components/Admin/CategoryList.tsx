@@ -204,7 +204,8 @@ const CategoryList: React.FC = () => {
       <Button
         variant="lightGray"
         onClick={handleCreate}
-        className="mt-3 mb-2 w-full"
+        className="mt-3 mb-2"
+        fullWidth
       >
         + Add Category
       </Button>
