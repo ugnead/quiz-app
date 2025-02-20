@@ -35,7 +35,20 @@ const Profile: React.FC = () => {
           </div>
         </div>
       </div>
-      
+      <div className="bg-white rounded-md shadow-sm p-8 mt-5">
+        <div className="text-center">
+          <h3 className="font-bold">Danger Zone</h3>
+          <p className="text-gray-600 mt-2">Changes are non reversable</p>
+        </div>
+        <Button
+          variant="danger"
+          onClick={handleDelete}
+          className="mt-3 mb-2"
+          fullWidth
+        >
+          Delete All User Progress
+        </Button>
+      </div>
     </>
   );
 };
