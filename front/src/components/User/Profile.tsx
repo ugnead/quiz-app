@@ -36,6 +36,16 @@ const Profile: React.FC = () => {
         </div>
       </div>
       <div className="bg-white rounded-md shadow-sm p-8 mt-5">
+        <div className="mb-8 text-center">
+          <h3 className="font-bold">Progress</h3>
+        </div>
+        <div className="space-y-6">
+          <div>
+         
+          </div>
+        </div>
+      </div>
+      <div className="bg-white rounded-md shadow-sm p-8 mt-5">
         <div className="text-center">
           <h3 className="font-bold">Danger Zone</h3>
           <p className="text-gray-600 mt-2">Changes are non reversable</p>
