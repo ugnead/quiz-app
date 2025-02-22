@@ -55,7 +55,7 @@ export const updateUserProgress = async (
 ): Promise<void> => {
   try {
     const { userId } = (req as any).user;
-    const { questionId, isCorrect, mode } = req.body;
+    const { subcategoryId, questionId, isCorrect, mode } = req.body;
 
     const userProgress = await UserProgress.findOne({
       user: userId,
@@ -73,7 +73,7 @@ export const updateUserProgress = async (
     } else {
       await UserProgress.create({
         user: userId,
-        subcategory: req.body.subcategoryId,
+        subcategory: subcategoryId,
         question: questionId,
         correctAnswersCount: isCorrect ? 1 : 0,
         mode,
