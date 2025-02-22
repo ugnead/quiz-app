@@ -2,7 +2,7 @@ import { Request, Response } from "express";
 import UserProgress from "../models/userProgressModel";
 import Question from "../models/questionModel";
 
-export const getUserProgress = async (
+export const getProgressBySubcategory = async (
   req: Request,
   res: Response
 ): Promise<void> => {
@@ -10,27 +10,24 @@ export const getUserProgress = async (
     const { userId } = (req as any).user;
     const { subcategoryId } = req.params;
 
-    const learnProgress = await UserProgress.find({
+    const totalQuestions = await Question.countDocuments({
+      subcategory: subcategoryId,
+      status: "enabled",
+    });
+
+    const learnedQuestions = await UserProgress.countDocuments({
       user: userId,
       subcategory: subcategoryId,
       mode: "learn",
+      correctAnswersCount: { $gte: 2 },
     });
-    const testProgress = await UserProgress.find({
+
+    const correctTestAnswers = await UserProgress.countDocuments({
       user: userId,
       subcategory: subcategoryId,
       mode: "test",
+      correctAnswersCount: { $gte: 1 },
     });
-
-    const learnedQuestions = learnProgress.filter(
-      (up) => up.correctAnswersCount >= 2
-    ).length;
-    const totalQuestions = await Question.countDocuments({
-      subcategory: subcategoryId,
-    });
-    const correctTestAnswers =
-      testProgress.length > 0
-        ? testProgress.filter((up) => up.correctAnswersCount >= 1).length
-        : null;
 
     res.status(200).json({
       status: "success",
