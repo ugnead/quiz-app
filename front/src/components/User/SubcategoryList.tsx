@@ -6,7 +6,7 @@ import { Category, Subcategory } from "../../types";
 import { useQuery } from "@tanstack/react-query";
 import { fetchCategoryById } from "../../services/categoryService";
 import { fetchEnabledSubcategories } from "../../services/subcategoryService";
-import { fetchUserProgress } from "../../services/userProgressService";
+import { fetchProgressBySubcategory } from "../../services/userProgressService";
 
 import Button from "../Common/Button";
 import Pagination from "../Common/Pagination";
@@ -62,7 +62,7 @@ const SubcategoryList: React.FC = () => {
     queryKey: ["userProgress", categoryId],
     queryFn: async () => {
       const progress = subcategories.map((subcategory) =>
-        fetchUserProgress(subcategory._id)
+        fetchProgressBySubcategory(subcategory._id)
       );
       return Promise.all(progress);
     },
