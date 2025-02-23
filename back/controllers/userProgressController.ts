@@ -15,14 +15,14 @@ export const getProgressBySubcategory = async (
       status: "enabled",
     });
 
-    const learnedQuestions = await getProgressCount(
+    const learnedQuestions = await getProgressCountBySubcat(
       userId,
       subcategoryId,
       "learn",
       2
     );
 
-    const correctTestAnswers = await getProgressCount(
+    const correctTestAnswers = await getProgressCountBySubcat(
       userId,
       subcategoryId,
       "test",

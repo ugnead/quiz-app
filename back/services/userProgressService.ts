@@ -1,7 +1,7 @@
 import mongoose from "mongoose";
 import UserProgress from "../models/userProgressModel";
 
-export async function getProgressCount(
+export async function getProgressCountBySubcat(
   userId: string,
   subcategoryId: string,
   mode: "learn" | "test",
