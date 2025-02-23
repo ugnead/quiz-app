@@ -1,6 +1,11 @@
 import api from "./api";
 
-export const fetchUserProgress = async (subcategoryId: string) => {
+export const fetchOverallProgress = async () => {
+  const response = await api.get(`/progress/overview`);
+  return response.data.data;
+};
+
+export const fetchProgressBySubcategory = async (subcategoryId: string) => {
   const response = await api.get(`/subcategories/${subcategoryId}/progress`);
   return response.data.data;
 };
