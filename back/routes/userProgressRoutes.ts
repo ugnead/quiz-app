@@ -1,13 +1,15 @@
 import express from "express";
 import {
-  getUserProgress,
+  getOverallProgress,
+  getProgressBySubcategory,
   updateUserProgress,
   deleteUserTestProgress,
 } from "../controllers/userProgressController";
 
 const router = express.Router();
 
-router.get("/subcategories/:subcategoryId/progress", getUserProgress);
+router.get("/progress/overview", getOverallProgress);
+router.get("/subcategories/:subcategoryId/progress", getProgressBySubcategory);
 router.post("/progress", updateUserProgress);
 router.delete("/subcategories/:subcategoryId/progress", deleteUserTestProgress);
 

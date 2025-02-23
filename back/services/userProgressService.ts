@@ -1,4 +1,5 @@
 import mongoose from "mongoose";
+import Category from "../models/categoryModel";
 import UserProgress from "../models/userProgressModel";
 
 export async function getProgressCountBySubcat(
@@ -34,4 +35,71 @@ export async function getProgressCountBySubcat(
   ]);
 
   return result.length > 0 ? result[0].count : 0;
+}
+
+export async function getEnabledQuestionsIds(): Promise<string[]> {
+  const result = await Category.aggregate([
+    { $match: { status: "enabled" } },
+    {
+      $lookup: {
+        from: "subcategories",
+        localField: "_id",
+        foreignField: "category",
+        as: "enabledSubcategories",
+        pipeline: [
+          { $match: { status: "enabled" } },
+          {
+            $lookup: {
+              from: "questions",
+              localField: "_id",
+              foreignField: "subcategory",
+              as: "enabledQuestions",
+              pipeline: [
+                { $match: { status: "enabled" } },
+                { $project: { _id: 1 } },
+              ],
+            },
+          },
+          { $project: { enabledQuestions: 1 } },
+        ],
+      },
+    },
+    { $unwind: "$enabledSubcategories" },
+    { $unwind: "$enabledSubcategories.enabledQuestions" },
+    {
+      $group: {
+        _id: null,
+        questionIds: {
+          $addToSet: "$enabledSubcategories.enabledQuestions._id",
+        },
+      },
+    },
+    {
+      $project: { _id: 0, questionIds: 1 },
+    },
+  ]);
+  return result.length > 0 ? result[0].questionIds : [];
+}
+
+export async function getLearnedQuestionsCount(
+  userId: string,
+  enabledQuestionIds: string[]
+): Promise<number> {
+  const objectIds = enabledQuestionIds.map(
+    (id) => new mongoose.Types.ObjectId(id)
+  );
+
+  const result = await UserProgress.aggregate([
+    {
+      $match: {
+        user: new mongoose.Types.ObjectId(userId),
+        question: { $in: objectIds },
+        mode: "learn",
+        correctAnswersCount: { $gte: 2 },
+      },
+    },
+    { $count: "learnedCount" },
+  ]);
+
+  return result.length > 0 ? result[0].learnedCount : 0;
 }
