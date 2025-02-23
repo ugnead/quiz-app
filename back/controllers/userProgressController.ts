@@ -15,26 +15,28 @@ export const getProgressBySubcategory = async (
       status: "enabled",
     });
 
-    const learnedQuestions = await UserProgress.countDocuments({
-      user: userId,
-      subcategory: subcategoryId,
-      mode: "learn",
-      correctAnswersCount: { $gte: 2 },
-    });
+    const learnedQuestions = await getProgressCount(
+      userId,
+      subcategoryId,
+      "learn",
+      2
+    );
 
-    const correctTestAnswers = await UserProgress.countDocuments({
-      user: userId,
-      subcategory: subcategoryId,
-      mode: "test",
-      correctAnswersCount: { $gte: 1 },
-    });
+    const correctTestAnswers = await getProgressCount(
+      userId,
+      subcategoryId,
+      "test",
+      1
+    );
+    console.log("learnedQuestions", learnedQuestions)
+    console.log("correctTestAnswers", correctTestAnswers);
 
     res.status(200).json({
       status: "success",
       data: {
         subcategoryId,
-        learnedQuestions,
         totalQuestions,
+        learnedQuestions,
         correctTestAnswers,
       },
     });
