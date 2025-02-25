@@ -37,8 +37,42 @@ export async function getProgressCountBySubcat(
   return result.length > 0 ? result[0].count : 0;
 }
 
-export async function getEnabledQuestionsIds(): Promise<string[]> {
-  const result = await Category.aggregate([
+export async function getLearnedQuestionsCount(
+  userId: string,
+  subcategoryId: string
+): Promise<number> {
+  const result = await getProgressCountBySubcat(
+    userId,
+    subcategoryId,
+    "learn",
+    2
+  );
+  return result;
+}
+
+export async function getCorrectTestAnswersCount(
+  userId: string,
+  subcategoryId: string
+): Promise<number> {
+  const result = await getProgressCountBySubcat(
+    userId,
+    subcategoryId,
+    "test",
+    1
+  );
+  return result;
+}
+
+export async function getOverallEnabled(): Promise<{
+  enabledCategories: Array<{
+    _id: string;
+    enabledSubcategories: Array<{
+      _id: string;
+      enabledQuestionIds: string[];
+    }>;
+  }>;
+}> {
+  const hierarchy = await Category.aggregate([
     { $match: { status: "enabled" } },
     {
       $lookup: {
