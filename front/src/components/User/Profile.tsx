@@ -5,6 +5,7 @@ import { useQuery } from "@tanstack/react-query";
 import { fetchOverallProgress } from "../../services/userProgressService";
 
 import Button from "../Common/Button";
+import ProgressBar from "../Common/ProgressBar";
 
 const Profile: React.FC = () => {
   const { user } = useAuth();
@@ -66,16 +67,34 @@ const Profile: React.FC = () => {
             <label className="block text-gray-600 uppercase mb-1">
               Answered Questions
             </label>
-            <div className="font-medium bg-gray-50 rounded-md p-3 shadow-sm">
+            <div className="font-medium">
               {progress.learnedQuestions} / {progress.totalQuestions}
+              <ProgressBar
+                progress={
+                  progress.totalQuestions > 0
+                    ? (progress.learnedQuestions / progress.totalQuestions) *
+                      100
+                    : 0
+                }
+                fillColor="bg-green-200"
+              />
             </div>
           </div>
           <div>
             <label className="block text-gray-600 uppercase mb-1">
               Passed Tests
             </label>
-            <div className="font-medium bg-gray-50 rounded-md p-3 shadow-sm">
+            <div className="font-medium">
               {progress.passedTests} / {progress.totalTests}
+              <ProgressBar
+                progress={
+                  progress.totalTests > 0
+                    ? (progress.passedTests / progress.totalTests) *
+                      100
+                    : 0
+                }
+                fillColor="bg-blue-200"
+              />
             </div>
           </div>
         </div>
