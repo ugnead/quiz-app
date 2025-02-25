@@ -33,7 +33,7 @@ const Profile: React.FC = () => {
 
   const handleDelete = () => {
     return null;
-    };
+  };
 
   return (
     <>
@@ -63,7 +63,20 @@ const Profile: React.FC = () => {
         </div>
         <div className="space-y-6">
           <div>
-         
+            <label className="block text-gray-600 uppercase mb-1">
+              Answered Questions
+            </label>
+            <div className="font-medium bg-gray-50 rounded-md p-3 shadow-sm">
+              {progress.learnedQuestions} / {progress.totalQuestions}
+            </div>
+          </div>
+          <div>
+            <label className="block text-gray-600 uppercase mb-1">
+              Passed Tests
+            </label>
+            <div className="font-medium bg-gray-50 rounded-md p-3 shadow-sm">
+              {progress.passedTests} / {progress.totalTests}
+            </div>
           </div>
         </div>
       </div>
