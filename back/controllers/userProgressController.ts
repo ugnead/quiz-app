@@ -82,21 +82,15 @@ export const getProgressBySubcategory = async (
       status: "enabled",
     });
 
-    const learnedQuestions = await getProgressCountBySubcat(
+    const learnedQuestions = await getLearnedQuestionsCount(
       userId,
-      subcategoryId,
-      "learn",
-      2
+      subcategoryId
     );
 
-    const correctTestAnswers = await getProgressCountBySubcat(
+    const correctTestAnswers = await getCorrectTestAnswersCount(
       userId,
-      subcategoryId,
-      "test",
-      1
+      subcategoryId
     );
-    console.log("learnedQuestions", learnedQuestions)
-    console.log("correctTestAnswers", correctTestAnswers);
 
     res.status(200).json({
       status: "success",
