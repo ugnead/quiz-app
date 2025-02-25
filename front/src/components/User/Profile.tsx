@@ -1,9 +1,31 @@
 import React from "react";
 import { useAuth } from "../../contexts/AuthContext";
+
+import { useQuery } from "@tanstack/react-query";
+import { fetchOverallProgress } from "../../services/userProgressService";
+
 import Button from "../Common/Button";
 
 const Profile: React.FC = () => {
   const { user } = useAuth();
+
+  const {
+    data: progress,
+    isLoading: isLoading,
+    error: error,
+  } = useQuery({
+    queryKey: ["userOverallProgress", user?._id],
+    queryFn: fetchOverallProgress,
+    enabled: !!user,
+  });
+
+  if (isLoading) {
+    return null;
+  }
+
+  if (error) {
+    return null;
+  }
 
   if (!user) {
     return null;
