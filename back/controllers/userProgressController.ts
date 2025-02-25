@@ -1,53 +1,58 @@
 import { Request, Response } from "express";
 import UserProgress from "../models/userProgressModel";
-import Subcategory from "../models/subcategoryModel";
 import Question from "../models/questionModel";
 import {
-  getProgressCountBySubcat,
-  getEnabledQuestionsIds,
-  getLearnedQuestionsCount
+  getLearnedQuestionsCount,
+  getCorrectTestAnswersCount,
+  getOverallEnabled,
+  getOverallLearnedQuestionsCount,
 } from "../services/userProgressService";
 
 export const getOverallProgress = async (req: Request, res: Response) => {
   try {
     const { userId } = (req as any).user;
 
-    const enabledQuestionIds = await getEnabledQuestionsIds();
-    const totalQuestions = enabledQuestionIds.length;
+    const { enabledCategories } = await getOverallEnabled();
 
-    const learnedQuestions = await getLearnedQuestionsCount(userId, enabledQuestionIds);
+    const totalQuestions = enabledCategories.reduce((acc, cat) => {
+      return (
+        acc +
+        cat.enabledSubcategories.reduce(
+          (subAcc, sub) => subAcc + sub.enabledQuestionIds.length,
+          0
+        )
+      );
+    }, 0);
 
-    const totalTests = await Subcategory.countDocuments({ status: "enabled" });
+    const allEnabledQuestionIds = enabledCategories.flatMap((cat) =>
+      cat.enabledSubcategories.flatMap((sub) => sub.enabledQuestionIds)
+    );
 
-    const enabledSubcats = await Subcategory.find({ status: "enabled" });
+    const learnedQuestions = await getOverallLearnedQuestionsCount(
+      userId,
+      allEnabledQuestionIds
+    );
+
+    const totalTests = enabledCategories.reduce((acc, cat) => {
+      const validSubcats = cat.enabledSubcategories.filter(
+        (sub) => sub.enabledQuestionIds.length > 0
+      );
+      return acc + validSubcats.length;
+    }, 0);
 
     let passedTests = 0;
-    for (const subcat of enabledSubcats) {
-      const subcatQuestionCount = await Question.countDocuments({
-        subcategory: subcat._id,
-        status: "enabled",
-      });
-
-      if (subcatQuestionCount === 0) {
-        continue;
-      }
-
-      const userProgressDocs = await UserProgress.find({
-        user: userId,
-        subcategory: subcat._id,
-        mode: "test",
-      });
-
-      let correctCount = 0;
-      for (const doc of userProgressDocs) {
-        if (doc.correctAnswersCount >= 1) {
-          correctCount++;
+    for (const cat of enabledCategories) {
+      for (const sub of cat.enabledSubcategories) {
+        const subcatTotal = sub.enabledQuestionIds.length;
+        if (subcatTotal === 0) continue;
+        const correctTestAnswers = await getCorrectTestAnswersCount(
+          userId,
+          sub._id.toString()
+        );
+        const passRatio = correctTestAnswers / subcatTotal;
+        if (passRatio >= 0.8) {
+          passedTests++;
         }
-      }
-
-      const percent = correctCount / subcatQuestionCount;
-      if (percent >= 0.8) {
-        passedTests++;
       }
     }
 
