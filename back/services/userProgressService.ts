@@ -94,28 +94,21 @@ export async function getOverallEnabled(): Promise<{
               ],
             },
           },
-          { $project: { enabledQuestions: 1 } },
+          {
+            $project: {
+              _id: 1,
+              enabledQuestionIds: "$enabledQuestions._id",
+            },
+          },
         ],
       },
     },
-    { $unwind: "$enabledSubcategories" },
-    { $unwind: "$enabledSubcategories.enabledQuestions" },
-    {
-      $group: {
-        _id: null,
-        questionIds: {
-          $addToSet: "$enabledSubcategories.enabledQuestions._id",
-        },
-      },
-    },
-    {
-      $project: { _id: 0, questionIds: 1 },
-    },
+    { $project: { _id: 1, enabledSubcategories: 1 } },
   ]);
-  return result.length > 0 ? result[0].questionIds : [];
+  return { enabledCategories: hierarchy };
 }
 
-export async function getLearnedQuestionsCount(
+export async function getOverallLearnedQuestionsCount(
   userId: string,
   enabledQuestionIds: string[]
 ): Promise<number> {
