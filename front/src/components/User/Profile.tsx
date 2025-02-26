@@ -1,14 +1,17 @@
 import React from "react";
 import { useAuth } from "../../contexts/AuthContext";
 
-import { useQuery } from "@tanstack/react-query";
-import { fetchOverallProgress } from "../../services/userProgressService";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
+import { fetchOverallProgress, deleteOverallProgress  } from "../../services/userProgressService";
 
 import Button from "../Common/Button";
 import ProgressBar from "../Common/ProgressBar";
 
+import { toast } from "react-toastify";
+
 const Profile: React.FC = () => {
   const { user } = useAuth();
+  const queryClient = useQueryClient();
 
   const {
     data: progress,
@@ -28,8 +31,14 @@ const Profile: React.FC = () => {
     return null;
   }
 
-  const handleDelete = () => {
-    return null;
+  const handleDelete = async () => {
+    try {
+      await deleteOverallProgress();
+      toast.success("User progress deleted successfully!");
+      queryClient.invalidateQueries({ queryKey: ["progress"] });
+    } catch (error) {
+      toast.error("Failed to delete user progress");
+    }
   };
 
   return (
