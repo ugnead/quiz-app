@@ -1,7 +1,7 @@
 import api from "./api";
 
 export const fetchOverallProgress = async () => {
-  const response = await api.get(`/progress/overview`);
+  const response = await api.get(`/progress/overall`);
   return response.data.data;
 };
 
@@ -22,6 +22,11 @@ export const updateUserProgress = async (
     isCorrect,
     mode,
   });
+  return response.data;
+};
+
+export const deleteOverallProgress = async () => {
+  const response = await api.delete(`/progress/overall`);
   return response.data;
 };
 
