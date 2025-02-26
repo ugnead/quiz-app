@@ -154,6 +154,26 @@ export const updateUserProgress = async (
   }
 };
 
+export const deleteOverallProgress = async (
+  req: Request,
+  res: Response
+): Promise<void> => {
+  try {
+    const { userId } = (req as any).user;
+
+    await UserProgress.deleteMany({ user: userId });
+
+    res
+      .status(200)
+      .json({ status: "success", message: "Overall user progress cleared" });
+  } catch (error) {
+    res.status(500).json({
+      status: "fail",
+      message: error,
+    });
+  }
+};
+
 export const deleteUserTestProgress = async (
   req: Request,
   res: Response
