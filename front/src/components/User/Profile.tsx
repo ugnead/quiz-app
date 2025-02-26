@@ -28,10 +28,6 @@ const Profile: React.FC = () => {
     return null;
   }
 
-  if (!user) {
-    return null;
-  }
-
   const handleDelete = () => {
     return null;
   };
@@ -47,13 +43,13 @@ const Profile: React.FC = () => {
           <div>
             <label className="block text-gray-600 uppercase mb-1">Name</label>
             <div className="font-medium bg-gray-50 rounded-md p-3 shadow-sm">
-              {user.name}
+              {user?.name}
             </div>
           </div>
           <div>
             <label className="block uppercase mb-1">Email</label>
             <div className="font-medium bg-gray-50 rounded-md p-3 shadow-sm">
-              {user.email}
+              {user?.email}
             </div>
           </div>
         </div>
