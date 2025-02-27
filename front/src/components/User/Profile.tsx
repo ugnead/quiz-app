@@ -53,13 +53,13 @@ const Profile: React.FC = () => {
         <div className="space-y-6">
           <div>
             <label className="block text-gray-600 uppercase mb-1">Name</label>
-            <div className="font-medium bg-gray-50 rounded-md p-3 shadow-sm">
+            <div className="font-medium bg-gray-50 rounded-md p-3 shadow-sm cursor-not-allowed">
               {user?.name}
             </div>
           </div>
           <div>
             <label className="block uppercase mb-1">Email</label>
-            <div className="font-medium bg-gray-50 rounded-md p-3 shadow-sm">
+            <div className="font-medium bg-gray-50 rounded-md p-3 shadow-sm cursor-not-allowed">
               {user?.email}
             </div>
           </div>
