@@ -41,6 +41,8 @@ const Profile: React.FC = () => {
     }
   };
 
+  const noProgress = progress.learnedQuestions === 0 && progress.passedTests === 0;
+
   return (
     <>
       <div className="bg-white rounded-md shadow-sm p-8">
@@ -114,6 +116,7 @@ const Profile: React.FC = () => {
           onClick={handleDelete}
           className="mt-3 mb-2"
           fullWidth
+          disabled={noProgress}
         >
           Delete All User Progress
         </Button>
