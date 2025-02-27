@@ -66,7 +66,6 @@ export const getOverallProgress = async (req: Request, res: Response) => {
       },
     });
   } catch (error) {
-    console.error("Error fetching user overview", error);
     return res.status(500).json({
       status: "fail",
       message: error,
