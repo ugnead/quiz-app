@@ -28,7 +28,7 @@ const Profile: React.FC = () => {
   }
 
   if (error) {
-    return null;
+     return toast.error("Error loading data");
   }
 
   const handleDelete = async () => {
