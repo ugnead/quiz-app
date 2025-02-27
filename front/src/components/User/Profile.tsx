@@ -18,7 +18,7 @@ const Profile: React.FC = () => {
     isLoading: isLoading,
     error: error,
   } = useQuery({
-    queryKey: ["userOverallProgress", user?._id],
+    queryKey: ["progress", user?._id],
     queryFn: fetchOverallProgress,
     enabled: !!user,
   });
