@@ -1,17 +1,23 @@
-import React from "react";
+import React, { useState } from "react";
 import { useAuth } from "../../contexts/AuthContext";
 
 import { useQuery, useQueryClient } from "@tanstack/react-query";
-import { fetchOverallProgress, deleteOverallProgress  } from "../../services/userProgressService";
+import {
+  fetchOverallProgress,
+  deleteOverallProgress,
+} from "../../services/userProgressService";
 
 import Button from "../Common/Button";
 import ProgressBar from "../Common/ProgressBar";
+import Modal from "../Common/Modal";
 
 import { toast } from "react-toastify";
 
 const Profile: React.FC = () => {
   const { user } = useAuth();
   const queryClient = useQueryClient();
+
+  const [isModalOpen, setModalOpen] = useState(false);
 
   const {
     data: progress,
@@ -28,10 +34,20 @@ const Profile: React.FC = () => {
   }
 
   if (error) {
-     return toast.error("Error loading data");
+    return toast.error("Error loading data");
   }
 
   const handleDelete = async () => {
+    if (!noProgress) {
+      setModalOpen(true);
+    }
+  };
+
+  const handleModalClose = () => {
+    setModalOpen(false);
+  };
+
+  const handleDeleteConfirm = async () => {
     try {
       await deleteOverallProgress();
       toast.success("User progress deleted successfully!");
@@ -39,9 +55,11 @@ const Profile: React.FC = () => {
     } catch (error) {
       toast.error("Failed to delete user progress");
     }
+    handleModalClose();
   };
 
-  const noProgress = progress.learnedQuestions === 0 && progress.passedTests === 0;
+  const noProgress =
+    progress.learnedQuestions === 0 && progress.passedTests === 0;
 
   return (
     <>
@@ -96,8 +114,7 @@ const Profile: React.FC = () => {
               <ProgressBar
                 progress={
                   progress.totalTests > 0
-                    ? (progress.passedTests / progress.totalTests) *
-                      100
+                    ? (progress.passedTests / progress.totalTests) * 100
                     : 0
                 }
                 fillColor="bg-blue-200"
@@ -121,6 +138,29 @@ const Profile: React.FC = () => {
           Delete All User Progress
         </Button>
       </div>
+
+      <Modal
+        isOpen={isModalOpen}
+        onClose={handleModalClose}
+        title="Delete All User Progress"
+        actions={[
+          {
+            label: "Cancel",
+            onClick: handleModalClose,
+            variant: "secondary",
+          },
+          {
+            label: "Confirm",
+            onClick: handleDeleteConfirm,
+            variant: "danger",
+          },
+        ]}
+      >
+        <p>
+          Are you sure you want to delete all progress? This action cannot be
+          undone.
+        </p>
+      </Modal>
     </>
   );
 };
