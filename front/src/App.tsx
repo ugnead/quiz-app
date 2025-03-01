@@ -8,14 +8,14 @@ import AdminLayout from "./components/Layouts/AdminLayout";
 import { PublicRoute } from "./components/Routes/PublicRoute";
 import { ProtectedRoute } from "./components/Routes/ProtectedRoute";
 import { AdminRoute } from "./components/Routes/AdminRoute";
+import WaitForAuth from "./components/Routes/WaitForAuth";
 
 import ErrorBoundary from "./components/Common/ErrorBoundary";
 import NotFoundPage from "./components/Common/NotFoundPage";
+import Home from "./components/Public/Home";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import Home from "./components/Public/Home";
-import WaitForAuth from "./components/Routes/WaitForAuth";
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 
 export const queryClient = new QueryClient();
 
