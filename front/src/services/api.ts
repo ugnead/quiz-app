@@ -60,7 +60,10 @@ api.interceptors.response.use(
             reject(refreshError as AxiosError)
           );
 
-          if ((refreshError as AxiosError).response?.status === 401) {
+          const errorResponseStatus = (refreshError as AxiosError).response
+            ?.status;
+
+          if (errorResponseStatus === 401 || errorResponseStatus === 403) {
             window.dispatchEvent(new Event("logout"));
           }
 
