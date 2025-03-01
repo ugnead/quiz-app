@@ -60,12 +60,7 @@ api.interceptors.response.use(
             reject(refreshError as AxiosError)
           );
 
-          const errorResponseStatus = (refreshError as AxiosError).response
-            ?.status;
-
-          if (errorResponseStatus === 401 || errorResponseStatus === 403) {
-            window.dispatchEvent(new Event("logout"));
-          }
+          window.dispatchEvent(new Event("logout"));
 
           return Promise.reject(refreshError);
         } finally {
