@@ -68,7 +68,9 @@ export const DynamicSelectFieldValidator = (
       function (value) {
         const currentOptions: string[] =
           (this.parent && this.parent[relatedFieldName]) || [];
-        return currentOptions.some((option) => option?.trim() === value?.trim());
+        return currentOptions.some(
+          (option) => option?.trim() === value?.trim()
+        );
       }
     );
 };
