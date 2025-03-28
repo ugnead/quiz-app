@@ -10,7 +10,7 @@ interface TokenPayload {
 export const generateTokens = (userPayload: TokenPayload) => {
 
   const accessToken = jwt.sign(userPayload, process.env.JWT_TOKEN!, {
-    expiresIn: "5s",
+    expiresIn: "1h",
   });
 
   const refreshToken = jwt.sign(
